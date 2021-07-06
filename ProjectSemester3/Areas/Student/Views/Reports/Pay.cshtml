@@ -1,32 +1,11 @@
 ﻿
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Pay";
     Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
 }
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-@*<link href="~/css/pay.css" rel="stylesheet" />*@
-
-<style>
-    .design {
-        font-family: "Times New Roman", Times, serif;
-        font-size: 20px;
-        padding: 0 0 0 20px;
-        box-shadow: inset 1px 0 0 #5f5f5f;
-        height: 100%;
-    }
-
-    .content.design {
-        position: relative;
-    }
-
-        .content.design input {
-            position: absolute;
-            bottom: 0;
-            left: 40%;
-        }
-</style>
 
 <div class="container">
     <div class="row">
@@ -53,15 +32,17 @@
                 </div>
             </div>
             <div class="content">
+                <div>
+                    <p><strong>Fullname: </strong> @ViewBag.pays.Account.Fullname</p>
+                    <p><strong>Class: </strong> @ViewBag.pays.Account.Class.ClassName</p>
+                    <p><strong>Email: </strong> @ViewBag.pays.Account.Email</p>
+                    <p><strong>Phone: </strong> @ViewBag.pays.Account.Phone</p>
+                    <p><strong>Address: </strong> @ViewBag.pays.Account.Address</p>
+                </div>
                 <div class="text-center">
                     <h1>Receipt</h1>
                 </div>
-                <form action="@ViewBag.postUrl" method="post">
-                    @*thong tin thanh toan*@
-                    <input type="hidden" name="upload" value="1" />
-                    <input type="hidden" name="return" value="@ViewBag.returnUrl" />
-                    <input type="hidden" name="cmd" value="_cart" />
-                    <input type="hidden" name="business" value="@ViewBag.business" />
+                <form action="" method="post">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -99,6 +80,7 @@
                                     <p>
                                         <strong>$0</strong>
                                     </p>
+
                                     <p>
                                         <strong>@ViewBag.pays.Discount</strong>
                                     </p>
@@ -112,10 +94,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <input type="hidden" name="item_number_1" value="@ViewBag.pays.PayId" />
-                    <input type="hidden" name="item_name_1" value="@ViewBag.pays.Title" />
-                    <input type="hidden" name="amount_1" value="1" />
-                    <input type="hidden" name="quantity_1" value="@ViewBag.pays.Total" />
                     @if (@ViewBag.pays.PayStatus)
                     {
                         <button type="text" class="btn btn-success btn-lg btn-block" disabled>
@@ -124,8 +102,8 @@
                     }
                     else
                     {
-                        <button type="submit" class="btn btn-success btn-lg btn-block">
-                            Pay Now   <span class="glyphicon glyphicon-chevron-right"></span>
+                        <button type="text" class="btn btn-success btn-lg btn-block" disabled>
+                            Unpaid 
                         </button>
                     }
                 </form>
@@ -134,40 +112,3 @@
     </div>
 </div>
 
-<!--<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <form action="@ViewBag.postUrl" method="post">-->
-@*thong tin thanh toan*@
-<!--<input type="hidden" name="upload" value="1" />
-                        <input type="hidden" name="return" value="@ViewBag.returnUrl" />
-                        <input type="hidden" name="cmd" value="_cart" />
-                        <input type="hidden" name="business" value="@ViewBag.business" />
-
-                        <table border="1">
-                            <tr>
-                                <th>name</th>
-                                <th>price</th>
-                                <th>quantity</th>
-                            </tr>
-                            <tr>
-                                <td>@ViewBag.pays.Title</td>
-                                <td>@ViewBag.pays.Total</td>
-                                <td>
-                                    1
-                                    <input type="hidden" name="item_number_1" value="@ViewBag.pays.PayId" />
-                                    <input type="hidden" name="item_name_1" value="@ViewBag.pays.Title" />
-                                    <input type="hidden" name="amount_1" value="1" />
-                                    <input type="hidden" name="quantity_1" value="@ViewBag.pays.Total" />
-                                </td>
-                            </tr>
-                        </table>
-                        <input type="submit" value="Checkout" />
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
