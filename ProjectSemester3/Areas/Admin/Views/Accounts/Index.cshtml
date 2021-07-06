@@ -15,55 +15,7 @@
 
 @{var index = 1;}
 <div class="container">
-    <!--<div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h1>Account</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Account
-                    </button>
-                    <br /><br />
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Serial</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Fullname</th>
-                                <th>Gender</th>
-                                <th>Role</th>
-                                <th>Active</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var account in ViewBag.accounts)
-                            {
-                                <tr--> @*onclick="location.href = '@Url.Action("edit", "accounts", new { id=account.AccountId })'"*@<!-->
-                                    <td>@index</td>
-                                    <td>@account.Username</td>
-                                    <td>@account.Email</td>
-                                    <td>@account.Fullname</td>
-                                    <td>@(account.Gender ? "Male" : "Female")</td>
-                                    <td>@account.Role.RoleName</td>
-                                    <td>@(account.Active ? "Actived" : "Inactive")</td>
-                                    <td>
 
-                                        <a type="button" class="btn btn-success" asp-controller="accounts" asp-action="edit" asp-route-id="@account.AccountId"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-danger" asp-controller="accounts" asp-action="delete" asp-route-id="@account.AccountId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
-
-                                    </td>
-                                </tr>
-                                index++;
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>-->
     @*///////////////////////////////////////*@
     <div class="row">
         <div class="col-12">
@@ -115,14 +67,14 @@
                                             <select class="form-control" name="statusKeyword">
                                                 <option value="">Choose Status</option>
                                                 <option value="true">Active</option>
-                                                <option value="false">Inactive</option>
+                                                <option value="false">Deleted</option>
                                             </select>
                                             @* end filter search*@
 
                                         </div>
                                         <div class="rs-select2--light">
                                             @* Start Search autocomplete*@
-                                            <input type="text" name="searchKeyword" id="searchkeyword" placeholder="Search for Batch" value="@ViewBag.searchKeyword" />
+                                            <input type="text" name="searchKeyword" id="searchkeyword" placeholder="Search..." value="@ViewBag.searchKeyword" />
 
                                             @* End Search autocomplete*@
 
@@ -152,6 +104,7 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Fullname</th>
+                                <th>PhoneNumber</th>
                                 <th>Gender</th>
                                 <th>Role</th>
                                 <th>Active</th>
@@ -159,34 +112,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var account in ViewBag.accounts)
+                            @foreach (var account in ViewBag.accounts.PagedList)
                             {
-                                <tr @*onclick="location.href = '@Url.Action("edit", "accounts", new { id=account.AccountId })'"*@>
-                                    <td>@index</td>
-                                    <td>@account.Username</td>
-                                    <td>@account.Email</td>
-                                    <td>@account.Fullname</td>
-                                    <td>@(account.Gender ? "Male" : "Female")</td>
-                                    <td>@account.Role.RoleName</td>
-                                    <td>@(account.Active ? "Actived" : "Inactive")</td>
-                                    <td>
-                                        <a type="button" class="btn btn-success edit" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
-                                        <form asp-controller="accounts" asp-action="delete" method="post" style="display: inline-block;">
-                                            <input type="hidden" asp-for="Account.AccountId" value="@account.AccountId" />
-                                            @*<input type="hidden" asp-for="Batch.ClassId" value="@batch.ClassId" />*@
-                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
-                                        </form>
-                                        <input type="hidden" name="accountId" id="accountId" value="@account.AccountId" />
-                                        @*<input type="hidden" name="classes" id="classes" value="@batch.ClassId" />*@
-                                    </td>
-                                </tr>
+                            <tr @*onclick="location.href = '@Url.Action("edit", "accounts", new { id=account.AccountId })'"*@>
+                                <td>@index</td>
+                                <td>@account.Username</td>
+                                <td>@account.Email</td>
+                                <td>@account.Fullname</td>
+                                <td>@account.Phone</td>
+                                <td>@(account.Gender ? "Male" : "Female")</td>
+                                <td>@account.Role.RoleName</td>
+                                <td>@(account.Active ? "Actived" : "Inactive")</td>
+                                <td>
+                                    <a type="button" class="btn btn-success editaccount" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                    <form asp-controller="accounts" asp-action="delete" method="post" style="display: inline-block;">
+                                        <input type="hidden" asp-for="Account.AccountId" value="@account.AccountId" />
+                                        @*<input type="hidden" asp-for="Batch.ClassId" value="@batch.ClassId" />*@
+                                        <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                    </form>
+                                    <input type="hidden" name="accountId" id="accountId" value="@account.AccountId" />
+                                    @*<input type="hidden" name="classes" id="classes" value="@batch.ClassId" />*@
+                                </td>
+                            </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
                     @*Start pagination*@
                     <div class="paging_bar">
-                        @using (Html.BeginForm("index", "accounts", FormMethod.Get, new { id = "formAccount" }))
+                        @using (Html.BeginForm("index", "accounts", FormMethod.Get, new { id = "form1" }))
                         {
                             <input type="hidden" name="searchKeyword" value="@ViewBag.searchkeyword" />
                             <input type="hidden" name="roleKeyword" value="@ViewBag.roleKeyword" />
@@ -240,40 +194,40 @@
 
                     <div class="form-group">
                         <label asp-for="Account.Fullname" class="control-label"></label>
-                        <input asp-for="Account.Fullname" class="form-control" name="fullname" required="required" />
+                        <input asp-for="Account.Fullname" class="form-control" required="required" />
                         <span asp-validation-for="Account.Fullname" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Account.Email" class="control-label"></label>
-                        <input asp-for="Account.Email" class="form-control" type="email" name="email" id="email1" required="required" />
+                        <input asp-for="Account.Email" class="form-control" type="email" id="email1" required="required" />
                         <span asp-validation-for="Account.Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Account.Dob" class="control-label">Date of Birth</label>
-                        <input asp-for="Account.Dob" class="form-control" name="dob" type="date" id="dob" required="required" onchange="CheckDateSmaller(this.id);" />
+                        <input asp-for="Account.Dob" class="form-control" type="date" id="dob" required="required" onchange="CheckDateSmaller(this.id);" />
                         <span asp-validation-for="Account.Dob" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Account.Address" class="control-label"></label>
-                        <input asp-for="Account.Address" class="form-control" name="address" required="required" />
+                        <input asp-for="Account.Address" class="form-control" required="required" />
                         <span asp-validation-for="Account.Address" class="text-danger"></span>
                     </div>
                     <div class="form-group">
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="male" asp-for="Account.Gender" value="true" checked>
+                            <input class="form-check-input" type="radio" id="male" asp-for="Account.Gender" value="true" checked>
                             <label class="form-check-label" for="male" asp-for="Account.Gender">Male &nbsp;</label>
 
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="female" asp-for="Account.Gender" value="false">
+                            <input class="form-check-input" type="radio"  id="female" asp-for="Account.Gender" value="false">
                             <label class="form-check-label" for="female" asp-for="Account.Gender">Female &nbsp;</label>
 
                         </div>
                     </div>
                     <div class="form-group">
                         <label asp-for="Account.Phone" class="control-label"></label>
-                        <input asp-for="Account.Phone" class="form-control" type="number" name="phone" min="0" maxlength="18" required="required" />
+                        <input asp-for="Account.Phone" class="form-control" type="number" min="0" maxlength="18" required="required" />
                         <span asp-validation-for="Account.Phone" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -293,85 +247,81 @@
 
 
 @*Edit modal*@
-<!--<div class="modal fade" id="ModalEdit" tabindex="-1" batch="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalEdit" tabindex="-1" batch="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+                <h4 class="modal-title" id="myModalLabel">Details</h4>
 
                 <button type="button" class="close" data-dismiss="modal">×</button>
 
             </div>
             <div class="modal-body">
-                <form asp-controller="accounts" asp-action="edit" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateEmail('email1');">
+                <form asp-controller="accounts" asp-action="edit" method="post" enctype="multipart/form-data" name="Form">
 
-                    <div class="form-group" id="roleid">
-                        <label asp-for="Account.RoleId" class="control-label">Role</label>
-                        <select asp-for="Account.RoleId" class="form-control" asp-items="ViewBag.RoleId" required="required">
-                        </select>
-                        <span asp-validation-for="Account.RoleId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group" id="student">
-                        <label asp-for="Account.ClassId" class="control-label">Class</label>
-                        <input class="form-control" type="text" name="listClassName" id="listClassName" placeholder="Choose Class" asp-for="Account.Class.ClassName" />
+                    <div class="form-group">
+                        <label class="control-label">Role</label>
+                        <input class="form-control" type="text" id="roleaccount" disabled />
 
                     </div>
-                    <div class="form-group" id="scholarshipstudent">
-                        <label class="control-label">Scholarship</label>
-                        <input class="form-control" type="text" name="listScholarship" id="listScholarship" placeholder="Choose Scholarship" />
+                    <div class="form-group">
+                        <label class="control-label">Class</label>
+                        <input class="form-control" type="text" name="listClassName" id="classaccount" disabled />
+
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Account.Fullname" class="control-label"></label>
-                        <input asp-for="Account.Fullname" class="form-control" name="fullname" required="required" />
-                        <span asp-validation-for="Account.Fullname" class="text-danger"></span>
+                        <label class="control-label">Username</label>
+                        <input class="form-control" id="usernameaccount" disabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Account.Email" class="control-label"></label>
-                        <input asp-for="Account.Email" class="form-control" type="email" name="email" id="email1" required="required" />
-                        <span asp-validation-for="Account.Email" class="text-danger"></span>
+                        <label class="control-label">Fullname</label>
+                        <input class="form-control" name="fullname" id="fullnameaccount" disabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Account.Dob" class="control-label">Date of Birth</label>
-                        <input asp-for="Account.Dob" class="form-control" name="dob" type="date" id="dob" required="required" onchange="CheckDateSmaller(this.id);" />
-                        <span asp-validation-for="Account.Dob" class="text-danger"></span>
+                        <label class="control-label">Email</label>
+                        <input class="form-control" type="email" name="email" id="emailaccount" disabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Account.Address" class="control-label"></label>
-                        <input asp-for="Account.Address" class="form-control" name="address" required="required" />
-                        <span asp-validation-for="Account.Address" class="text-danger"></span>
+                        <label class="control-label">Date of Birth</label>
+                        <input class="form-control" name="dob" type="datetime" id="dobaccount" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Address</label>
+                        <input class="form-control" name="address" id="addressaccount" required="required" disabled />
                     </div>
                     <div class="form-group">
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="male" asp-for="Account.Gender" value="true" checked>
-                            <label class="form-check-label" for="male" asp-for="Account.Gender">Male &nbsp;</label>
+                            <input class="form-check-input" type="radio" name="gender" id="maleaccount" value="true" disabled>
+                            <label class="form-check-label" for="male">Male &nbsp;</label>
 
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="female" asp-for="Account.Gender" value="false">
-                            <label class="form-check-label" for="female" asp-for="Account.Gender">Female &nbsp;</label>
-
+                            <input class="form-check-input" type="radio" name="gender" id="femaleaccount" value="false" disabled>
+                            <label class="form-check-label" for="female">Female &nbsp;</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Account.Phone" class="control-label"></label>
-                        <input asp-for="Account.Phone" class="form-control" type="number" name="phone" min="0" maxlength="18" required="required" />
-                        <span asp-validation-for="Account.Phone" class="text-danger"></span>
+                        <label class="control-label">Phone Number</label>
+                        <input class="form-control" type="number" name="phone" id="phoneaccount" disabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Account.Avatar" class="control-label"></label>
-                        <input asp-for="Account.Avatar" class="form-control" type="file" name="photo" />
-                        <span asp-validation-for="Account.Avatar" class="text-danger"></span>
+                        <label class="control-label">Active</label>
+                        <input class="form-control" type="text" name="phone" id="activeaccount" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <img src="" alt="Alternate Text" id="avataraccount" height="100px" width="100px" />
                     </div>
 
-                    <input type="submit" value="ADD" class="btn btn-primary" />
+                    @*<input type="submit" value="ADD" class="btn btn-primary" />*@
                 </form>
             </div>
 
         </div>
     </div>
-</div>-->
+</div>
 @*Edit modal*@
 
 @*<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

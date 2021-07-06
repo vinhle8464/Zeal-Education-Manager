@@ -144,7 +144,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         [Route("create")]
         public async Task<dynamic> Create(IFormFile photo, AccountViewModel accountViewModel, string listClassName, string listScholarship, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
-        {
+        {   
             if (ModelState.IsValid)
             {
                 var numAlpha = new Regex("(?<Alpha>[a-zA-Z]*)(?<Numeric>[0-9][0-9]*)");
@@ -321,6 +321,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("edit")]
         public async Task<IActionResult> Edit(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
         {
 
@@ -343,13 +344,14 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("delete")]
         public async Task<IActionResult> Delete(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
         {
-            var account = await context.Accounts.FindAsync(accountViewModel.Account.AccountId);
-            context.Accounts.Remove(account);
-            await context.SaveChangesAsync();
+            var account = context.Accounts.Find(accountViewModel.Account.AccountId);
+            account.Status = false;
+            accountService.Update(account);
             TempData["msg"] = "<script>alert('Successfully!');</script>";
 
             // Return view index and auto paging

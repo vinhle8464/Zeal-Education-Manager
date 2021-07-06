@@ -113,7 +113,7 @@
                                     <td>@batch.EndDate</td>
                                     <td>
 
-                                        <a type="button" class="btn btn-success edit" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-success editbatch" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
                                         <form asp-controller="batches" asp-action="delete" method="post" style="display: inline-block;">
                                             <input type="hidden" asp-for="Batch.CourseId" value="@batch.CourseId" />
                                             <input type="hidden" asp-for="Batch.ClassId" value="@batch.ClassId" />
