@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+                    <h1>Detail</h1><br />
+                    <div class="col">
+                        <div class="content-header form-group">
+                            <h2 style="color: blue">@ViewBag.enquiry.Title</h2><br />
+                        </div>
+                        <div class="content form-group" style="color: black">
+                            @ViewBag.enquiry.Answer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

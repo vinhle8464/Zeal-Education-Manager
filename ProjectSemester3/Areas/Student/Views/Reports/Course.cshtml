@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Course";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <h2 class="title">Details Course</h2>
+                <div class="card-body">
+                    <div class="content details">
+                        @foreach (var batch in ViewBag.course)
+                        {
+                            <h2>Course Name: @batch.Course.CourseName</h2>
+                            <p class="design"><strong class="design">Fee: </strong> @batch.Course.Fee </p>
+
+                            <p class="design"><strong class="design">Class: </strong> @batch.Class.ClassName</p>
+
+                            <p class="design"><strong class="design">Start Date: </strong>@batch.StartDate.ToString("MM/dd/yyyy")</p>
+
+                            <p class="design"><strong class="design">End Date: </strong> @batch.EndDate.ToString("MM/dd/yyyy")</p>
+
+                            <p class="design"><strong class="design">Certificate: </strong> @batch.Course.Certificate</p>
+
+                            <strong class="design">Subjects: </strong>
+
+                            @foreach (var item in batch.Course.CourseSubjects)
+                            {
+                                <p class="design">@index.  @item.Subject.SubjectName</p>
+                                index++;
+                            }
+                        }
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

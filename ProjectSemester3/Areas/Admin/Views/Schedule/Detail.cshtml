@@ -1,0 +1,175 @@
+﻿@model ProjectSemester3.Models.Schedule
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Raw(TempData["msg"])
+
+@{var index = 1;}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-controller="schedule" asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+                    <h1>Detail Schedule Of Class @ViewBag.classitem.ClassName</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Schedule
+                    </button>
+                    <br />
+                    <br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Subject</th>
+                                <th>Faculty</th>
+                                <th>Time</th>
+                                <th>Study Day</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in ViewBag.schedule)
+                            {
+                            <tr>
+                                <td>@index</td>
+                                <td>@s.Subject.SubjectName</td>
+                                <td>@(s.FacultyId != null ? s.Faculty.Fullname : "none")</td>
+                                <td>@(s.TimeDay != null ? s.TimeDay : "none")</td>
+                                <td>@(s.StudyDay != null ? s.StudyDay : "none")</td>
+                                <td>@(Convert.ToInt32(s.StartDate.ToString("yyyy")) > 1000 ? s.StartDate.ToString("MM/dd/yyyy") : "none")</td>
+                                <td>@(Convert.ToInt32(s.EndDate.ToString("yyyy")) > 1000 ? s.EndDate.ToString("MM/dd/yyyy") : "none")</td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-area="admin" asp-controller="schedule" asp-action="create" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+                    <input type="hidden" asp-for="ClassId" />
+
+                    <div class="form-group">
+                        <label asp-for="SubjectId" class="control-label">Subject</label>
+                        <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FacultyId" class="control-label">Faculty</label>
+                        <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TimeDay" class="control-label" for="appt">Time Day</label>
+                        <input class="form-control" asp-for="TimeDay" type="time" name="timeday"  required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label">Start Date</label>
+                        <input asp-for="StartDate" class="form-control" type="date" name="startdate" required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label">End Date</label>
+                        <input asp-for="EndDate" class="form-control" type="date" name="enddate" required="required"/>
+                    </div>
+
+                    <div class="form-group" id="studyday">
+                        <label class="control-label">Study Day</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="monday" value="Monday" onclick="calculate()">
+                            <label class="form-check-label" for="monday">Monday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="tuesday" value="Tuesday" onclick="calculate()">
+                            <label class="form-check-label" for="tuesday">Tuesday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="wednesday" value="Wednesday" onclick="calculate()">
+                            <label class="form-check-label" for="wednesday">Wednesday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="thursday" value="Thursday" onclick="calculate()">
+                            <label class="form-check-label" for="thursday">Thursday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="friday" value="Friday" onclick="calculate()">
+                            <label class="form-check-label" for="friday">Friday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="saturday" value="Saturday" onclick="calculate()">
+                            <label class="form-check-label" for="saturday">Saturday</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sunday" value="Sunday" onclick="calculate()">
+                            <label class="form-check-label" for="sunday">Sunday</label>
+                        </div>
+                        Day: <br />
+                        <textarea id="res" asp-for="StudyDay" cols="56" rows="5" style="background-color: darkgrey;" name="studyday" disabled="disabled"></textarea>
+                    </div>
+
+                    <br />
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function calculate() {
+        var arr = $.map($('#studyday input[type=checkbox]:checked'), function (e, i) {
+            return e.value;
+        });
+        $('#res').text(arr.join(','));
+    }
+
+    calculate();
+    $('#studyday').delegate('input:checkbox', 'click', calculate);
+
+    function validateForm() {
+        var timeday = document.forms["Form"]["timeday"].value.trim();
+        var startdate = document.forms["Form"]["startdate"].value.trim();
+        var enddate = document.forms["Form"]["enddate"].value.trim();
+        var studyday = document.forms["Form"]["studyday"].value.trim();
+        if (timeday == null || timeday == "") {
+            alert("Please Fill Time Day Field");
+            return false;
+        }
+        if (startdate == null || startdate == "") {
+            alert("Please Fill Start Date Field");
+            return false;
+        }
+        if (enddate == null || enddate == "") {
+            alert("Please Fill End Date Field");
+            return false;
+        }
+        if (studyday == null || studyday == "") {
+            alert("Please Fill Study Day Field");
+            return false;
+        }
+    }
+
+</script>
+

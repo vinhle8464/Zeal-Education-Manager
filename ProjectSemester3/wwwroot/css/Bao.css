@@ -1,0 +1,74 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: auto;
+    padding: 0;
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    font-size: 25px;
+    text-align: center;
+}
+
+.form .input-box {
+    min-width: 400px;
+    display: block;
+    margin: auto;
+    padding: 15px 20px;
+    background-color: #ece7e7;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    box-shadow: 15px 15px 25px #a8a8a8;
+    transition: box-shadow 0.5s;
+}
+
+.form input:focus {
+    box-shadow: 5px 5px 15px #a8a8a8;
+}
+
+.form .btn {
+    margin: auto;
+    padding: 10px 35px;
+    background-color: #f1a566;
+    color: #fff;
+    border: none;
+    font-size: 22px;
+    border-radius: 10px;
+    box-shadow: 15px 15px 20px #a8a8a8;
+    transition: box-shadow 0.5s;
+    outline: none;
+}
+
+    .form .btn:hover {
+        box-shadow: 5px 5px 15px #aaa;
+    }
+
+
+.form h1 {
+/*    margin-top: 15%;*/
+    text-align: center;
+    color: white;
+}
+
+
+
+.cover .switch-btn:hover {
+    box-shadow: 5px 5px 15px #aaa;
+}
+
+.fade-in-element {
+    animation-name: fade-in-element;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fade-in-element {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,31 @@
+﻿.design {
+    font-family: "Times New Roman";
+    color: darkcyan;
+}
+
+p.design {
+    font-family: "Times New Roman";
+}
+
+.details {
+    font-size: 30px;
+    padding: 0% 0% 0% 15%;
+}
+
+    .details > h2 {
+        font-size: 40px;
+        font-family: "Times New Roman";
+        color: crimson;
+    }
+
+.title {
+    font-family: 'Times New Roman';
+    color: darkblue;
+    text-align: center;
+    font-size: 50px;
+}
+
+.icon_arrow {
+    font-size: 30px;
+    padding: 3% 3% 0 3%;
+}

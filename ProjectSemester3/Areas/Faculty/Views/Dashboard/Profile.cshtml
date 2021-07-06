@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link rel="stylesheet" href="https://bootswatch.com/4/simplex/bootstrap.min.css" />
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title mb-4">
+                        <div class="justify-content-start">
+                            <form asp-controller="dashboard" asp-action="changeavatar" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="image-container col-3">
+                                        <img src="~/images/@ViewBag.account.Avatar" id="imgProfile" style="width: 250px; height: 250px" class="img-thumbnail" />
+
+                                        <div class="row">
+                                            <br />
+                                            <div class="col-4">
+                                                <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" />
+                                                <input type="file" style="display: none;" id="profilePicture" name="file" />
+                                            </div>
+                                            <br />
+                                            <div class="col-4">
+                                                <input type="submit" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        <br />
+                                        <h2 class="d-block" style="font-size: 2.5rem; font-weight: bold; color:red;">@ViewBag.account.Fullname</h2> <br />
+                                        <h4 class="d-block">Email: @ViewBag.account.Email</h4>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="font-size: 20px">
+                            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Pesonal Information</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content ml-1" id="myTabContent">
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Full Name</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <form asp-controller="dashboard" asp-action="editfullname">
+                                                <nav class="navbar navbar-light" style="border: 0">
+                                                    <p class="navbar-brand">@ViewBag.account.Fullname</p>
+                                                    <button class="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent_1"
+                                                            aria-controls="navbarSupportedContent_1" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <span><i class="fas fa-edit"></i></span>
+                                                    </button>
+                                                    <div class="collapse navbar-collapse" id="navbarSupportedContent_1">
+                                                        <ul class="navbar-nav mr-auto active row" style="padding: 3%">
+                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Fullname" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editfullname" />
+                                                            &nbsp; &nbsp;
+                                                            <input type="submit" class="btn btn-success col-2" value="Change" />
+                                                        </ul>
+                                                    </div>
+                                                </nav>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Gender</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <nav class="navbar navbar-light" style="border: 0">
+                                                <p class="navbar-brand">@(ViewBag.account.Gender? "Male" : "Female")</p>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                    <hr />
+
+
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Birthday</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <form asp-controller="dashboard" asp-action="editdob">
+                                                <nav class="navbar navbar-light" style="border: 0">
+                                                    <p class="navbar-brand"> @ViewBag.account.Dob.ToString("dd/MM/yyyy")</p>
+                                                    <button class="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent_2"
+                                                            aria-controls="navbarSupportedContent_2" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <span><i class="fas fa-edit"></i></span>
+                                                    </button>
+                                                    <div class="collapse navbar-collapse" id="navbarSupportedContent_2">
+                                                        <ul class="navbar-nav mr-auto active row" style="padding: 3%">
+                                                            <input type="date" class="nav-item col-10" placeholder="Enter new Birthday" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editdob" />
+                                                            &nbsp; &nbsp;
+                                                            <input type="submit" class="btn btn-success col-2" value="Change" />
+                                                        </ul>
+                                                    </div>
+                                                </nav>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Email</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <form asp-controller="dashboard" asp-action="editemail">
+
+                                                <nav class="navbar navbar-light" style="border: 0">
+                                                    <p class="navbar-brand">@ViewBag.account.Email</p>
+                                                    <button class="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent_3"
+                                                            aria-controls="navbarSupportedContent_3" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <span><i class="fas fa-edit"></i></span>
+                                                    </button>
+                                                    <div class="collapse navbar-collapse" id="navbarSupportedContent_3">
+                                                        <ul class="navbar-nav mr-auto active row" style="padding: 3%">
+                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Email" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editemail" />
+                                                            &nbsp; &nbsp;
+                                                            <input type="submit" class="btn btn-success col-2" value="Change" />
+                                                        </ul>
+                                                    </div>
+                                                </nav>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Phone</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <form asp-controller="dashboard" asp-action="editphone">
+                                                <nav class="navbar navbar-light" style="border: 0">
+                                                    <p class="navbar-brand">@ViewBag.account.Phone</p>
+                                                    <button class="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent_4"
+                                                            aria-controls="navbarSupportedContent_4" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <span><i class="fas fa-edit"></i></span>
+                                                    </button>
+                                                    <div class="collapse navbar-collapse" id="navbarSupportedContent_4">
+                                                        <ul class="navbar-nav mr-auto active row" style="padding: 3%">
+                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Phone" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editphone" />
+                                                            &nbsp; &nbsp;
+                                                            <input type="submit" class="btn btn-success col-2" value="Change" />
+                                                        </ul>
+                                                    </div>
+                                                </nav>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">ID Faculty</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <nav class="navbar navbar-light" style="border: 0">
+                                                <p class="navbar-brand">@ViewBag.account.AccountId</p>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $imgSrc = $('#imgProfile').attr('src');
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgProfile').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $('#btnChangePicture').on('click', function () {
+            // document.getElementById('profilePicture').click();
+            if (!$('#btnChangePicture').hasClass('changing')) {
+                $('#profilePicture').click();
+            }
+            else {
+                // change
+            }
+        });
+        $('#profilePicture').on('change', function () {
+            readURL(this);
+            $('#btnChangePicture').addClass('changing');
+            $('#btnChangePicture').attr('value', 'Confirm');
+            $('#btnDiscard').removeClass('d-none');
+            // $('#imgProfile').attr('src', '');
+        });
+
+    });
+</script>
+

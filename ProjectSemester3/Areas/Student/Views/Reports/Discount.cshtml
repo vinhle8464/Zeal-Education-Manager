@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Discount";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <h2 class="title">Details Discount</h2>
+                <div class="card-body">
+                    <div class="content details" style="padding-left: 29%;">
+                        @foreach (var item in ViewBag.discount)
+                        {
+                            <div class="form-control" style="width: 60%; padding-left: 5%; font-size: 24px;">
+                                <p class="design"><strong class="design">Fullname: </strong> @item.Account.Fullname </p>
+                                <p class="design"><strong class="design">Class: </strong> @item.Account.Class.ClassName </p>
+                                <p class="design"><strong class="design">Email: </strong> @item.Account.Email </p>
+                                <p class="design"><strong class="design">Birthday: </strong> @item.Account.Dob.ToString("MM/dd/yyyy") </p>
+                                <p class="design"><strong class="design">Scholarship: </strong> @item.Scholarship.ScholarshipName </p>
+                                <p class="design"><strong class="design">Discount: </strong> @item.Scholarship.Discount </p>
+                                <p class="design"><strong class="design">Description: </strong> @item.Scholarship.Desc </p>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

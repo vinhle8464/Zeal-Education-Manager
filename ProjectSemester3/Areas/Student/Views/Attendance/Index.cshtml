@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewData["Title"] = "Attendance";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .building {
+        font-size: 30px;
+        width: 40%;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h1 class="title">Attendance</h1>
+                <div class="card-body">
+                    <div class="content" style="text-align: -webkit-center;">
+                        @foreach (var subject in ViewBag.subjects)
+                        {
+                            <div class="form-control building">
+                                <a asp-controller="attendance" asp-action="details" asp-route-subjectid="@subject.Subject.SubjectId"> <p>@subject.Subject.SubjectName</p></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr style="border-top: 3px solid black" />﻿
+<!--<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="page-title">Attendance Sheet</h4>
+                    </div>
+                </div>
+                <div class="row filter-row">
+                    <div class="col-sm-6 col-md-3">-->
+                        @*<div class="form-group form-focus">
+                                <label class="focus-label">Employee Name</label>
+                                <input type="text" class="form-control floating">
+                            </div>*@
+                    <!--</div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus select-focus">
+                            <label class="focus-label">Select Month</label>
+                            <select class="select floating">
+                                <option hidden>Month</option>
+                                <option>Jan</option>
+                                <option>Feb</option>
+                                <option>Mar</option>
+                                <option>Apr</option>
+                                <option>May</option>
+                                <option>Jun</option>
+                                <option>Jul</option>
+                                <option>Aug</option>
+                                <option>Sep</option>
+                                <option>Oct</option>
+                                <option>Nov</option>
+                                <option>Dec</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus select-focus">
+                            <label class="focus-label">Select Year</label>
+                            <select class="select floating">
+                                <option hidden>Year</option>
+                                <option>2022</option>
+                                <option>2021</option>
+                                <option>2020</option>
+                                <option>2019</option>
+                                <option>2018</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <a href="#" class="btn btn-success btn-block"> Search </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped custom-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>6</th>
+                                        <th>7</th>
+                                        <th>8</th>
+                                        <th>9</th>
+                                        <th>10</th>
+                                        <th>11</th>
+                                        <th>12</th>
+                                        <th>13</th>
+                                        <th>14</th>
+                                        <th>15</th>
+                                        <th>16</th>
+                                        <th>17</th>
+                                        <th>18</th>
+                                        <th>19</th>
+                                        <th>20</th>
+                                        <th>22</th>
+                                        <th>23</th>
+                                        <th>24</th>
+                                        <th>25</th>
+                                        <th>26</th>
+                                        <th>27</th>
+                                        <th>28</th>
+                                        <th>29</th>
+                                        <th>30</th>
+                                        <th>31</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @foreach (var item in ViewBag.attendances)
+                                        {
+                                            <td>
+                                                @if (item.Date.Day.ToString().Contains("1") && item.Checked == true)
+                                                {
+                                                    <i class="fa fa-check text-success"></i>
+                                                }
+                                                else if (item.Date.Day.ToString().Contains("1") && item.Checked == false)
+                                                {
+                                                    <i class="fa fa-close text-danger"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-circle-o text-info"></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Date.Day.ToString().Contains("1") && item.Checked == true)
+                                                {
+                                                    <i class="fa fa-check text-success"></i>
+                                                }
+                                                else if (item.Date.Day.ToString().Contains("1") && item.Checked == false)
+                                                {
+                                                    <i class="fa fa-close text-danger"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-circle-o text-info"></i>
+                                                }
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.slimscroll.js"></script>
+    <script src="assets/js/select2.min.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>-->

@@ -1,0 +1,130 @@
+﻿@model ProjectSemester3.Models.ClassAssignment
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h1 class="title-5 m-b-35">Batch</h1>
+                            <div class="table-data__tool">
+                                @*<div class="table-data__tool-left padding_search_bar">
+                                        <form class="form-header" asp-action="search" method="post">
+                                            <div class="rs-select2--light rs-select2--md">
+
+                                                <select asp-for="FacultyId" class="js-select2" name="course" asp-items="ViewBag.FacultyId"></select>
+                                                <div class="dropDownSelect2"></div>
+                                            </div>
+                                            <div class="rs-select2--light rs-select2--sm">
+
+                                                <select asp-for="ClassId" class="js-select2" name="class" asp-items="ViewBag.ClassId"></select>
+                                                <div class="dropDownSelect2"></div>
+                                            </div>
+                                            <div class="rs-select2--light">
+                                                <input class="au-input au-input--" type="text" list="datal" name="keyword" placeholder="Search for Course" />
+                                                <datalist id="datal">
+                                                    @foreach (var item in ViewBag.keyword)
+                                                    {
+                                                        <option value="@item"></option>
+                                                    }
+                                                </datalist>
+
+                                            </div>
+                                            <div class="rs-select2--light">
+                                                <button class="au-btn au-btn-load au-btn--small" type="submit">
+                                                    <i class="zmdi zmdi-search"></i>Search
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>*@
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#myModal">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Class</th>
+                                <th>Faculty</th>
+                                <th>Subject</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in ViewBag.classassignments)
+                            {
+                            <tr onclick="location.href = '@Url.Action("details", "classassignments", new { facultyid = c.FacultyId, classid=c.ClassId })'">
+                                <td>@index</td>
+                                <td>@c.Class.ClassName</td>
+                                <td>@c.Faculty.Fullname</td>
+                                <td>@c.SubjectName</td>
+
+                                <td>
+                                    <a asp-controller="classassignments" asp-action="details" asp-route-classid="@c.ClassId" asp-route-facultyid="@c.FacultyId">View</a>
+                                </td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+            </div>
+            <div class="modal-body">
+                <form  asp-action="create" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+
+                    <div class="form-group">
+                        <label asp-for="ClassId" class="control-label">Class</label>
+                        <input class="form-control" type="text" name="cbbClass" id="cbbClass" placeholder="Choose Class" asp-for="Class.ClassName" required="required" />
+
+                     
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Subject</label>
+                        <select class="form-control" name="cbbSubject" id="cbbSubject"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Faculty</label>
+                        <select class="form-control" id="cbbFaculty" asp-for="FacultyId"></select>
+                    </div>
+                    @*<div class="form-group">
+            <label asp-for="FacultyId" class="control-label">Faculty</label>
+            <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
+        </div>*@
+
+                    <br />
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

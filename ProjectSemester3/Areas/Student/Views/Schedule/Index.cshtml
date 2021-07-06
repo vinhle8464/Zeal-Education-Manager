@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Schedule";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        padding: 3%;
+        text-align: center;
+        font-size: 50px;
+    }
+    #header {
+        font-family: 'Times New Roman';
+        font-size: 26px;
+        color: darkblue;
+    }
+</style>
+
+@{ var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h1 id="title">Schedule of @ViewBag.account.Class.ClassName class</h1>
+                <div class="card-body">
+                    <div class="content">
+                        <form action="/" method="post">
+                            <table class="table table-hover">
+                                <thead id="header">
+                                    <tr>
+                                        <th>Serial</th>
+                                        <th>Subject</th>
+                                        <th>Faculty</th>
+                                        <th>Time</th>
+                                        <th>Study Day</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.schedule)
+                                    {
+                                        <tr onclick="location.href = '@Url.Action("detail", "schedule", new { subjectid=item.Subject.SubjectId})'" style="font-family: cursive; font-size: 22px ">
+                                            <td>@index</td>
+                                            <td>@item.Subject.SubjectName</td>
+                                            <td>@item.Faculty.Fullname</td>
+                                            <td>@item.TimeDay</td>
+                                            <td>@item.StudyDay</td>
+                                            <td>@item.StartDate.ToString("MM/dd/yyyy")</td>
+                                            <td>@item.EndDate.ToString("MM/dd/yyyy")</td>
+                                        </tr>
+                                        index++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

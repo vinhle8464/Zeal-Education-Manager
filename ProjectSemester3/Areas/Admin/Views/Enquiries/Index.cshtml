@@ -1,0 +1,116 @@
+﻿@model ProjectSemester3.Models.Enquiry
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
+<script>tinymce.init({ selector: 'textarea' });</script>
+@{ var index = 1;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Enquiry</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Enquiry
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var enquiry in ViewBag.enquiries)
+                            {
+                                <tr  onclick="location.href = '@Url.Action("details", "enquiries", new { enquiryid=enquiry.Id })'">
+                                    <td>@index</td>
+                                    <td>@enquiry.Title</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+                    <div class="form-group">
+                        <div class="col">
+                            <div class="card card-primary card-outline">
+                                <form method="post" asp-controller="enquiries" asp-action="create" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Compose New Enquiry</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group" id="title">
+                                            <label asp-for="Title" class="control-label">Title</label>
+                                            <input type="text" asp-for="Title" class="form-control" placeholder="Enter Title" name="title"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea id="compose-textarea" class="form-control" style="height: 300px" asp-for="Answer" name="answer"></textarea>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="float-right">
+                                                <input type="submit" value="ADD" class="btn btn-primary" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="errorLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+                    <div class="form-group">
+                        @ViewBag.msg
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var title = document.forms["Form"]["title"].value.trim();
+        var answer = document.forms["Form"]["answer"].value.trim();
+        if (title == null || title == "") {
+            alert("Please Fill Title Field");
+            return false;
+        }
+        if (answer == null || answer == "") {
+            alert("Please Fill Answer Field");
+            return false;
+        }
+    }
+</script>

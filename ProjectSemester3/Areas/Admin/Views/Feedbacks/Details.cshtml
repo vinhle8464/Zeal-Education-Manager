@@ -1,0 +1,61 @@
+﻿@model ProjectSemester3.Models.Feedback
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Feedback</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Teaching)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Teaching)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Exercises)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Exercises)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TeacherEthics)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TeacherEthics)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Specialize)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Specialize)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Assiduous)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Assiduous)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Subject.SubjectId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.FeedbackId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

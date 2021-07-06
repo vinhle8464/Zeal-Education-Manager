@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewData["Title"] = "Batch";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+<style>
+
+    .subject {
+        font-family: "Times New Roman";
+        font-size: 20px;
+        padding: 2%;
+        border: 1px solid;
+    }
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <br />
+                <h2 class="title">Detail Batch</h2>
+                <div class="card-body">
+                    <div class="content details">
+                        @foreach (var batch in ViewBag.batch)
+                        {
+
+                            <p class="design"><strong class="design">Class: </strong> @batch.Class.ClassName</p>
+                            <p class="design"><strong class="design">Start Date: </strong>@batch.StartDate.ToString("MM/dd/yyyy")</p>
+                            <p class="design"><strong class="design">End Date: </strong> @batch.EndDate.ToString("MM/dd/yyyy")</p>
+                            <p class="design"><strong class="design">Graduate: </strong> @(batch.Graduate? "Graduated": "Yet graduated")</p>
+                            <hr />
+                        }
+                    </div>
+                    <div class="row" style="padding: 5%;">
+                        <div class="col-4 subject">
+                            <h3>Studying</h3>
+                            @foreach (var studying in ViewBag.listStudying)
+                            {
+                                <p>@studying</p>
+                            }
+                        </div>
+                        <div class="col-4 subject">
+                            <h3>Completed</h3>
+                            @foreach (var completed in ViewBag.listCompleted)
+                            {
+                                <p>@completed</p>
+                            }
+                        </div>
+                        <div class="col-4 subject">
+                            <h3>Scheduled</h3>
+                            @foreach (var scheduled in ViewBag.listScheduled)
+                            {
+                                <p>@scheduled</p>
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

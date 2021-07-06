@@ -1,0 +1,79 @@
+﻿@model ProjectSemester3.Models.ScholarshipStudent
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Scholarship Student</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Scholarship Student
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Scholarship</th>
+                                <th>Student</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in ViewBag.scholarshipstudents)
+                            {
+                            <tr onclick="location.href = '@Url.Action("details", "scholarshipstudents", new { accountid = c.AccountId, scholarshipid=c.ScholarshipId })'">
+                                <td>@index</td>
+                                <td>@c.Scholarship.ScholarshipName</td>
+                                <td>@c.Account.Fullname</td>
+                                <td>
+                                    <a asp-controller="classassignments" asp-action="details" asp-route-accountid="@c.AccountId" asp-route-scholarshipid="@c.ScholarshipId">View</a>
+                                </td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-area="admin" asp-controller="scholarshipstudents" asp-action="create" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+
+                    <div class="form-group">
+                        <label asp-for="ScholarshipId" class="control-label">Scholarship</label>
+                        <select asp-for="ScholarshipId" class="form-control" asp-items="ViewBag.ScholarshipId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AccountId" class="control-label">Student</label>
+                        <select asp-for="AccountId" class="form-control" asp-items="ViewBag.AccountId"></select>
+                    </div>
+
+                    <br />
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

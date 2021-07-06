@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "DetailsDiligence";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="diligence"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <h2 class="title">Details Diligence of @ViewBag.subjectname</h2>
+                <div class="card-body">
+                    <div class="content ">
+                    <table border="1" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Date</th>
+                                <th>Time day</th>
+                                <th>Faculty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var attendance in ViewBag.attendances)
+                            {
+                                <tr>
+                                    <td>@attendance.Subject.SubjectName</td>
+                                    <td>@attendance.Date.ToString("MM/dd/yyyy")</td>
+                                    <td> @ViewBag.timeday</td>
+                                    <td>@attendance.Faculty.Fullname</td>
+                                    @if (attendance.Checked)
+                                    {
+                                        <td style="color: forestgreen">Complete <i class="fa fa-check text-success"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color: red">Absent <i class="fa fa-close text-danger"></i></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="form-control" style="font-size: 20px;">
+                        <p>Total Days Off: @ViewBag.dateoff</p>
+                        @if (ViewBag.dateoff > 3)
+                        {
+                            <p>Status: Prohibitive Examination</p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

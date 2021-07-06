@@ -1,0 +1,135 @@
+﻿@model ProjectSemester3.Models.Course
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Courses</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Course
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Name</th>
+                                <th>Fee</th>
+                                <th>Term</th>
+                                <th>Certificate</th>
+                                <th>Desciption</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in ViewBag.courses)
+                            {
+                            <tr onclick="location.href = '@Url.Action("edit", "courses", new { id=course.CourseId })'">
+                                <td>@index</td>
+                                <td>@course.CourseName</td>
+                                <td>@course.Fee</td>
+                                <td>@course.Term</td>
+                                <td>@course.Certificate</td>
+                                <td>@course.Desc</td>
+
+                                <td>
+
+                                    <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@course.CourseId"><i class="fas fa-edit"></i></a>
+                                    <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@course.CourseId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                </td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create Course</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-controller="courses" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+
+                    <div class="form-group">
+                        <label for="CourseName">CourseName</label>
+                        <input type="text" class="form-control" asp-for="CourseName" name="coursename" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Fee">Fee</label>
+                        <input type="text" class="form-control" asp-for="Fee" name="fee" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="Term">Term</label>
+                        <input type="text" class="form-control" asp-for="Term" name="term" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="certificate">Certificate</label>
+                        <input type="text" class="form-control" asp-for="Certificate" name="certificate" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                    </div>
+
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function validateForm() {
+        var coursename = document.forms["Form"]["coursename"].value.trim();
+        var fee = document.forms["Form"]["fee"].value.trim();
+        var term = document.forms["Form"]["term"].value.trim();
+        var certificate = document.forms["Form"]["certificate"].value.trim();
+        var desc = document.forms["Form"]["desc"].value.trim();
+
+        if (coursename == null || coursename == "") {
+            alert("Please Fill Course Name Field");
+            return false;
+        }
+        if (fee == null || fee == "") {
+            alert("Please Fill Fee Field");
+            return false;
+        }
+        if (term == null || term == "") {
+            alert("Please Fill Term Field");
+            return false;
+        }
+        if (certificate == null || certificate == "") {
+            alert("Please Fill Term Field");
+            return false;
+        }
+        if (desc == null || desc == "") {
+            alert("Please Fill Description Field");
+            return false;
+        }
+    }
+</script>

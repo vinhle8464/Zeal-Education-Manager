@@ -1,0 +1,38 @@
+﻿@model ProjectSemester3.Models.Subject
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <a asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+
+    <h2>Update Subject</h2>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="SubjectId" />
+                <input type="hidden" asp-for="Status" />
+                <div class="form-group">
+                    <label asp-for="SubjectName" class="control-label"></label>
+                    <input asp-for="SubjectName" class="form-control" />
+                    <span asp-validation-for="SubjectName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Desc" class="control-label"></label>
+                    <input asp-for="Desc" class="form-control" />
+                    <span asp-validation-for="Desc" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+

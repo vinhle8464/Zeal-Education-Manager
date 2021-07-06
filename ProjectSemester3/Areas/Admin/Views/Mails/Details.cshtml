@@ -1,0 +1,152 @@
+﻿@model ProjectSemester3.Models.Mail
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="~/css/all.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/css/adminlte.min.css">
+<!-- summernote -->
+<link rel="stylesheet" href="~/css/summernote-bs4.min.css">
+<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
+<script>tinymce.init({ selector: 'textarea' });</script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea'
+    });
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+                    <div class="form-group">
+                        <label style="font-weight:bold;">Fullname: </label>
+                        <span>@ViewBag.mail.Fullname</span>
+
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:bold;">Email User: </label>
+                        <span>@ViewBag.mail.EmailUser</span>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:bold;">Phone: </label>
+                        <span>@ViewBag.mail.PhoneNumber</span>
+
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight:bold;">Date Send: </label>
+                        <span>@ViewBag.mail.SendDate</span>
+                    </div>
+                    <div class="content">
+                        <h2>@ViewBag.mail.Title</h2>
+                        <div class="align-content-md-around">
+                            @ViewBag.mail.Content
+                        </div>
+                    </div>
+                    <br /><br />
+                    @if (ViewBag.mail.Check)
+                    {
+                        <h2>Reply</h2>
+                        <div class="content">
+                            <div class="align-content-md-around">
+                                @ViewBag.mail.ReplyContent
+                            </div>
+                            <span style="text-align: right">@ViewBag.mail.ReplyDate</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="content">
+                            <div class="form-group">
+                                <div class="col">
+                                    <div class="card card-primary card-outline">
+                                        <form method="post" asp-controller="mails" asp-action="reply" asp-route-MailId="@ViewBag.mail.MailId" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Compose New Message</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <input class="form-control" placeholder="To:" value="@ViewBag.mail.EmailUser">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input class="form-control" placeholder="Subject:">
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea class="compose-textarea form-control" style="height: 300px" asp-for="ReplyContent" name="replycontent"></textarea>
+
+                                                </div>
+                                                <input type="hidden" asp-for="MailId" />
+                                                <input type="hidden" asp-for="Title" />
+                                                <input type="hidden" asp-for="EmailUser" />
+                                                <input type="hidden" asp-for="Fullname" />
+                                                <input type="hidden" asp-for="PhoneNumber" />
+                                                <input type="hidden" asp-for="Content" />
+                                                <input type="hidden" asp-for="SendDate" />
+                                                <input type="hidden" asp-for="Status" />
+                                                <div class="form-group">
+                                                    <div class="btn btn-default btn-file">
+                                                        <i class="fas fa-paperclip"></i> Attachment
+                                                        <input type="file" name="attachment">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="float-right">
+                                                    <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Send</button>
+                                                </div>
+                                                <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Discard</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/bootstrap-4.6.0-dist/js/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/bootstrap-4.6.0-dist/js/adminlte.min.js"></script>
+<!-- Summernote -->
+<script src="~/bootstrap-4.6.0-dist/js/summernote-bs4.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/bootstrap-4.6.0-dist/js/demo.js"></script>
+@*<script src="~/js/tinymce.min.js"></script>*@
+@*<script src="https://cdn.tiny.cloud/1/rop5rm4xrwuxf50rl7125zggl8mz8pjvl0pao76mvlsal4lc/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>tinymce.init({ selector: 'textarea' });</script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: 'textarea'
+        });
+    </script>*@
+
+<script>
+    $(function () {
+        //Add text editor
+        $('.compose-textarea').summernote()
+    })
+
+    function validateForm() {
+        var replycontent = document.forms["Form"]["replycontent"].value.trim();
+        if (replycontent == null || replycontent == "") {
+            alert("Content send is not vacant");
+            return false;
+        }
+    }
+</script>
+
+

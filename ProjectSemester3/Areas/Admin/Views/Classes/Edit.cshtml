@@ -1,0 +1,38 @@
+﻿@model ProjectSemester3.Models.Class
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@Html.Raw(TempData["msg"])
+
+<div class="container">
+    <a asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+    <h2>Update Class</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-controller="classes" asp-action="edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ClassId" />
+                <input type="hidden" asp-for="Status" />
+                <div class="form-group">
+                    <label asp-for="ClassName" class="control-label"></label>
+                    <input asp-for="ClassName" class="form-control" />
+                    <span asp-validation-for="ClassName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Desc" class="control-label"></label>
+                    <input asp-for="Desc" class="form-control" />
+                    <span asp-validation-for="Desc" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+

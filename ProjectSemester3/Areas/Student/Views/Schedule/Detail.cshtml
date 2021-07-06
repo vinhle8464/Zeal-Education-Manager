@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/DetailsSchedule.css" rel="stylesheet" />
+
+<style>
+    #title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        padding: 0 2% 2% 2%;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    #header {
+        font-family: 'Times New Roman';
+        font-size: 26px;
+        color: darkblue;
+    }
+
+    .icon_arrow {
+        font-size: 30px;
+        padding: 3% 3% 0 3%;
+    }
+</style>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <br />
+                <h1 id="title">Detail Schedule of @ViewBag.schedule.Subject.SubjectName</h1>
+                <div class="timetable">
+                    <div class="week-names">
+                        <div>monday</div>
+                        <div>tuesday</div>
+                        <div>wednesday</div>
+                        <div>thursday</div>
+                        <div>friday</div>
+                        <div class="weekend">saturday</div>
+                        <div class="weekend">sunday</div>
+                    </div>
+
+                    <div class="content">
+                        <div>
+                            @foreach (var item in ViewBag.monday)
+                            {
+                                @if (item.Contains("Monday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr/>
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.tuesday)
+                            {
+                                @if (item.Contains("Tuesday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.wednesday)
+                            {
+                                @if (item.Contains("Wednesday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.thursday)
+                            {
+                                @if (item.Contains("Thursday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.friday)
+                            {
+                                @if (item.Contains("Friday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.saturday)
+                            {
+                                @if (item.Contains("Saturday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+
+                                }
+                            }
+                        </div>
+                        <div>
+                            @foreach (var item in ViewBag.sunday)
+                            {
+                                @if (item.Contains("Sunday"))
+                                {
+
+                                    <p>Date: @item</p>
+                                    <p>Time: @ViewBag.schedule.TimeDay</p>
+                                    <p>Faculty: @ViewBag.schedule.Faculty.Fullname</p>
+                                    <p>Subject: @ViewBag.schedule.Subject.SubjectName</p>
+                                    <hr />
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model ProjectSemester3.Models.Pay
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Pays</h1>
+                    <br />
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Name</th>
+                                <th>Payment</th>
+                                <th>Title</th>
+                                <th>Fee</th>
+                                <th>Total</th>
+                                <th>Pay Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pay in ViewBag.pays)
+                            {
+                            <tr onclick="location.href = '@Url.Action("details", "pays", new { id=pay.PayId })'">
+                                <td>@index</td>
+                                <td>@pay.Account.Fullname</td>
+                                <td>@pay.Payment</td>
+                                <td>@pay.Title</td>
+                                <td>@pay.Fee</td>
+                                <td>@pay.Total</td>
+                                <td>@(pay.PayStatus == true ? "Paid" : "Unpaid")</td>
+
+                                <td>
+
+                                    <a type="button" class="btn btn-success" asp-action="details" asp-route-id="@pay.PayId"><i class="fas fa-edit"></i></a>
+                                </td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

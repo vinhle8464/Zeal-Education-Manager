@@ -1,0 +1,104 @@
+﻿@model ProjectSemester3.Models.Exam
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Exams</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new exam
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Subject</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var exam in ViewBag.exams)
+                            {
+                                <tr  onclick="location.href = '@Url.Action("edit", "exams", new { examid=exam.ExamId,  subjectid=exam.SubjectId})'">
+                                    <td>@index</td>
+                                    <td>@exam.Subject.SubjectName</td>
+                                    <td>@exam.Title</td>
+                                    <td>@exam.Desc</td>
+                                    <td>
+
+                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-examid="@exam.ExamId" asp-route-subjectid="@exam.SubjectId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-examid="@exam.ExamId" asp-route-subjectid="@exam.SubjectId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" exam="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create Exam</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                    <div class="form-group">
+                        <label asp-for="SubjectId" class="control-label"></label>
+                        <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Nameexam">Title</label>
+                        <input type="text" class="form-control" asp-for="Title" name="title" />
+
+                    </div>
+                  
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function validateForm() {
+        var title = document.forms["Form"]["title"].value.trim();
+        var desc = document.forms["Form"]["desc"].value.trim();
+
+        if (title == null || title == "") {
+            alert("Please Fill Title Field");
+            return false;
+        }
+       
+        if (desc == null || desc == "") {
+            alert("Please Fill Description Field");
+            return false;
+        }
+    }
+</script>

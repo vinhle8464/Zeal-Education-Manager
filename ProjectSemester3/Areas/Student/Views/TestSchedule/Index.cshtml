@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewData["Title"] = "TestSchedule";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        padding: 3%;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    #header {
+        font-family: 'Times New Roman';
+        font-size: 26px;
+        color: darkblue;
+    }
+</style>
+
+
+@{var index = 1;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h1 id="title">Test Schedule of @ViewBag.account.Class.ClassName class</h1>
+                <div class="card-body">
+                    <div class="content">
+                        <form action="/" method="post">
+                            <table class="table table-hover">
+                                <thead id="header">
+                                    <tr>
+                                        <th>Serial</th>
+                                        <th>Subject</th>
+                                        <th>Faculty</th>
+                                        <th>Date Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var testschedule in ViewBag.testschedules)
+                                    {
+                                        <tr onclick="location.href = '@Url.Action("details", "testschedule", new { subjectid=testschedule.Exam.Subject.SubjectId})'" style="font-family: cursive; font-size: 22px ">
+                                            <td>@index</td>
+                                            <td>@testschedule.Exam.Subject.SubjectName</td>
+                                            <td>@testschedule.Faculty.Fullname</td>
+                                            <td>@testschedule.Date.ToString("MM/dd/yyyy")</td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

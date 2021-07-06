@@ -1,0 +1,45 @@
+﻿.padding_search_bar form div {
+    margin-right: 25px;
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 7%);
+}
+
+.flex_end_navbar {
+    justify-content: flex-end;
+}
+
+.paging_bar {
+    margin-top: 30px;
+    display: inline-block;
+    width: 100%;
+}
+
+    .paging_bar .page-count {
+        display: inline-block;
+    }
+
+    .paging_bar div:last-child {
+        float: right;
+    }
+
+
+
+input#searchkeyword {
+    padding: 10px;
+    text-align: center;
+}
+
+.table-data__tool-left.padding_search_bar form div select {
+    border: 0;
+}
+
+.table-data__tool-left.padding_search_bar form .rs-select2--light.rs-select2--md {
+    width: 170px;
+}
+
+.ui-front {
+    z-index: 9999999999!important;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,107 @@
+﻿@model ProjectSemester3.Models.Class
+
+@{
+    ViewData["Title"] = "Class";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Classes</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Class
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Name</th>
+                                <th>Number of student</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in ViewBag.classes)
+                            {
+                            <tr onclick="location.href = '@Url.Action("edit", "classes", new { id=c.ClassId })'">
+                                <td>@index</td>
+                                <td>@c.ClassName</td>
+                                <td>@c.NumberOfStudent</td>
+                                <td>@c.Desc</td>
+                                <td>
+
+                                    <a type="button" class="btn btn-success" asp-controller="classes" asp-action="edit" asp-route-id="@c.ClassId"><i class="fas fa-edit"></i></a>
+
+                                    <a type="button" class="btn btn-danger" asp-controller="classes" asp-action="delete" asp-route-id="@c.ClassId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create New Class</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="classes" asp-action="create" method="post" onsubmit="return validateForm()" name="Form">
+
+                    <div class="form-group">
+                        <label for="NameRole">Class Name</label>
+                        <input type="text" class="form-control" name="classname" placeholder="Class" asp-for="ClassName" required/>
+                        <span></span>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NameRole">Number of Student</label>
+                        <input type="number" class="form-control" name="numberstudent" placeholder="Class" asp-for="NumberOfStudent" min="0" max="1000" required />
+                        <span></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="descRole">Description</label>
+                        <input type="text" class="form-control" name="desc" placeholder="Description" asp-for="Desc"  required/>
+                        <span></span>
+
+                    </div>
+
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function validateForm() {
+        var classname = document.forms["Form"]["classname"].value.trim();
+        var desc = document.forms["Form"]["desc"].value.trim();
+        if (classname == null || classname == "") {
+            alert("Please Fill Class Name Field");
+            return false;
+        }
+        if (desc == null || desc == "") {
+            alert("Please Fill Description Field");
+            return false;
+        }
+    }
+</script>

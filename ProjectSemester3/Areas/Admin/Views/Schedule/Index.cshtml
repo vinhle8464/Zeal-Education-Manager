@@ -1,0 +1,47 @@
+﻿@model ProjectSemester3.Models.Schedule
+@{
+    ViewData["Title"] = "Schedule";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@*<script src="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />*@
+
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Schedule of classes</h1>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Class</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in ViewBag.listClass)
+                            {
+                                <tr  onclick="location.href = '@Url.Action("details", "schedule", new { classid=c.ClassId })'">
+                                    <td>@index</td>
+                                    <td>@c.ClassName</td>
+                                    <td>
+                                        <a asp-controller="schedule" asp-action="details" asp-route-classid="@c.ClassId">View</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

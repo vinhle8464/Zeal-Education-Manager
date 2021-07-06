@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <link rel="stylesheet" href="~/css/Bao.css">
+    <link rel="shortcut icon" type="image/png" href="~/client/images/icon.png" />
+    <style>
+        body {
+            background-image: url('../images/board_3.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .form > .content {
+            width: 40%;
+            text-align: -webkit-center;
+        }
+
+        .title {
+            text-align: -webkit-center;
+            font-family: cursive;
+            font-size: 72px;
+        }
+
+        .form .input-box {
+            border-radius: 15px;
+        }
+
+
+    </style>
+</head>
+<body>
+    @Html.Raw(TempData["msg"])
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form fade-in-element" style="text-align: -webkit-center; padding: 5%;">
+                            <div class="content">
+                                <h1 class="title">ZeaL Education</h1>
+                                <form method="post" asp-controller="account" asp-action="signin" style="padding-bottom: 5%;">
+                                    <input type="text" name="username" class="input-box" placeholder="User Name" value="@ViewBag.username" />
+                                    <br />
+                                    <input type="password" name="password" class="input-box" placeholder="Password" value="@ViewBag.password" />
+                                    <br />
+                                    <input type="checkbox" id="rememberme" name="rememberme" value="" /> Remenberme &nbsp; | &nbsp; <a asp-controller="account" asp-action="forgotpassword">Forgot Password ?</a>
+                                    <br />
+                                    <br />
+                                    <input type="submit" name="Signin" class="btn" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br /><br /><br />
+</body>
+
+</html>
+<script>
+
+    document.getElementById('rememberme').onclick = function (e) {
+        if (this.checked) {
+            document.getElementById('rememberme').value = true;
+        }
+        else {
+            document.getElementById('rememberme').value = false;
+        }
+    };
+
+</script>

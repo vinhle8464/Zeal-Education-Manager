@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        padding: 0 2% 2% 2%;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .details {
+        font-size: 25px;
+    }
+
+        .details > strong {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .details > p {
+            font-family: "Times New Roman";
+        }
+
+    .icon_arrow {
+        font-size: 30px;
+        padding: 3% 3% 0 3%;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <br />
+                <h1 id="title">Test Schedule Information of @ViewBag.testSchedule.Exam.Subject.SubjectName</h1>
+                <div class="card-body">
+                    <div class="content">
+                        <div class="details">
+                            <p>
+                                <strong>Title exam: </strong> @ViewBag.testSchedule.Exam.Title
+                            </p>
+                            <p>
+                                <strong>Subject exam: </strong> @ViewBag.testSchedule.Exam.Subject.SubjectName
+                            </p>
+                            <p>
+                                <strong>Class: </strong> @ViewBag.testSchedule.Class.ClassName
+                            </p>
+                            <p>
+                                <strong>Faculty: </strong> @ViewBag.testSchedule.Faculty.Fullname
+                            </p>
+                            <p>
+                                <strong>Date exam: </strong> @ViewBag.testSchedule.Date
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

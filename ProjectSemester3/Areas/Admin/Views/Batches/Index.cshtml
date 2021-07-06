@@ -1,0 +1,277 @@
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.BatchViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@*//==========================================////*@
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Batch</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light rs-select2--md">
+                                            @* start filter search*@
+
+                                            <select class="form-control" name="courseKeyword">
+                                                <option value="">Choose Course</option>
+                                                @foreach (var course in ViewBag.listCourse)
+                                                {
+                                                    if (ViewBag.courseKeyword == course)
+                                                    {
+                                                        <option value="@course" selected>@course</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@course">@course</option>
+                                                    }
+                                                }
+                                            </select>
+                                            @* end filter search*@
+
+                                        </div>
+                                        <div class="rs-select2--light rs-select2--md">
+
+                                            @* start filter search*@
+                                            <select class="form-control" name="classKeyword">
+                                                <option value="">Status</option>
+                                                <option value="true">Graduated</option>
+                                                <option value="false">UnderGraduate</option>
+                                            </select>
+                                            @* end filter search*@
+
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input type="text" name="searchKeyword" id="searchkeyword" placeholder="Search for Batch" value="@ViewBag.searchKeyword" />
+
+                                            @* End Search autocomplete*@
+
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Course</th>
+                                <th>Class</th>
+                                <th>Gradute</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var batch in ViewBag.batches.PagedList)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@batch.Course.CourseName</td>
+                                    <td>@batch.Class.ClassName</td>
+                                    <td>@(batch.Graduate ? "Graduated" : "Undergraduate")</td>
+                                    <td>@batch.StartDate</td>
+                                    <td>@batch.EndDate</td>
+                                    <td>
+
+                                        <a type="button" class="btn btn-success edit" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        <form asp-controller="batches" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Batch.CourseId" value="@batch.CourseId" />
+                                            <input type="hidden" asp-for="Batch.ClassId" value="@batch.ClassId" />
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        <input type="hidden" name="courses" id="courses" value="@batch.CourseId" />
+                                        <input type="hidden" name="classes" id="classes" value="@batch.ClassId" />
+
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "batches", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchKeyword" value="@ViewBag.searchkeyword" />
+                            <input type="hidden" name="courseKeyword" value="@ViewBag.courseKeyword" />
+                            <input type="hidden" name="classKeyword" value="@ViewBag.classKeyword" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.batches.PagedList.PageCount < ViewBag.batches.PagedList.PageNumber ? 0 : ViewBag.batches.PagedList.PageNumber) &nbsp;of @ViewBag.batches.PagedList.PageCount
+                            </div>
+
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.batches.PagedList, page => Url.Action("index", "batches", new { searchKeyword = ViewBag.searchKeyword, courseKeyword = ViewBag.courseKeyword, classKeyword = ViewBag.classKeyword, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Create modal*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" batch="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Create batch</h4>
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+
+            </div>
+            <div class="modal-body">
+                <form asp-action="create" method="post" name="Form">
+                    @* start hidden paging*@
+                    <input type="hidden" name="searchKeyword" value="@ViewBag.searchkeyword" />
+                    <input type="hidden" name="courseKeyword" value="@ViewBag.courseKeyword" />
+                    <input type="hidden" name="classKeyword" value="@ViewBag.classKeyword" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                    @* end hidden paging*@
+
+                    <div class="form-group">
+                        <label asp-for="Batch.ClassId" class="control-label"></label><br />
+                        <input class="form-control" type="text" name="listClass" id="listClass" placeholder="Choose Class" asp-for="Batch.Class.ClassName" required="required" />
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Batch.CourseId" class="control-label"></label>
+                        <select asp-for="Batch.CourseId" class="form-control" asp-items="ViewBag.CourseId" required="required"></select>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="Batch.Graduate" value="true">
+                            <label class="form-check-label" for="gradute" asp-for="Batch.Graduate">Gradute &nbsp;</label>
+
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="Batch.Graduate" value="false" checked>
+                            <label class="form-check-label" for="undergraduate" asp-for="Batch.Graduate">Undergraduate &nbsp;</label>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="startdate">Start Date</label>
+                        <input type="date" class="form-control" asp-for="Batch.StartDate" required="required" id="startdt" onchange="CheckDate(this.id); CompareDateStart();" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="enddate">End Date</label>
+                        <input type="date" class="form-control" asp-for="Batch.EndDate" required="required" id="enddt" onchange="CheckDate(this.id); CompareDateEnd();" />
+
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Create modal*@
+
+
+
+@*Edit modal*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" batch="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+
+            </div>
+            <div class="modal-body">
+                <form asp-action="edit" method="post" name="Form">
+                    @* start hidden paging*@
+                    <input type="hidden" name="searchKeyword" value="@ViewBag.searchkeyword" />
+                    <input type="hidden" name="courseKeyword" value="@ViewBag.courseKeyword" />
+                    <input type="hidden" name="classKeyword" value="@ViewBag.classKeyword" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                    @* end hidden paging*@
+
+                    <input type="hidden" id="courseidhd" asp-for="Batch.CourseId" />
+                    <input type="hidden" id="classidhd" asp-for="Batch.ClassId" />
+
+                    <div class="form-group">
+                        <label asp-for="Batch.CourseId" class="control-label"></label>
+                        <select asp-for="Batch.CourseId" class="form-control" asp-items="ViewBag.CourseId" required="required" id="courseid" disabled="disabled"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Batch.ClassId" class="control-label"></label>
+                        <select asp-for="Batch.ClassId" class="form-control" asp-items="ViewBag.ClassId" required="required" id="classid" disabled="disabled"></select>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="graduate" id="graduated" asp-for="Batch.Graduate" value="true">
+                            <label class="form-check-label" for="graduate" asp-for="Batch.Graduate">Graduate &nbsp;</label>
+
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="graduate" id="undergraduate" asp-for="Batch.Graduate" value="false">
+                            <label class="form-check-label" for="undergraduate" asp-for="Batch.Graduate">Undergraduate &nbsp;</label>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Start Date</label>
+                        <input type="datetime" class="form-control" asp-for="Batch.StartDate" required="required" id="startdate" onchange="CompareDateStart();" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">End Date</label>
+                        <input type="datetime" class="form-control" asp-for="Batch.EndDate" required="required" id="enddate" onchange="CompareDateEnd();" />
+                    </div>
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Edit modal*@

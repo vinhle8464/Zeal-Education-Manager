@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewData["Title"] = "Diligence";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#btnGetdata').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/reports/getdata/',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (listAttendance) {
+                    var result = '';
+                    for (var i = 0; i < listAttendance.length; i++) {
+                        result += '<tr>';
+                        result += '<td>' + listAttendance[i].date + '</td>';
+                        result += '<td>' + listAttendance[i].subjectName + '</td>';
+                        result += '<td>' + listAttendance[i].facultyName + '</td>';
+                        if (listAttendance[i].checked) {
+                            result += '<td>' + 'Completed' + '</td>';
+                        } else {
+                            result += '<td>' + 'Absent' + '</td>';
+                        }
+                        result += '<tr>';
+                    }
+                    $('#getdata tbody').html(result);
+                    console.log(listAttendance);
+                }
+            });
+        });
+
+        $('#btnSearch').click(function () {
+            var year = $('#selectYear option:selected').val();
+            var month = $('#selectMonth option:selected').val();
+            $.ajax({
+                type: 'GET',
+                url: '/reports/search',
+                data: {
+                    year: year,
+                    month: month
+                },
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (attendane) {
+                    var result = '';
+                    for (var i = 0; i < attendane.length; i++) {
+
+                        result += '<tr>';
+                        result += '<td>' + attendane[i].date + '</td>';
+                        result += '<td>' + attendane[i].subjectName + '</td>';
+                        result += '<td>' + attendane[i].facultyName + '</td>';
+                        if (attendane[i].checked) {
+                            result += '<td>' + 'Completed' + '</td>';
+                        } else {
+                            result += '<td>' + 'Absent' + '</td>';
+                        }
+                        result += '<tr>';
+                    }
+                    $('#getdata tbody').html(result);
+                    console.log(attendane);
+
+                }
+            });
+        });
+
+    });
+
+</script>
+
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+<style>
+    .building {
+        font-family: monospace;
+        font-size: 35px;
+        width: 40%;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <a asp-action="Index"><i class="fa fa-arrow-circle-left icon_arrow" style="font-size: 30px"></i></a>
+                <h2 class="title">Details Diligence</h2>
+                <div class="card-body">
+                    <div class="content" style="text-align: -webkit-center;">
+                        @foreach (var subject in ViewBag.subjects)
+                        {
+                            <div class="form-control building">
+                                <a asp-controller="reports" asp-action="detailsdiligence" asp-route-subjectid="@subject.Subject.SubjectId"> <p>@subject.Subject.SubjectName</p></a>
+                            </div>
+                        }
+
+                    </div>
+                    <br /><br /><br /><br />
+                    <div class="content" style="padding: 0% 5% 0% 5%;">
+                        <div class="row">
+                            <div class="col-3">
+                                <select class="form-control" id="selectYear">
+                                    <option value="0" hidden>Year</option>
+                                    @foreach (var year in ViewBag.year)
+                                    {
+                                        <option value="@year">@year</option>
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-control" id="selectMonth">
+                                    <option value="0" hidden>Month</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <input type="button" id="btnSearch" class="btn btn-default" value="Serach" />
+                            </div>
+                            <div class="col-4">
+
+                            </div>
+                        </div>
+                        <br /><br /><br />
+                        <div class="form-control row">
+                            <form>
+                                <input type="button" id="btnGetdata" class="btn btn-default" value="Get Data" />
+                                <br /><br />
+                                <div class="content">
+                                    <table class="table table-hover" id="getdata">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Subject Name</th>
+                                                <th>Faculty</th>
+                                                <th>Checked</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

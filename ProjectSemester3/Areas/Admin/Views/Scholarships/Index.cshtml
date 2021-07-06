@@ -1,0 +1,109 @@
+﻿@model ProjectSemester3.Models.Scholarship
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Scholarship</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Scholarship
+                    </button>
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Name</th>
+                                <th>Discount</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var scholarship in ViewBag.scholarships)
+                            {
+
+                                <tr onclick="location.href = '@Url.Action("edit", "scholarships", new { id=scholarship.ScholarshipId })'">
+                                    <td>@index</td>
+                                    <td>@scholarship.ScholarshipName</td>
+                                    <td>@scholarship.Discount</td>
+                                    <td>@scholarship.Desc</td>
+                                    <td>
+
+                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@scholarship.ScholarshipId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@scholarship.ScholarshipId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                    </td>
+                                </tr>
+
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" scholarship="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create Scholarship</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-controller="scholarships" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+
+                    <div class="form-group">
+                        <label for="ScholarshipName">Name</label>
+                        <input type="text" class="form-control" asp-for="ScholarshipName" name="scholarshipName" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discount">Discount</label>
+                        <input type="number" class="form-control" asp-for="Discount" name="discount" min="0" max="100" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Desc">Description</label>
+                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*<script>
+        function validateForm() {
+            var namee = document.forms["Form"]["scholarshipName"].value;
+            var desc = document.forms["Form"]["desc"].value;
+            var discount = document.forms["Form"]["discount"].value;
+
+            if (namee == null || namee == "") {
+                alert("Please Fill Scholarship Name Field");
+                return false;
+            }
+            if (discount == null || discount == "") {
+                alert("Please Fill Discount Field");
+                return false;
+            }
+            if (desc == null || desc == "") {
+                alert("Please Fill Description Field");
+                return false;
+            }
+        }
+    </script>*@

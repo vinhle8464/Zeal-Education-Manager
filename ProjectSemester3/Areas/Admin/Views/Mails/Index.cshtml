@@ -1,0 +1,60 @@
+﻿@model ProjectSemester3.Models.Mail
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Mails</h1>
+                    <br />
+                    <br /><br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Title</th>
+                                <th>User's email</th>
+                                <th>Fullname</th>
+                                <th>Action</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mail in ViewBag.mails)
+                            {
+                                <tr  onclick="location.href = '@Url.Action("details", "mails", new { id=mail.MailId })'">
+                                    <td>@index</td>
+                                    <td>@mail.Title</td>
+                                    <td>@mail.EmailUser</td>
+                                    <td>@mail.Fullname</td>
+                                    <td>
+
+                                        <a type="button" class="btn btn-success" asp-controller="mails" asp-action="details" asp-route-id="@mail.MailId"><i class="fas fa-mail-reply">Read</i></a>
+
+                                        <a type="button" class="btn btn-danger" asp-controller="mails" asp-action="delete" asp-route-id="@mail.MailId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                    @if (mail.Check)
+                                    {
+                                        <td style="color: green">Responded</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color: red">Yet Respond</td>
+                                    }
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

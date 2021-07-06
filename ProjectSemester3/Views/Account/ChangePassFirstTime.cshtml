@@ -1,0 +1,87 @@
+﻿@model ProjectSemester3.ViewModels.ChangePasswordByUsername
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300i,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+        background-image: url('../images/change-password.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .background {
+        padding: 3%;
+        border-radius: 25px;
+        background-color: #97c5e982;
+    }
+</style>
+@Html.Raw(TempData["msg"])
+
+<body>
+    @*<form asp-controller="account" asp-action="changepasswordbyemail" method="post">
+            New Password: <input type="password" asp-for="Password" /> <br /><br />
+            Confirm Password: <input type="password" asp-for="ConfirmPassword" /> <br /><br />
+            <input type="hidden" asp-for="Email" /> <br /><br />
+            <input type="submit" value="Change Password" />
+            <div asp-validation-summary="All"></div>
+            <div class="text-danger">@ViewData["failed"]</div>
+            <div class="text-info">@ViewData["success"]</div>
+        </form>*@
+    <div class="container" style="text-align: -webkit-center; padding: 5%">
+        <div class="col-md-8 col-md-offset-2 background">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="alert alert-success">
+                        <div asp-validation-summary="All"></div>
+                        <div class="text-danger">@ViewData["failed"]</div>
+                        <div class="text-info">@ViewData["success"]</div>
+                    </div>
+                    <h1>Change Password</h1>
+
+                    <div class="alert alert-info">
+                        Please change your password
+                    </div>
+                    <form class="form-horizontal" asp-controller="account" asp-action="changepasswordbyusername" method="post">
+                        <div class="form-group">
+                            <label for="password" class="col-md-4 control-label">New Password</label>
+                            <div class="col-md-6">
+                                <input asp-for="Password" id="password" type="password" class="form-control" required="required">
+
+                                <span class="help-block">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password-confirm" class="col-md-4 control-label">Confirm New Password</label>
+                            <div class="col-md-6">
+                                <input asp-for="ConfirmPassword" id="password-confirm" type="password" class="form-control"  required="required">
+                                <span class="help-block">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary">
+                                    CHANGE
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <a type="button" asp-controller="account" asp-action="signin">Signin</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

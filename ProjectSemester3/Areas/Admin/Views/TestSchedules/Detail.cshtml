@@ -1,0 +1,115 @@
+﻿@model ProjectSemester3.Models.TestSchedule
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-controller="testschedules" asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+                    <h1>Detail Test Schedule Of Class @ViewBag.classitem.ClassName</h1>
+                    <br />
+                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
+                        <i class="zmdi zmdi-plus"></i>Add new Test Schedule
+                    </button>
+                    <br />
+                    <br />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Exam</th>
+                                <th>Date</th>
+                                <th>Faculty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in ViewBag.testschedules)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@s.Exam.Title</td>
+                                    <td>@s.Date.ToString("MM/dd/yyyy")</td>
+                                    <td>@s.Faculty.Fullname</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-area="admin" asp-controller="testschedules" asp-action="create" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="ClassId" />
+
+                    <div class="form-group">
+                        <label asp-for="ExamId" class="control-label">Exam</label>
+                        <select asp-for="ExamId" class="form-control" asp-items="ViewBag.ExamId"></select>
+                        <span asp-validation-for="ExamId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FacultyId" class="control-label">Faculty</label>
+                        <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
+                        <span asp-validation-for="FacultyId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Date" class="control-label" for="appt">Time Day</label>
+                        <input class="form-control" asp-for="Date" type="datetime-local" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxmark">Max Mark</label>
+                        <input type="number" class="form-control" name="maxmark" min="0" max="100" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Rate</label>
+                        <input type="number" class="form-control" name="rate" min="0" max="100" />
+
+                    </div>
+                    <br />
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function calculate() {
+        var arr = $.map($('#studyday input[type=checkbox]:checked'), function (e, i) {
+            return e.value;
+        });
+        $('#res').text(arr.join(','));
+        $('#res2').text(arr.join(','));
+    }
+
+    calculate();
+    $('#studyday').delegate('input:checkbox', 'click', calculate);
+
+
+</script>

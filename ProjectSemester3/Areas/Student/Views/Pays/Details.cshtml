@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .design {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 20px;
+        padding: 0 0 0 20px;
+        box-shadow: inset 1px 0 0 #5f5f5f;
+        height: 100%;
+    }
+
+    .content.design {
+        position: relative;
+    }
+
+    .content.design input {
+        position: absolute;
+        bottom: 0;
+        left: 40%;
+    }
+</style>
+ 
+<link href="~/css/pay.css" rel="stylesheet" />
+
+<form action="@ViewBag.postUrl" method="post">
+    @*thong tin thanh toan*@
+    <input type="hidden" name="upload" value="1" />
+    <input type="hidden" name="return" value="@ViewBag.returnUrl" />
+    <input type="hidden" name="cmd" value="_cart" />
+    <input type="hidden" name="business" value="@ViewBag.business" />
+
+    <table border="1">
+            <tr>
+                <th>name</th>
+                <th>price</th>
+                <th>quantity</th>
+
+            </tr>
+
+
+        <tr>
+            <td>@ViewBag.pays.Title</td>
+            <td>@ViewBag.pays.Total</td>
+            <td>
+                1
+                <input type="hidden" name="item_number_1" value="@ViewBag.pays.PayId" />
+                <input type="hidden" name="item_name_1" value="@ViewBag.pays.Title" />
+                <input type="hidden" name="amount_1" value="1" />
+                <input type="hidden" name="quantity_1" value="@ViewBag.pays.Total" />
+            </td>
+        </tr>
+
+        </table>
+
+    <input type="submit" value="Checkout" />
+</form>
+<hr />
+@*<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body" style="height: 450px">
+                    <h2  style="color:red;">*Please select the number of payments</h2>
+                    <div class="row" style="height: 92%">
+                        <div class="col-3">
+                            <div class="content design">
+                                <p>Title: @ViewBag.pays.Title</p>
+                                <p>Date Request: @ViewBag.pays.DateRequest.ToString("MM/dd/yyyy")</p>
+                                <p>Payment: @ViewBag.pays.Payment</p>
+                                <p>Payment 1 time</p>
+                                <p>Fee: @ViewBag.pays.Fee</p>
+                                <p>Total: @ViewBag.pays.Total</p>
+                                <p>Pay 1st: @(ViewBag.pays.Total)</p>
+                                <input type="submit" value="Checkout" class="btn btn-success"/>
+
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="content design">
+                                <p>Title: @ViewBag.pays.Title</p>
+                                <p>Date Request: @ViewBag.pays.DateRequest.ToString("MM/dd/yyyy")</p>
+                                <p>Payment: @ViewBag.pays.Payment</p>
+                                <p>Payment 2 times</p>
+                                <p>Fee: @(ViewBag.pays.Fee*1/100 + ViewBag.pays.Fee)</p>
+                                <p>Total: @(ViewBag.pays.Fee * 1 / 100 + ViewBag.pays.Total)</p>
+
+                                <p>Pay 1st: @((ViewBag.pays.Fee * 1 / 100 + ViewBag.pays.Total) /2)</p>
+                                <p>Pay 2nd: @((ViewBag.pays.Fee * 1 / 100 + ViewBag.pays.Total) /2)</p>
+                                <input type="submit" value="Checkout" class="btn btn-success"/>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@

@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Enquiry";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+
+@{ var index = 1;}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="title">Enquiry</h1>
+                    <br />
+                    @foreach (var item in ViewBag.enquiries)
+                    {
+
+                        <nav class="navbar navbar-light navbar-1 white">
+                            <h2 class="navbar-brand" style="font-family: Monospace; font-size:26px">@item.Title</h2>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent_@index"
+                                    aria-controls="navbarSupportedContent_@index" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent_@index">
+                                <ul class="navbar-nav mr-auto active">
+                                    <p class="nav-item" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%">@item.Answer</p>
+                                </ul>
+                            </div>
+                        </nav>
+                        index++;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

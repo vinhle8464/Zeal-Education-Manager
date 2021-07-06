@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Subjectbystudent";
+    Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
+}
+<!-- MAIN CONTENT-->
+
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="overview-wrap">
+                        <h2 class="title-1">Exam</h2>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-25">
+                @foreach (var exams in ViewBag.exams)
+                {
+                    <div class="col-sm-6">
+                        <div class="overview-item overview-item--c3">
+                            <div class="overview__inner">
+                                <div class="overview-box clearfix">
+                                    <div class="icon">
+                                        <a asp-area="faculty" asp-controller="marking" asp-action="student"  asp-route-classid="@ViewBag.classes.ClassId" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-examid="@exams.ExamId"><i class="zmdi zmdi-check-circle"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        
+                                        <h3>@exams.Title</h3>
+                                        <h1> <span>@exams.SubjectId</span></h1>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+

@@ -1,0 +1,60 @@
+﻿@model ProjectSemester3.Models.Mail
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/Reports.css" rel="stylesheet" />
+
+
+<style>
+
+    .design {
+        font-family: "Times New Roman";
+        background-color: lavender;
+        padding: 1.5%;
+        width: 100%;
+        font-size: 30px;
+    }
+
+        .design > h2 {
+            color: red;
+        }
+
+    .content > .form-control {
+        margin-bottom: 20px;
+        width: 50%;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h1 class="title" style="padding: 4%">REPORTS</h1>
+                <div class="card-body">
+                    <div class="content" style="text-align: -webkit-center;">
+                        <div class="form-control">
+                            <a asp-controller="reports" asp-action="course" class="design"><h2>1. COURSE</h2></a>
+                        </div>
+                        <div class="form-control">
+                            <a asp-controller="reports" asp-action="batch" class="design"><h2>2. BATCH</h2></a>
+                        </div>
+                        <div class="form-control">
+                            <a asp-controller="reports" asp-action="diligence" class="design"><h2>3. DILIGENCE</h2></a>
+                        </div>
+                        <div class="form-control">
+                            <a asp-controller="reports" asp-action="" class="design"><h2>4. PAID</h2></a>
+
+                        </div>
+                        <div class="form-control">
+                            <a asp-controller="reports" asp-action="discount" class="design"><h2>5. DISCOUNT</h2></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
