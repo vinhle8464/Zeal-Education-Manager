@@ -84,5 +84,10 @@ namespace ProjectSemester3.Services
         {
             return await context.Batches.SingleOrDefaultAsync(b => b.ClassId == classid);
         }
+
+        public async Task<Pay> GetPayByStudent(string studentid)
+        {
+            return await context.Pays.SingleOrDefaultAsync(p => p.AccountId == studentid);
+        }
     }
 }
