@@ -14,38 +14,37 @@
                 </div>
             </div>
         </div>
-        <div class="row m-t-25">
-            <form action="/" method="post">
-                <table class="table table-borderless table-striped table-earning">
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Student Class</th>
-                            
-                            <th>Action</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var students in ViewBag.students)
-                        {
+        <div class="row">
+            <div class="col-md-12">
+                    <table class="table table-borderless table-striped table-earning">
+                        <thead>
                             <tr>
-                                <td>@students.Fullname</td>
-                                <td>@students.Class.ClassName</td>
-                                
-                                <td>
-                                    <a asp-area="faculty" asp-controller="student" asp-action="studentanalysis" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@students.ClassId" asp-route-studentid="@students.AccountId"><i class="fa fa-eye"></i></a>
-                                    
+                                <th>Student Name</th>
+                                <th>Student Class</th>
 
-                                </td>
+                                <th>Action</th>
+
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var students in ViewBag.students)
+                            {
+                                <tr>
+                                    <td>@students.Fullname</td>
+                                    <td>@students.Class.ClassName</td>
 
-                        }
+                                    <td>
+                                        <a asp-area="faculty" asp-controller="student" asp-action="studentanalysis" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@students.ClassId" asp-route-studentid="@students.AccountId"><i class="fa fa-eye"></i></a>
+
+                                    </td>
+                                </tr>
+
+                            }
 
 
-                    </tbody>
-                </table>
-            </form>
+                        </tbody>
+                    </table>
+            </div>
         </div>
 
     </div>

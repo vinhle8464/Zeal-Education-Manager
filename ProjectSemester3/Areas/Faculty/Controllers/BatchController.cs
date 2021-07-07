@@ -74,6 +74,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             ViewBag.faculty = ViewBag.account = batchService.getfaculty(facultyid);
             ViewBag.courses = batchService.courses();
             ViewBag.scholarshipstudent = batchService.scholarship(course);
+            ViewBag.students = batchService.students(course);
             return View("endingbatch");
         }
         [Route("startingbatch")]
@@ -96,7 +97,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             ViewBag.schedules = batchService.schedules(course);
             ViewBag.faculty = ViewBag.account = batchService.getfaculty(facultyid);
             ViewBag.courses = batchService.courses();
-
+            ViewBag.students = batchService.students(course);
             return View("startingbatch");
         }
     }

@@ -30,9 +30,18 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
         [Route("evaluate")]
         public IActionResult Evaluate(string facultyid,string subjectid)
         {
-            ViewBag.faculty= ViewBag.account = accountService.FindID(facultyid);
-            ViewBag.feedback = feedbackService.feedbacks(subjectid,facultyid);
-            return View("evaluate");
+            try
+            {
+                ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
+                ViewBag.feedback = feedbackService.feedbacks(subjectid, facultyid);
+                return View("evaluate");
+            }
+            catch 
+            {
+                TempData["msg"] = "<script>alert('feedback not exists!');</script>";
+                return RedirectToRoute(new { area = "faculty", controller = "feedback", action = "index", facultyid = facultyid });
+            }
+           
         }
     }
 }

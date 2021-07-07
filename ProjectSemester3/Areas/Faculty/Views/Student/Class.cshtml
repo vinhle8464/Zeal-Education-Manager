@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Subjectbystudent";
+    ViewData["Title"] = "Marking";
     Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
 }
 <!-- MAIN CONTENT-->
@@ -10,25 +10,24 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="overview-wrap">
-                        <h2 class="title-1">Subject</h2>
+                        <h2 class="title-1">Class</h2>
                         
                     </div>
                 </div>
             </div>
             <div class="row m-t-25">
-                @foreach (var subjects in ViewBag.subjects)
+                @foreach (var cls in ViewBag.classes)
                 {
-                    <div class="col-sm-6">
-                        <div class="overview-item overview-item--c1">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="overview-item overview-item--c2">
                             <div class="overview__inner">
                                 <div class="overview-box clearfix">
                                     <div class="icon">
-                                        <a asp-area="faculty" asp-controller="marking" asp-action="exam" asp-route-classid="@ViewBag.classid" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
+                                        <a asp-area="faculty" asp-controller="student" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@cls.ClassId"> <i class="zmdi zmdi-home"></i></a>
                                     </div>
                                     <div class="text">
-                                        
-                                        <h3>@subjects.SubjectName</h3>
-                                        <span>@subjects.Status</span>
+                                        <h2>@cls.ClassName</h2>
+                                        <span>@cls.Desc</span>
                                     </div>
                                 </div>
                                 
@@ -36,12 +35,10 @@
                         </div>
                     </div>
                 }
-
-
             </div>
+            
+
+
         </div>
     </div>
-
-
-
 
