@@ -233,6 +233,32 @@ $(document).ready(function () {
 });
 //---------------- Professional ---------------------------
 
+//---------------- Course ---------------------------
+//search autocomplete
+$("#searchCourse").autocomplete({
+    source: "/admin/courses/searchautocomplete",
+});
+
+$('table .editcourse').on('click', function () {
+
+    var courseid = $(this).parent().find("#courseid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { courseid: courseid },
+        url: ' /admin/courses/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #namecourse').val(result.courseName);
+            $('#ModalEdit #feecourse').val(result.fee);
+            $('#ModalEdit #termcourse').val(result.term);
+            $('#ModalEdit #certificatecourse').val(result.certificate);
+            $('#ModalEdit #desccourse').val(result.desc);
+        }
+    });
+});
+//---------------- Course ---------------------------
 
 //---------------- FeedBack ---------------------------
 $("#feedbackFaculty").autocomplete({

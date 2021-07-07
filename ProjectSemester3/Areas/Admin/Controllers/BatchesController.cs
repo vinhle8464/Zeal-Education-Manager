@@ -106,7 +106,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var batches = await batchesService.Search(searchKeyword, courseKeyword, classKeyword);
+                var batches = batchesService.Search(searchKeyword, courseKeyword, classKeyword);
                 ViewBag.searchKeyword = searchKeyword;
                 ViewBag.courseKeyword = courseKeyword;
                 ViewBag.classKeyword = classKeyword;

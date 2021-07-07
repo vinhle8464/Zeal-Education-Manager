@@ -18,7 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public Task<dynamic> Update(Batch batch);
         public Task Delete(string courseId, string classId);
-        public Task<List<Batch>> Search(string searchKeyword, string courseKeyword, string classKeyword);
+        public List<Batch> Search(string searchKeyword, string courseKeyword, string classKeyword);
         public Task<List<string>> GetKeyWord();
         public Task<List<string>> GetKeyWordByKeyword(string keyword);
         //public Task<List<Course>> ListCourse(string keyword);
