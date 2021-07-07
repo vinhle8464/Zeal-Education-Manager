@@ -1,8 +1,8 @@
-﻿@model  List<ProjectSemester3.Models.Mark>
+﻿@model List<ProjectSemester3.Models.Mark>
 @{
     ViewData["Title"] = "Marking";
     Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
-   
+
 }
 <!-- MAIN CONTENT-->
 
@@ -51,7 +51,7 @@
                                         <input type="hidden" asp-for="@Model[i].StatusMark" value="@Model[i].StatusMark" />
                                         <input type="hidden" asp-for="@Model[i].Student" value="@Model[i].Student" />
                                         <input type="hidden" asp-for="@Model[i].StudentId" value="@Model[i].StudentId" />
-                                        <input asp-for="@Model[i].Mark1" type="text" placeholder="@Model[i].Mark1" />
+                                        <input asp-for="@Model[i].Mark1" type="text" placeholder="@Model[i].Mark1" id="foo"/>
 
                                     </td>
                                     <td>@Model[i].MaxMark</td>
@@ -72,3 +72,18 @@
 
     </div>
 </div>
+<script>
+
+    var foo = document.getElementById('foo');
+
+    foo.addEventListener('input', function (prev) {
+        return function (evt) {
+            if (!/^\d{0,6}(?:\.\d{0,2})?$/.test(this.value)) {
+                this.value = prev;
+            }
+            else {
+                prev = this.value;
+            }
+        };
+    }(foo.value), false);
+</script>
