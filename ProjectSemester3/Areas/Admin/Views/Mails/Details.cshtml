@@ -11,14 +11,14 @@
 <!-- Theme style -->
 <!--<link rel="stylesheet" href="~/css/adminlte.min.css">-->
 <!-- summernote -->
-<link rel="stylesheet" href="~/css/summernote-bs4.min.css">
-<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
-<script>tinymce.init({ selector: 'textarea' });</script>
+<!--<link rel="stylesheet" href="~/css/summernote-bs4.min.css">
+<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>-->
+@*<script>tinymce.init({ selector: 'textarea' });</script>
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea'
     });
-</script>
+</script>*@
 
 <div class="container">
     <div class="row">
@@ -79,7 +79,8 @@
                                                     <input class="form-control" placeholder="Subject: Reply mail" disabled>
                                                 </div>
                                                 <div class="form-group">
-                                                    <textarea class="compose-textarea form-control" style="height: 300px" asp-for="ReplyContent" name="replycontent" id="replycontent"></textarea>
+                                                    <textarea class="compose-textarea form-control" style="height: 300px" asp-for="ReplyContent" name="replycontent" placeholder="Something about reply"></textarea>
+
                                                 </div>
                                                 <input type="hidden" asp-for="MailId" />
                                                 <input type="hidden" asp-for="Title" />
@@ -145,8 +146,7 @@
             alert("Content send is not vacant");
             return false;
         }
-    }
-
+    } (jQuery);
 </script>
 
 

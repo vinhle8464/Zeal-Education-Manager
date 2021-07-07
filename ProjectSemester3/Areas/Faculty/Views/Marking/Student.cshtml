@@ -1,8 +1,8 @@
-﻿@model  List<ProjectSemester3.Models.Mark>
+﻿@model List<ProjectSemester3.Models.Mark>
 @{
     ViewData["Title"] = "Marking";
     Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
-   
+
 }
 <!-- MAIN CONTENT-->
 
@@ -16,57 +16,74 @@
                 </div>
             </div>
         </div>
-        <div class="row m-t-25">
-            <form asp-action="edit" asp-area="faculty" asp-controller="marking"  asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@ViewBag.classes.ClassId" asp-route-examid="@ViewBag.exams.ExamId"  method="post">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="edit" asp-area="faculty" asp-controller="marking" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@ViewBag.classes.ClassId" asp-route-examid="@ViewBag.exams.ExamId" method="post">
 
-                <table class="table table-borderless table-striped table-earning">
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Subject Name</th>
-                            <th>Exam Name</th>
-                            <th>Score</th>
-                            <th>Maximum_Score</th>
-                            <th>Status</th>
-                            <th>Action</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i=0;i<Model.Count;i++)
-                        {
+                    <table class="table table-borderless table-striped table-earning">
+                        <thead>
                             <tr>
+                                <th>Student Name</th>
+                                <th>Subject Name</th>
+                                <th>Exam Name</th>
+                                <th>Score</th>
+                                <th>Maximum_Score</th>
+                                <th>Status </th>
 
-                                <td>@Model[i].Student.Fullname</td>
-                                <td>@Model[i].Exam.Subject.SubjectName</td>
-                                <td>@Model[i].Exam.Title</td>
-                                <td>
-                                    <input type="hidden" asp-for="@Model[i].MarkId" value="@Model[i].MarkId" />
-                                    <input type="hidden" asp-for="@Model[i].ExamId" value="@Model[i].ExamId" />
-                                    <input type="hidden" asp-for="@Model[i].MaxMark" value="@Model[i].MaxMark" />
-                                    <input type="hidden" asp-for="@Model[i].Rate" value="@Model[i].Rate" />
-                                    <input type="hidden" asp-for="@Model[i].Status" value="@Model[i].Status" />
-                                    <input type="hidden" asp-for="@Model[i].Exam" value="@Model[i].Exam" />
-                                    <input type="hidden" asp-for="@Model[i].Student" value="@Model[i].Student" />
-                                    <input type="hidden" asp-for="@Model[i].StudentId" value="@Model[i].StudentId" />
-                                    <input asp-for="@Model[i].Mark1" type="text" placeholder="@Model[i].Mark1" />
 
-                                </td>
-                                <td>@Model[i].MaxMark</td>
-                                <td>@Model[i].Status</td>
-                                <td>
-                                </td>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
 
-                        }
+                                    <td>@Model[i].Student.Fullname</td>
+                                    <td>@Model[i].Exam.Subject.SubjectName</td>
+                                    <td>@Model[i].Exam.Title</td>
+                                    <td>
+                                        <input type="hidden" asp-for="@Model[i].MarkId" value="@Model[i].MarkId" />
+                                        <input type="hidden" asp-for="@Model[i].ExamId" value="@Model[i].ExamId" />
+                                        <input type="hidden" asp-for="@Model[i].MaxMark" value="@Model[i].MaxMark" />
+                                        <input type="hidden" asp-for="@Model[i].Rate" value="@Model[i].Rate" />
+                                        <input type="hidden" asp-for="@Model[i].Status" value="@Model[i].Status" />
+                                        <input type="hidden" asp-for="@Model[i].Exam" value="@Model[i].Exam" />
+                                        <input type="hidden" asp-for="@Model[i].StatusMark" value="@Model[i].StatusMark" />
+                                        <input type="hidden" asp-for="@Model[i].Student" value="@Model[i].Student" />
+                                        <input type="hidden" asp-for="@Model[i].StudentId" value="@Model[i].StudentId" />
+                                        <input asp-for="@Model[i].Mark1" type="text" placeholder="@Model[i].Mark1" id="foo"/>
+
+                                    </td>
+                                    <td>@Model[i].MaxMark</td>
+                                    <td>@Model[i].StatusMark</td>
+
+                                </tr>
+
+                            }
 
 
-                    </tbody>
-                </table>
-               
-               <input type="submit" value="Update">
-            </form>
+                        </tbody>
+                    </table>
+
+                    <input class="btn-info btn-block" type="submit" value="Update">
+                </form>
+            </div>
         </div>
 
     </div>
 </div>
+<script>
+
+    var foo = document.getElementById('foo');
+
+    foo.addEventListener('input', function (prev) {
+        return function (evt) {
+            if (!/^\d{0,6}(?:\.\d{0,2})?$/.test(this.value)) {
+                this.value = prev;
+            }
+            else {
+                prev = this.value;
+            }
+        };
+    }(foo.value), false);
+</script>

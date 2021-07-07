@@ -22,9 +22,9 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
         }
         [Route("subject")]
         [Route("")]
-        public IActionResult Subject(string facultyid,string classid)
+        public IActionResult Subject(string facultyid, string classid)
         {
-            ViewBag.faculty= ViewBag.account = accountService.FindID(facultyid);
+            ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
             ViewBag.subjects = attendanceService.subjects(classid);
             return View();
         }
@@ -36,21 +36,35 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             return View("class");
         }
         [Route("attendances")]
-        public IActionResult attendances(string facultyid, string subjectid)
+        public IActionResult attendances(string facultyid, string subjectid, string search)
         {
-            ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
-            ViewBag.students = attendanceService.attendances(subjectid);
-            return View("attendances");
+            if (search == null)
+            {
+                ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
+                ViewBag.students = attendanceService.attendances(subjectid);
+                return View("attendances");
+            }
+            else
+            {
+                ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
+                ViewBag.students = attendanceService.search(search);
+                ViewBag.search = search;
+                return View("attendances");
+            }
+
         }
-        [Route("edit")] 
-        public IActionResult Edit(int attendanceid,string check, string facultyid, string subjectid)
+        [Route("edit")]
+        public IActionResult Edit(int attendanceid, string check, string facultyid, string subjectid,string search)
         {
-            attendanceService.update(attendanceid,check);
-            ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
-            ViewBag.students = attendanceService.attendances(subjectid);
-            return View("attendances");
+            attendanceService.update(attendanceid, check);
+            return RedirectToRoute(new { controller = "attendance", action = "attendances", facultyid = facultyid, search = search,subjectid=subjectid });
         }
-        
+        [Route("search")]
+        public IActionResult Search(string facultyid,string search)
+        {
+            
+            return RedirectToRoute(new { controller = "attendance", action = "attendances",facultyid=facultyid ,search = search });
+        }
 
     }
 }

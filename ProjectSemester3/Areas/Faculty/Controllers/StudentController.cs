@@ -19,14 +19,21 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
         {
             studentService = _studentService;
         }
-        [Route("index")]
+        [Route("class")]
         [Route("")]
-        public IActionResult Index(string facultyid, string searchfullname)
+        public IActionResult Class(string facultyid)
+        {
+            ViewBag.faculty = ViewBag.account = studentService.getfacultyid(facultyid);
+            ViewBag.classes = studentService.classes(facultyid);
+            return View("class");
+        }
+        [Route("index")]
+        
+        public IActionResult Index(string facultyid, string classid)
         {
             ViewBag.faculty=ViewBag.account = studentService.getfacultyid(facultyid);
-            // ViewBag.students = studentService.students(facultyid, searchfullname);
-            ViewBag.students = studentService.allstudents(facultyid);
-            return View();
+            ViewBag.students = studentService.allstudents(classid);
+            return View("index");
         }
         [Route("studentanalysis")]
         public IActionResult StudentAnalysis(string facultyid,string classid, string studentid)

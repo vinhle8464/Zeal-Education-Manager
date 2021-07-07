@@ -44,16 +44,16 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             foreach (var mark in examinationService.examdetail(examid).Marks)
             {
                 numbermark++;
-                if (((decimal)mark.Mark1 / (decimal)mark.MaxMark) >= (decimal)0.4)
+                if (((decimal)mark.Mark1 / (decimal)mark.MaxMark)*100 >= (decimal)mark.Rate)
                 {
                     i++;
                 }
 
             }
-            ViewBag.passpercent =Convert.ToInt32( ((decimal)(i / numbermark)*100));
+            ViewBag.passpercent = ((decimal)((i * 100) / numbermark));
             ViewBag.pass = i;
-            ViewBag.failpercent = Convert.ToInt32(100 - ViewBag.passpercent);
-            ViewBag.pass = numbermark - i;
+            ViewBag.failpercent = (decimal)100 - ViewBag.passpercent;
+            ViewBag.fail = numbermark - i;
             ViewBag.maxscore =Convert.ToInt32( examinationService.examdetail(examid).Marks.Max(m => m.MaxMark));
             ViewBag.mediumscore = Convert.ToInt32(examinationService.examdetail(examid).Marks.Sum(m => m.Mark1)/(decimal)examinationService.examdetail(examid).Marks.Count());
             return View("examanalysis");

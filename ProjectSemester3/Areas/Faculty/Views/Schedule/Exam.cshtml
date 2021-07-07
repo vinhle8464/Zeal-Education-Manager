@@ -10,28 +10,28 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="overview-wrap">
-                        <h2 class="title-1">Subject</h2>
+                        <h2 class="title-1">Exam</h2>
                         
                     </div>
                 </div>
             </div>
             <div class="row m-t-25">
-                @foreach (var subjects in ViewBag.subjects)
+                @foreach (var exams in ViewBag.exams)
                 {
                     <div class="col-sm-6">
-                        <div class="overview-item overview-item--c1">
+                        <div class="overview-item overview-item--c3">
                             <div class="overview__inner">
                                 <div class="overview-box clearfix">
                                     <div class="icon">
-                                        <a asp-area="faculty" asp-controller="marking" asp-action="exam" asp-route-classid="@ViewBag.classid" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
+                                        <a asp-area="faculty" asp-controller="schedule" asp-action="testschedule"   asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-examid="@exams.ExamId"><i class="zmdi zmdi-check-circle"></i></a>
                                     </div>
                                     <div class="text">
                                         
-                                        <h3>@subjects.SubjectName</h3>
-                                        <span>@subjects.Status</span>
+                                        <h3>@exams.Title</h3>
+                                        <h1> <span>@exams.SubjectId</span></h1>
                                     </div>
                                 </div>
-                                
+                               
                             </div>
                         </div>
                     </div>
@@ -41,6 +41,7 @@
             </div>
         </div>
     </div>
+
 
 
 

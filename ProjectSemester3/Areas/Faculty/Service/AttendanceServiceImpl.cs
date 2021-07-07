@@ -24,6 +24,19 @@ namespace ProjectSemester3.Areas.Faculty.Service
             return context.ClassAssignments.Where(m=>m.FacultyId==facultyid).Select(m=>m.Class).ToList();       
         }
 
+        public List<Attendance> search(string search)
+        {
+            string mydate = null;
+            DateTime date2;
+            bool check = DateTime.TryParse(search, out date2);
+            if (check)
+            {
+                mydate =date2.ToString("MM/dd/yyyy");
+            }
+
+            return context.Attendances.Where(m => m.Date.Equals(DateTime.Parse( mydate))).ToList();
+        }
+
         public List<Subject> subjects(string classid)
         {
             return context.CourseSubjects.Where(m => m.CourseId==context.Courses.FirstOrDefault(m=>m.CourseId==context.Batches.FirstOrDefault(m=>m.ClassId==context.Classes.FirstOrDefault(m=>m.ClassId==context.Accounts.FirstOrDefault(m=>m.ClassId==classid).ClassId).ClassId).CourseId).CourseId).Select(m => m.Subject).ToList();

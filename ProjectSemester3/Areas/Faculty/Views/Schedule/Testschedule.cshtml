@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Faculty Schedule";
+    ViewData["Title"] = "Test Schedule";
     Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
 }
 <div class="section__content section__content--p30">
@@ -7,50 +7,33 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="overview-wrap">
-                    <h2 class="title-1">Faculty Schedule</h2>
+                    <h2 class="title-1">Test Schedule</h2>
 
                 </div>
             </div>
         </div>
-        <br />
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-borderless table-striped table-earning">
                     <thead>
                         <tr>
                             <th>Class Name</th>
-                            <th>Subject Name</th>
+                            <th>Exam Name</th>
                             <th>Time</th>
-                            <th>Start Day</th>
-                            <th>End Day</th>
-                            <th>Study Day</th>
-
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var schedule in ViewBag.schedules)
+                        @foreach (var schedule in ViewBag.testschedules)
                         {
                             <tr>
                                 <td>@schedule.Class.ClassName</td>
-                                <td>@schedule.Subject.SubjectName</td>
-                                <td>@schedule.TimeDay</td>
-
-                                <td> @schedule.StartDate</td>
-
-
-                                <td>@schedule.EndDate</td>
-                                <td>@schedule.StudyDay</td>
-
-
+                                <td>@schedule.Exam.Title</td>
+                                <td>@schedule.Date</td>
                             </tr>
-
                         }
-
-
                     </tbody>
                 </table>
             </div>
         </div>
-
     </div>
 </div>

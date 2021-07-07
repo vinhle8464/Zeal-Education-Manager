@@ -112,14 +112,18 @@ namespace ProjectSemester3.Areas.Faculty.Service
             return datapreabslesson.ToArray();
         }
 
-        public List<Account> allstudents(string facultyid)
+        public List<Account> allstudents(string classid)
         {
-            List<Account> accounts = new List<Account>();
-            foreach (var classid in context.ClassAssignments.Where(m => m.FacultyId == facultyid).Select(m => m.ClassId).ToList())
-            {
-                accounts = accounts.Union(context.Accounts.Where(m => m.ClassId == classid).ToList()).ToList();
-            }
-            return accounts;
+            
+            return context.Accounts.Where(m=>m.ClassId==classid).ToList();
+        }
+        public List<Class> classes(string facultyid)
+        {
+            return context.ClassAssignments.Where(m => m.FacultyId == facultyid).Select(n => n.Class).ToList();
+        }
+        public Class getclass(string classid)
+        {
+            return context.Classes.FirstOrDefault(m => m.ClassId == classid);
         }
     }
 }

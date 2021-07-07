@@ -8,62 +8,78 @@
 
 <!-- MAIN CONTENT-->
 
-    <div class="section__content section__content--p30">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="overview-wrap">
-                        <h2 class="title-1">Roll Call</h2>
 
-                    </div>
+<div class="section__content section__content--p30">
+    <div class="container-fluid">
+        
+            <div class="col-md-12">
+                <div style="text-align:center">
+                    <form class="form-header"asp-area="faculty" asp-controller="attendance" asp-action="search" asp-route-facultyid="@ViewBag.faculty.AccountId" method="POST">
+                        <input class="au-input au-input--xl" type="datetime-local" name="search" placeholder="Search " />
+                        <button class="au-btn--submit" type="submit">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="overview-wrap">
+                    <h2 class="title-1">Roll Call</h2>
+
                 </div>
             </div>
-            <div class="row m-t-25">
-                <form action="/" method="post">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Student Name</th>
-                                <th>Subject Name</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var students in ViewBag.students)
-                            {
-                                <tr>
-                                    <td>@students.Student.Fullname</td>
-                                    <td>@students.Subject.SubjectName</td>
-                                    <td>@students.Date</td>
-                                    @if (students.Checked == true)
-                                    {
-                                        <td> Present</td>
-                                    }
-                                    else
-                                    {
-                                        <td> Absent</td>
-                                    }
-                                    <td>
-
-                                        <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="present" type="button" class="btn btn-success"><i class="fas fa-check"></i></a>
-                                        <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="apsent" type="button" class="btn btn-success"><i class="fas fa-close"></i></a>
-
-                                    </td>
-                                </tr>
-
-                            }
-
-
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-
         </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <table class="table table-borderless table-striped table-earning">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Subject Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var students in ViewBag.students)
+                        {
+                            <tr>
+                                <td>@students.Student.Fullname</td>
+                                <td>@students.Subject.SubjectName</td>
+                                <td>@students.Date</td>
+                                @if (students.Checked == true)
+                                {
+                                    <td> Present</td>
+                                }
+                                else
+                                {
+                                    <td> Absent</td>
+                                }
+                                <td>
+
+                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="present"  asp-route-search="@ViewBag.search"  type="button" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="apsent" asp-route-search="@ViewBag.search" type="button" class="btn btn-success"><i class="fas fa-close"></i></a>
+
+                                </td>
+                            </tr>
+
+                        }
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
     </div>
+</div>
 
 
 

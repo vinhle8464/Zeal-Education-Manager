@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProjectSemester3.Areas.Faculty.Service
 {
-    public class MarkingServiceImpl : IMarkingService
+    public class MarkingServerImpl : IMarkingService
     {
         private DatabaseContext _context;
-        public MarkingServiceImpl(DatabaseContext context)
+        public MarkingServerImpl(DatabaseContext context)
         {
             _context = context;
         }
@@ -24,9 +24,9 @@ namespace ProjectSemester3.Areas.Faculty.Service
         {
             return _context.ClassAssignments.Where(m => m.FacultyId == facultyid).Select(n => n.Class).ToList();
         }
-        public List<Mark> students(string exammid)
+        public List<Account> students(string exammid)
         {
-            return _context.Marks.Where(m => m.Exam.ExamId == exammid).ToList();
+            return _context.Marks.Where(m => m.Exam.ExamId == exammid).Select(m => m.Student).ToList();
 
         }
 
@@ -36,7 +36,7 @@ namespace ProjectSemester3.Areas.Faculty.Service
         }
         public List<Exam> exams(string subjectid, string classid)
         {
-
+            
 
             return _context.Exams.Where(m => m.SubjectId == subjectid).ToList();
         }
@@ -46,9 +46,16 @@ namespace ProjectSemester3.Areas.Faculty.Service
             return _context.Accounts.FirstOrDefault(m => m.AccountId == facultyid);
         }
 
+        public async Task<int> update(Mark mark)
+        {
+            _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            return await _context.SaveChangesAsync();
+        }
 
-
-
+        public Mark getmark(string examid)
+        {
+            return _context.Marks.First(m => m.ExamId == examid);
+        }
 
         public Class getclass(string classid)
         {
@@ -57,40 +64,17 @@ namespace ProjectSemester3.Areas.Faculty.Service
 
         public Exam getexam(string examid)
         {
-
             return _context.Exams.FirstOrDefault(m => m.ExamId == examid);
         }
 
-
+        List<Mark> IMarkingService.students(string examid)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task update(List<Mark> marks)
         {
-            foreach (var mark in marks)
-
-            {
-                if ((decimal)(mark.Mark1 / mark.MaxMark) * 100 >= mark.Rate)
-                {
-                    mark.StatusMark = "pass";
-                    _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                }
-                else
-                {
-                    mark.StatusMark = "fail";
-
-                    _context.Pays.Add(new Pay
-                    {
-                        AccountId = mark.StudentId,
-                        Payment = "Paypal",
-                        Title="finefee"
-
-                    });
-                    _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                }
-
-
-            }
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }
