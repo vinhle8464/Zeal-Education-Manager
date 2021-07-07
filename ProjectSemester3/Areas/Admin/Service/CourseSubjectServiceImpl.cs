@@ -18,7 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(CourseSubject CourseSubject)
         {
-            if (context.CourseSubjects.Any(p => p.SubjectId.Equals(CourseSubject.SubjectId) && p.CourseId.Equals(CourseSubject.CourseId)))
+            if (context.CourseSubjects.Any(p => p.SubjectId.Equals(CourseSubject.SubjectId) && p.CourseId.Equals(CourseSubject.CourseId) && p.Status == true))
             {
                 return 0;
             }

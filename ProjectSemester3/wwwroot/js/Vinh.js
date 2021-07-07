@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
-    // get data to modal edit
-    $('table .edit').on('click', function () {
+   
+    //---------------- batch ---------------------------
+    // get data to modal edit Batch
+    $('table .editbatch').on('click', function () {
 
         var course = $(this).parent().find("#courses").val();
         var classes = $(this).parent().find("#classes").val();
@@ -32,7 +34,7 @@
             }
         });
     });
-    //---------------- batch ---------------------------
+
     //search autocomplete
     $("#searchkeyword").autocomplete({
         source: "/batches/searchautocomplete",
@@ -73,6 +75,46 @@
 
 
     //---------------- account ---------------------------
+    // get data to modal edit Batch
+    $('table .editaccount').on('click', function () {
+
+        var accountId = $(this).parent().find("#accountId").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { accountId: accountId},
+            url: ' /accounts/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                var dob = new Date(result.dob);
+               
+                var Dob = dob.getFullYear() + "/" + (dob.getMonth() + 1) + "/" + dob.getDate();
+               
+                $('#ModalEdit #roleaccount').val(result.roleId);
+                $('#ModalEdit #classaccount').val(result.classId);
+                $('#ModalEdit #usernameaccount').val(result.username);
+                $('#ModalEdit #fullnameaccount').val(result.fullname);
+                $('#ModalEdit #emailaccount').val(result.email);
+                $('#ModalEdit #dobaccount').val(Dob);
+                $('#ModalEdit #addressaccount').val(result.address);
+                if (result.gender === true) {
+                    $('#ModalEdit #maleaccount').prop('checked', true);
+                } else {
+                    $('#ModalEdit #femaleaccount').prop('checked', true);
+                }
+                $('#ModalEdit #phoneaccount').val(result.phone);
+                if (result.active === true) {
+                    $('#ModalEdit #activeaccount').val("Actived");
+                } else {
+                    $('#ModalEdit #activeaccount').val("Inactive");
+
+                }
+                $('#ModalEdit #avataraccount').attr('src', '../../images/' + result.avatar);
+            }
+        });
+    });
+
     $("#listClassName").autocomplete({
         source: "/accounts/listClass",
     });
@@ -84,6 +126,27 @@
     $("#listScholarship").autocomplete("option", "appendTo", ".eventInsForm");
 
     //---------------- account ---------------------------
+
+    //---------------- role ---------------------------
+    $('table .editrole').on('click', function () {
+
+        var idrole = $(this).parent().find("#idrole").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { idrole: idrole},
+            url: ' /admin/roles/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #roleid').val(result.roleId);
+                $('#ModalEdit #namerole').val(result.roleName);
+                $('#ModalEdit #rolename').val(result.roleName);
+                $('#ModalEdit #descrole').val(result.desc);
+            }
+        });
+    });
+    //---------------- role ---------------------------
 
 
     //---------------- class assignment ---------------------------
@@ -138,6 +201,11 @@
 
 
 //---------------- Professional ---------------------------
+//search autocomplete
+$("#searchProfessional").autocomplete({
+    source: "/admin/professionals/searchautocomplete",
+});
+
 $("#facultyProfess").autocomplete({
     source: "/admin/professionals/listFaculty",
 });
@@ -215,6 +283,8 @@ $(function () {
         $("#form1").submit();
     });
 });
+
+
 
 function tempAlert(msg, duration) {
     var el = document.createElement("div");
@@ -305,3 +375,8 @@ function validateEmail(id) {
     }
     return false;
 };
+
+// 
+setTimeout(function () {
+    $('#notification').fadeOut('fast');
+}, 3000); // <-- time in milliseconds}

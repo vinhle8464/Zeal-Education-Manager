@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
 using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -24,6 +25,16 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             context = _context;
             this.professionalsService = professionalsService;
+        }
+
+        // get data autocomplete
+        [HttpGet]
+        [Route("searchautocomplete")]
+        public async Task<IActionResult> SearchByKeyword([FromQuery(Name = "term")] string term)
+        {
+            var keyword = await professionalsService.GetKeyWordByKeyword(term);
+            return new JsonResult(keyword);
+
         }
 
         // get list Faculty autocomplete
@@ -58,12 +69,23 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/Professionals
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchProfessional, string subjectKeyword, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.professionals = await professionalsService.FindAll();
-              
+                var professionals = await professionalsService.Search(searchProfessional, subjectKeyword);
+                ViewBag.searchProfessional = searchProfessional;
+                ViewBag.subjectKeyword = subjectKeyword;
+                //ViewBag.classKeyword = classKeyword;
+                //ViewBag.keyword = await batchesService.GetKeyWord();
+
+                // this is a list for form create and edit
+                ViewBag.listSubject = await context.Subjects.Where(s => s.Status == true).Select(c => c.SubjectName).ToListAsync();
+                // this is a list for form create and edit
+
+             
+                LoadPagination(professionals, page, pageSize);
+
                 return View();
             }
             else
@@ -71,14 +93,39 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
 
-
         }
+
+
+        // load pagination
+        public void LoadPagination(List<Professional> professionals, int? page, int? pageSize)
+        {
+            var professionalViewModel = new ProfessionalViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = professionals.ToPagedList(pageNumber, pagesize);
+
+            professionalViewModel.PagedList = (PagedList<Professional>)onePageOfProducts;
+
+            ViewBag.professionals = professionalViewModel;
+        }
+
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create(Professional professional, string facultyProfess, string subjectProfess)
+        public async Task<IActionResult> Create(Professional professional, string facultyProfess, string subjectProfess, string searchProfessional, string subjectKeyword, int? pageSize)
         {
             if (ModelState.IsValid && subjectProfess != null)
             {
@@ -88,78 +135,50 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 if (facultyId == null)
                 {
                     TempData["msg"] = "<script>alert('Faculty is not Exist!');</script>";
-                    return RedirectToAction(nameof(Index));
 
                     // Return view index and auto paging
-                    //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
+                    return RedirectToRoute(new { controller = "professionals", action = "index", searchProfessional = searchProfessional, subjectKeyword = subjectKeyword, pageSize = pageSize });
                 }
 
                 
-
-                //if (subjectId == null)
-                //{
-                //    TempData["msg"] = "<script>alert('Subject is not Exist!');</script>";
-
-                //    // Return view index and auto paging
-                //    //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
-                //}
-
                 professional.FacultyId = facultyId.AccountId;
                 professional.SubjectId = subjectProfess;
                 professional.Status = true;
                 if (await professionalsService.Create(professional) == 0)
                 {
                     TempData["msg"] = "<script>alert('Professional has already existed!');</script>";
-                    return RedirectToAction(nameof(Index));
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "professionals", action = "index", searchProfessional = searchProfessional, subjectKeyword = subjectKeyword, pageSize = pageSize });
                 }
                 else
                 {
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
-                    return RedirectToAction(nameof(Index));
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "professionals", action = "index", searchProfessional = searchProfessional, subjectKeyword = subjectKeyword, pageSize = pageSize });
                 }
 
 
             }
             ViewBag.professionals = await professionalsService.FindAll();
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "professionals", action = "index", searchProfessional = searchProfessional, subjectKeyword = subjectKeyword, pageSize = pageSize });
         }
 
-        // GET: Admin/Professionals/Edit/5
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string facultyid, string subjectid)
+
+        // delete professional
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete(ProfessionalViewModel professionalViewModel, string searchProfessional, string subjectKeyword, int? pageSize)
         {
-            var professional = await professionalsService.Find(facultyid, subjectid);
 
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname", professional.FacultyId);
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", professional.SubjectId);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            professionalViewModel.Professional.Status = false;
+            await professionalsService.Update(professionalViewModel.Professional);
 
-            return View(professional);
+            TempData["success"] = "success";
+
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "professionals", action = "index", searchProfessional = searchProfessional, subjectKeyword = subjectKeyword, pageSize = pageSize });
         }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id, [Bind("FacultyId,SubjectId")] Professional professional)
-        {
-            if (ModelState.IsValid)
-            {
-                context.Update(professional);
-                await context.SaveChangesAsync();
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname", professional.FacultyId);
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", professional.SubjectId);
-
-            return View(professional);
-        }
-
-
     }
 }

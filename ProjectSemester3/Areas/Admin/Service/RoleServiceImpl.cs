@@ -29,7 +29,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Role role)
         {
-            if (context.Roles.Any(p => p.RoleName.Equals(role.RoleName)))
+            if (context.Roles.Any(p => p.RoleName.Equals(role.RoleName) && p.Status == true))
             {
                 return 0;
             }
@@ -74,6 +74,7 @@ namespace ProjectSemester3.Areas.Admin.Service
             return role;
         }
 
-
+        public async Task<Role> FindAjax(string RoleId) => await context.Roles.FirstOrDefaultAsync(r => r.RoleId == RoleId && r.Status == true);
+      
     }
 }

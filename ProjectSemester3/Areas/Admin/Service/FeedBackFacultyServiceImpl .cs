@@ -20,7 +20,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         public async Task<dynamic> Create(FeedbackFaculty FeedbackFaculty)
         {
 
-            if (context.FeedbackFaculties.Any(p => p.FeedbackId.Equals(FeedbackFaculty.FeedbackId) && p.FacultyId == FeedbackFaculty.FacultyId))
+            if (context.FeedbackFaculties.Any(p => p.FeedbackId.Equals(FeedbackFaculty.FeedbackId) && p.FacultyId == FeedbackFaculty.FacultyId && p.Status == true))
             {
                 return 0;
             }
