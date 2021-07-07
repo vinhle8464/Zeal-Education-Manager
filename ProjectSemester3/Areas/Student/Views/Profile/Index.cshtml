@@ -11,6 +11,15 @@
 <!------ Include the above in your HEAD tag ---------->
 <link rel="stylesheet" href="https://bootswatch.com/4/simplex/bootstrap.min.css" />
 
+<style>
+    .design {
+        color: black;
+        font-family: Cursive;
+        background-color: antiquewhite;
+        padding: 1.5%
+    }
+</style>
+
 @Html.Raw(TempData["msg"])
 
 <div class="container">
@@ -24,7 +33,7 @@
                                 <div class="row">
                                     <div class="image-container col-3">
                                         <img src="~/images/@ViewBag.account.Avatar" id="imgProfile" style="width: 250px; height: 250px" class="img-thumbnail" />
-                                        
+
                                         <div class="row">
                                             <br />
                                             <div class="col-4">
@@ -74,7 +83,7 @@
                                                     </button>
                                                     <div class="collapse navbar-collapse" id="navbarSupportedContent_1">
                                                         <ul class="navbar-nav mr-auto active row" style="padding: 3%">
-                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Fullname" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editfullname" />
+                                                            <input type="text" class="nav-item col-10 design" placeholder="Enter new Fullname" name="editfullname" required/>
                                                             &nbsp; &nbsp;
                                                             <input type="submit" class="btn btn-success col-2" value="Change" />
                                                         </ul>
@@ -113,7 +122,7 @@
                                                     </button>
                                                     <div class="collapse navbar-collapse" id="navbarSupportedContent_2">
                                                         <ul class="navbar-nav mr-auto active row" style="padding: 3%">
-                                                            <input type="date" class="nav-item col-10" placeholder="Enter new Birthday" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editdob" />
+                                                            <input type="date" class="nav-item col-10 design" placeholder="Enter new Birthday" name="editdob" required/>
                                                             &nbsp; &nbsp;
                                                             <input type="submit" class="btn btn-success col-2" value="Change" />
                                                         </ul>
@@ -139,7 +148,7 @@
                                                     </button>
                                                     <div class="collapse navbar-collapse" id="navbarSupportedContent_3">
                                                         <ul class="navbar-nav mr-auto active row" style="padding: 3%">
-                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Email" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editemail" />
+                                                            <input type="text" class="nav-item col-10 design" placeholder="Enter new Email" name="editemail" required/>
                                                             &nbsp; &nbsp;
                                                             <input type="submit" class="btn btn-success col-2" value="Change" />
                                                         </ul>
@@ -163,7 +172,7 @@
                                                     </button>
                                                     <div class="collapse navbar-collapse" id="navbarSupportedContent_4">
                                                         <ul class="navbar-nav mr-auto active row" style="padding: 3%">
-                                                            <input type="text" class="nav-item col-10" placeholder="Enter new Phone" style="color: black; font-family: Cursive; background-color: antiquewhite; padding: 1.5%" name="editphone" />
+                                                            <input type="text" class="nav-item col-10 design" placeholder="Enter new Phone" name="editphone" required/>
                                                             &nbsp; &nbsp;
                                                             <input type="submit" class="btn btn-success col-2" value="Change" />
                                                         </ul>
