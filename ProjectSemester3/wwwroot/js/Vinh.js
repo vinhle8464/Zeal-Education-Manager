@@ -110,7 +110,7 @@
                     $('#ModalEdit #activeaccount').val("Inactive");
 
                 }
-                $('#ModalEdit #avataraccount').attr('src', '~/images/' + result.avatar);
+                $('#ModalEdit #avataraccount').attr('src', '../../images/' + result.avatar);
             }
         });
     });
@@ -126,6 +126,27 @@
     $("#listScholarship").autocomplete("option", "appendTo", ".eventInsForm");
 
     //---------------- account ---------------------------
+
+    //---------------- role ---------------------------
+    $('table .editrole').on('click', function () {
+
+        var idrole = $(this).parent().find("#idrole").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { idrole: idrole},
+            url: ' /admin/roles/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #roleid').val(result.roleId);
+                $('#ModalEdit #namerole').val(result.roleName);
+                $('#ModalEdit #rolename').val(result.roleName);
+                $('#ModalEdit #descrole').val(result.desc);
+            }
+        });
+    });
+    //---------------- role ---------------------------
 
 
     //---------------- class assignment ---------------------------
@@ -180,6 +201,11 @@
 
 
 //---------------- Professional ---------------------------
+//search autocomplete
+$("#searchProfessional").autocomplete({
+    source: "/admin/professionals/searchautocomplete",
+});
+
 $("#facultyProfess").autocomplete({
     source: "/admin/professionals/listFaculty",
 });
@@ -349,3 +375,8 @@ function validateEmail(id) {
     }
     return false;
 };
+
+// 
+setTimeout(function () {
+    $('#notification').fadeOut('fast');
+}, 3000); // <-- time in milliseconds}

@@ -23,6 +23,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
                             <!-- DATA TABLE -->
                             <h1 class="m-b-35">Account</h1>
                             <div class="table-data__tool">
@@ -74,7 +85,7 @@
                                         </div>
                                         <div class="rs-select2--light">
                                             @* Start Search autocomplete*@
-                                            <input type="text" name="searchKeyword" id="searchkeyword" placeholder="Search..." value="@ViewBag.searchKeyword" />
+                                            <input class="searchPadding" type="text" name="searchKeyword" id="searchkeyword" placeholder="Search..." value="@ViewBag.searchKeyword" />
 
                                             @* End Search autocomplete*@
 

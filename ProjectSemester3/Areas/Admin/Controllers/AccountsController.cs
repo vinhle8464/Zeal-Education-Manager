@@ -304,7 +304,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
                     }
                 }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 // Return view index and auto paging
                 return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
@@ -332,7 +332,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 context.Update(accountViewModel.Account);
                 await context.SaveChangesAsync();
 
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 // Return view index and auto paging
                 return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
@@ -352,7 +352,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             var account = context.Accounts.Find(accountViewModel.Account.AccountId);
             account.Status = false;
             accountService.Update(account);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             // Return view index and auto paging
             return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });

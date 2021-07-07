@@ -25,7 +25,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<int> Create(Exam exam)
         {
-            if (context.Exams.Any(p => p.ExamId == exam.ExamId && p.SubjectId == exam.SubjectId))
+            if (context.Exams.Any(p => p.ExamId == exam.ExamId && p.SubjectId == exam.SubjectId && p.Status == true))
             {
                 return 0;
             }

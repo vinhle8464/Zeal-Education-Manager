@@ -23,7 +23,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Course course)
         {
-            if (_context.Courses.Any(p => p.CourseName == course.CourseName))
+            if (_context.Courses.Any(p => p.CourseName == course.CourseName && p.Status == true))
             {
                 return 0;
             }

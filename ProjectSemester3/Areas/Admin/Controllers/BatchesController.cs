@@ -195,7 +195,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 await batchesService.CreateClassSchedule(batchViewModel.Batch.CourseId, classs.ClassId);
                 await batchesService.CreateTestSchedule(batchViewModel.Batch.CourseId, classs.ClassId);
 
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
             }
 
@@ -218,10 +218,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     ClassId = batchViewModel.Batch.ClassId,
                     Graduate = batchViewModel.Batch.Graduate,
                     StartDate = batchViewModel.Batch.StartDate,
-                    EndDate = batchViewModel.Batch.EndDate
+                    EndDate = batchViewModel.Batch.EndDate,
+                    Status = true
                 });
 
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 // Return view index and auto paging
                 return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
@@ -240,10 +241,10 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             
             await batchesService.Delete(batchViewModel.Batch.CourseId, batchViewModel.Batch.ClassId);
 
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             // Return view index and auto paging
-            return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
+            return RedirectToRoute(new { controller = "professionals", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
         }
     }
 }

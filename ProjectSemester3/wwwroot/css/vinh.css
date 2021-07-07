@@ -23,7 +23,7 @@
 
 
 
-input#searchkeyword {
+.searchPadding {
     padding: 10px;
     text-align: center;
 }

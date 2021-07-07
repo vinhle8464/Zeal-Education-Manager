@@ -24,6 +24,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
                             <!-- DATA TABLE -->
                             <h1 class="m-b-35">Batch</h1>
                             <div class="table-data__tool">
@@ -64,7 +75,7 @@
                                         </div>
                                         <div class="rs-select2--light">
                                             @* Start Search autocomplete*@
-                                            <input type="text" name="searchKeyword" id="searchkeyword" placeholder="Search for Batch" value="@ViewBag.searchKeyword" />
+                                            <input class="searchPadding" type="text" name="searchKeyword" id="searchkeyword" placeholder="Search for Batch" value="@ViewBag.searchKeyword" />
 
                                             @* End Search autocomplete*@
 
@@ -248,12 +259,12 @@
                     <div class="form-group">
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="graduate" id="graduated" asp-for="Batch.Graduate" value="true">
+                            <input class="form-check-input" type="radio" id="graduated" asp-for="Batch.Graduate" value="true">
                             <label class="form-check-label" for="graduate" asp-for="Batch.Graduate">Graduate &nbsp;</label>
 
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="graduate" id="undergraduate" asp-for="Batch.Graduate" value="false">
+                            <input class="form-check-input" type="radio" id="undergraduate" asp-for="Batch.Graduate" value="false">
                             <label class="form-check-label" for="undergraduate" asp-for="Batch.Graduate">Undergraduate &nbsp;</label>
 
                         </div>

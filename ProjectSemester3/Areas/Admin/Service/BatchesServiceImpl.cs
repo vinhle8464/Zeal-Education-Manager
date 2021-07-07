@@ -18,7 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Batch batch)
         {
-            if (context.Batches.Any(p => p.ClassId.Equals(batch.ClassId) && p.CourseId.Equals(batch.CourseId)))
+            if (context.Batches.Any(p => p.ClassId.Equals(batch.ClassId) && p.CourseId.Equals(batch.CourseId) && p.Status == true))
             {
                 return 0;
             }
@@ -182,7 +182,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
             if (searchKeyword != null) batches = batches.Where(b => b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword));
            
-            var result = batches.ToList(); // execute query
+            var result = batches.Where(b => b.Status == true).ToList(); // execute query
 
             return result;
         }

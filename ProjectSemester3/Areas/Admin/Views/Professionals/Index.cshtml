@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.Professional
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.ProfessionalViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Index";
@@ -10,44 +14,141 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                @*//////////////////*@
                 <div class="card-body">
-                    <h1>Professional</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Professional
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Professional</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light rs-select2--md">
+                                            @* start filter search*@
+
+                                            <select class="form-control" name="subjectKeyword">
+                                                <option value="">Choose Subject</option>
+                                                @foreach (var subject in ViewBag.listSubject)
+                                                {
+                                                    if (ViewBag.subjectKeyword == subject)
+                                                    {
+                                                        <option value="@subject" selected>@subject</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@subject">@subject</option>
+                                                    }
+                                                }
+                                            </select>
+                                            @* end filter search*@
+
+                                        </div>
+
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchProfessional" id="searchProfessional" placeholder="Search..." value="@ViewBag.searchProfessional" />
+
+                                            @* End Search autocomplete*@
+
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Serial</th>
                                 <th>Faculty</th>
                                 <th>Subject</th>
+                                <th style="text-align: center;">Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var p in ViewBag.professionals)
+                            @foreach (var p in ViewBag.professionals.PagedList)
                             {
-                                <tr onclick="location.href = '@Url.Action("details", "professionals", new { facultyid = p.FacultyId, subjectid=p.SubjectId })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@p.Faculty.Fullname</td>
-                                    <td>@p.Subject.SubjectId</td>
-                                    <td>
-                                        <a asp-controller="professionals" asp-action="details" asp-route-facultyid="@p.FacultyId" asp-route-subjectid="@p.SubjectId">View</a>
+                                    <td>@p.Subject.SubjectName</td>
+                                    <td style="text-align: center;">
+
+
+                                        @*<a type="button" class="btn btn-success editbatch" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>*@
+                                        <form asp-controller="professionals" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Professional.FacultyId" value="@p.FacultyId" />
+                                            <input type="hidden" asp-for="Professional.SubjectId" value="@p.SubjectId" />
+
+                                            <input type="hidden" name="searchProfessional" value="@ViewBag.searchProfessional" />
+                                            <input type="hidden" name="subjectKeyword" value="@ViewBag.subjectKeyword" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        <input type="hidden" name="faculty" id="facultyid" value="@p.FacultyId" />
+                                        <input type="hidden" name="subject" id="subjectid" value="@p.SubjectId" />
+
                                     </td>
                                 </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "professionals", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchProfessional" value="@ViewBag.searchProfessional" />
+                            <input type="hidden" name="subjectKeyword" value="@ViewBag.subjectKeyword" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.professionals.PagedList.PageCount < ViewBag.professionals.PagedList.PageNumber ? 0 : ViewBag.professionals.PagedList.PageNumber) &nbsp;of @ViewBag.professionals.PagedList.PageCount
+                            </div>
+
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.professionals.PagedList, page => Url.Action("index", "professionals", new { searchProfessional = ViewBag.searchProfessional, subjectKeyword = ViewBag.subjectKeyword, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -55,16 +156,16 @@
                 <h4 class="modal-title" id="myModalLabel">Create</h4>
             </div>
             <div class="modal-body">
-                <form asp-area="admin" asp-controller="professionals" asp-action="create" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
-
+                <form asp-area="admin" asp-controller="professionals" asp-action="create" method="post" enctype="multipart/form-data" name="Form">
+                    <input type="hidden" name="searchProfessional" value="@ViewBag.searchProfessional" />
+                    <input type="hidden" name="subjectKeyword" value="@ViewBag.subjectKeyword" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
                     <div class="form-group">
-                        <label asp-for="FacultyId" class="control-label">Faculty</label>
-                        <input class="form-control" type="text" name="facultyProfess" id="facultyProfess" placeholder="Choose Faculty" asp-for="Faculty.Fullname" required="required" />
-
+                        <label asp-for="Professional.FacultyId" class="control-label">Faculty</label>
+                        <input class="form-control" type="text" name="facultyProfess" id="facultyProfess" placeholder="Choose Faculty" asp-for="Professional.Faculty.Fullname" required="required" />
                     </div>
-
                     <div class="form-group">
-                        <label asp-for="SubjectId" class="control-label">Subject</label>
+                        <label asp-for="Professional.SubjectId" class="control-label">Subject</label>
                         <select class="form-control" name="subjectProfess" id="subjectProfess" required="required"></select>
 
                     </div>
@@ -77,3 +178,4 @@
         </div>
     </div>
 </div>
+

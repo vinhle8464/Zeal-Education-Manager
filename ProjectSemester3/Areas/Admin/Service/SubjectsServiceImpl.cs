@@ -26,7 +26,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Subject Subject)
         {
-            if (_context.Subjects.Any(p => p.SubjectName == Subject.SubjectName))
+            if (_context.Subjects.Any(p => p.SubjectName == Subject.SubjectName && p.Status == true))
             {
                 return 0;
             }
