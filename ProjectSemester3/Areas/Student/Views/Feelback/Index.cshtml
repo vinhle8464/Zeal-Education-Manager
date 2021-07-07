@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link rel="stylesheet" href="https://bootswatch.com/4/simplex/bootstrap.min.css" />
+
+<style>
+    .title {
+        font-family: 'Times New Roman';
+        color: darkblue;
+        text-align: center;
+        font-size: 50px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h1 class="title">Feelback</h1>
+                <div class="card-body">
+                    <form asp-controller="feelback" asp-action="send" method="post">
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <!-- <label for="fname">First Name</label> -->
+                                <input type="text" name="fname" class="form-control" placeholder="Your firstname">
+                            </div>
+                            <div class="col-md-6">
+                                <!-- <label for="lname">Last Name</label> -->
+                                <input type="text" name="lname" class="form-control" placeholder="Your lastname">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <!-- <label for="email">Class</label> -->
+                                <input type="text" name="class" class="form-control" placeholder="Your class">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <!-- <label for="email">Email</label> -->
+                                <input type="text" name="email" class="form-control" placeholder="Your email address">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <!-- <label for="email">Email</label> -->
+                                <input type="text" name="phone" class="form-control" placeholder="Your phone number">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <!-- <label for="subject">Subject</label> -->
+                                <input type="text" name="subject" class="form-control" placeholder="Your subject of this message">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <!-- <label for="message">Message</label> -->
+                                <textarea name="message" id="message" cols="30" rows="10" class="form-control" placeholder="Say something about us"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Send Message" class="btn btn-primary">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

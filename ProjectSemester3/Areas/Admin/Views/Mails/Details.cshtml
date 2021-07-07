@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="~/css/summernote-bs4.min.css">
 <script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
 <script>tinymce.init({ selector: 'textarea' });</script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea'
@@ -146,7 +148,7 @@
             alert("Content send is not vacant");
             return false;
         }
-    }
+    } (jQuery);
 </script>
 
 

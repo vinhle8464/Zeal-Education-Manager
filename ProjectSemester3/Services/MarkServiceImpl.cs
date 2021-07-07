@@ -21,16 +21,16 @@ namespace ProjectSemester3.Services
 
         public List<string> CheckStatus(string studentid)
         {
-            var marks = GetMarkByStudentId(studentid);
+            var marks = context.Marks.Where(m => m.StudentId == studentid).ToList();
             var listRank = new List<string>();
             foreach (var mark in marks)
             {
                 var total = (mark.Mark1 / mark.MaxMark) * 100;
-                if (total >= mark.Rate && mark.Mark1 >=0)
+                if (total >= mark.Rate && mark.Mark1 >=0 && mark.StatusMark == "pass")
                 {
                     listRank.Add(mark.Exam.Title + ":    PASSED    |    Mark:    "+ mark.Mark1);
                 }
-                else
+                else if(mark.StatusMark == "fail")
                 {
                     listRank.Add(mark.Exam.Title + ":    FAILED    |    Mark:    " + mark.Mark1);
                 }
