@@ -179,25 +179,28 @@
                 <form asp-area="admin" asp-controller="courses" asp-action="edit" method="post" name="Form">
                     <input type="hidden" name="searchCourse" value="@ViewBag.searchCourse" />
                     <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                    <input type="hidden" id="courseidid" asp-for="Course.CourseId" />
+                    <input type="hidden" id="coursestatus" asp-for="Course.Status" />
+
                     <div class="form-group">
                         <label for="CourseName">CourseName</label>
-                        <input type="text" class="form-control" id="namecourse" disabled/>
+                        <input type="text" class="form-control" id="namecourse" asp-for="Course.CourseName" disabled />
                     </div>
                     <div class="form-group">
                         <label for="Fee">Fee</label>
-                        <input type="number" class="form-control"  id="feecourse"/>
+                        <input type="number" class="form-control" asp-for="Course.Fee" id="feecourse" required="required" />
                     </div>
                     <div class="form-group">
                         <label for="Term">Term</label>
-                        <input type="text" class="form-control" id="termcourse" />
+                        <input type="text" class="form-control" asp-for="Course.Term" id="termcourse" required="required" />
                     </div>
                     <div class="form-group">
                         <label for="certificate">Certificate</label>
-                        <input type="text" class="form-control" id="certificatecourse"/>
+                        <input type="text" class="form-control" id="certificatecourse" asp-for="Course.Certificate" required="required" />
                     </div>
                     <div class="form-group">
                         <label for="desc">Description</label>
-                        <input type="text" class="form-control" id="desccourse"/>
+                        <input type="text" class="form-control" id="desccourse" asp-for="Course.Desc" required="required" />
                     </div>
                     <br />
                     <input type="submit" value="ADD" class="btn btn-primary" />

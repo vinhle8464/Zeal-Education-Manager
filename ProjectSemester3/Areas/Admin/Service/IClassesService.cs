@@ -13,9 +13,12 @@ namespace ProjectSemester3.Areas.Admin.Service
         Task<int> CountId();
        // Task<int> CountIdById(string ClassId);
         Task<dynamic> Create(Class classes);
-        Task Delete(string ClassId);
+        Task Delete(string classId);
         string GetNewestId();
         Task<Class> Update(Class classes);
         bool RoleExists(string ClassId);
+        public Task<Class> FindAjax(string classId);
+        public Task<List<Class>> Search(string searchCLass, int filterNumber);
+
     }
 }

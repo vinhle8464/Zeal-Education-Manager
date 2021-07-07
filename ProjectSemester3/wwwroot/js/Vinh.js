@@ -233,6 +233,36 @@ $(document).ready(function () {
 });
 //---------------- Professional ---------------------------
 
+
+
+//---------------- Class ---------------------------
+
+
+$('table .editClass').on('click', function () {
+
+    var classid = $(this).parent().find("#classid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { classid: classid },
+        url: ' /admin/classes/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+
+            $('#ModalEdit #idclass').val(result.classId);
+            $('#ModalEdit #nameclass').val(result.className);
+            $('#ModalEdit #numberclass').val(result.numberOfStudent);
+            $('#ModalEdit #descclass').val(result.desc);
+            $('#ModalEdit #statusclass').val(result.status);
+            $('#ModalEdit #nameclasss').val(result.className);
+
+        }
+    });
+});
+//---------------- Class ---------------------------
+
+
 //---------------- Course ---------------------------
 //search autocomplete
 $("#searchCourse").autocomplete({
@@ -250,15 +280,43 @@ $('table .editcourse').on('click', function () {
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
+            $('#ModalEdit #courseidid').val(result.courseId);
             $('#ModalEdit #namecourse').val(result.courseName);
             $('#ModalEdit #feecourse').val(result.fee);
             $('#ModalEdit #termcourse').val(result.term);
             $('#ModalEdit #certificatecourse').val(result.certificate);
             $('#ModalEdit #desccourse').val(result.desc);
+            $('#ModalEdit #coursestatus').val(result.status);
+
+            
         }
     });
 });
 //---------------- Course ---------------------------
+
+
+//---------------- Subject ---------------------------
+
+$('table .editsubject').on('click', function () {
+
+    var subjectid = $(this).parent().find("#subjectid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { subjectid: subjectid },
+        url: ' /admin/subjects/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #subjectidid').val(result.subjectId);
+            $('#ModalEdit #namesubject').val(result.subjectName);
+            $('#ModalEdit #descsubject').val(result.desc);
+            $('#ModalEdit #subjectsatus').val(result.status);
+
+        }
+    });
+});
+//---------------- Subject ---------------------------
 
 //---------------- FeedBack ---------------------------
 $("#feedbackFaculty").autocomplete({

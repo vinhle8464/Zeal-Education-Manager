@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.Class
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.ClassViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Class";
@@ -10,13 +14,68 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+
+                @*////////////*@
                 <div class="card-body">
-                    <h1>Classes</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Class
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Class</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light rs-select2--md">
+                                            @* start filter search*@
+
+                                            <select class="form-control" name="filterNumber">
+                                                <option value="">Choose Number</option>
+                                                <option value="10"> > 10</option>
+                                                <option value="20"> > 20</option>
+                                                <option value="50"> > 50</option>
+                                            </select>
+                                            @* end filter search*@
+
+                                        </div>
+
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchClass" id="searchClass" placeholder="Search..." value="@ViewBag.searchClass" />
+
+                                            @* End Search autocomplete*@
+
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
+
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -28,24 +87,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var c in ViewBag.classes)
+                            @foreach (var c in ViewBag.classes.PagedList)
                             {
-                            <tr onclick="location.href = '@Url.Action("edit", "classes", new { id=c.ClassId })'">
-                                <td>@index</td>
-                                <td>@c.ClassName</td>
-                                <td>@c.NumberOfStudent</td>
-                                <td>@c.Desc</td>
-                                <td>
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@c.ClassName</td>
+                                    <td>@c.NumberOfStudent</td>
+                                    <td>@c.Desc</td>
+                                    <td style="text-align: center;">
 
-                                    <a type="button" class="btn btn-success" asp-controller="classes" asp-action="edit" asp-route-id="@c.ClassId"><i class="fas fa-edit"></i></a>
 
-                                    <a type="button" class="btn btn-danger" asp-controller="classes" asp-action="delete" asp-route-id="@c.ClassId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
+                                        <a type="button" class="btn btn-success editClass" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        <form asp-controller="classes" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Class.ClassId" value="@c.ClassId" />
+
+
+                                            <input type="hidden" name="searchClass" value="@ViewBag.searchClass" />
+                                            <input type="hidden" name="filterNumber" value="@ViewBag.filterNumber" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        <input type="hidden" name="classid" id="classid" value="@c.ClassId" />
+
+
+                                    </td>
+                                </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "classes", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchClass" value="@ViewBag.searchClass" />
+                            <input type="hidden" name="filterNumber" value="@ViewBag.filterNumber" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.classes.PagedList.PageCount < ViewBag.classes.PagedList.PageNumber ? 0 : ViewBag.classes.PagedList.PageNumber) &nbsp;of @ViewBag.classes.PagedList.PageCount
+                            </div>
+
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.classes.PagedList, page => Url.Action("index", "classes", new { searchClass = ViewBag.searchClass, filterNumber = ViewBag.filterNumber, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
@@ -53,33 +141,33 @@
 </div>
 
 
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+@*Modal Create*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create New Class</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
             </div>
             <div class="modal-body">
-                <form asp-controller="classes" asp-action="create" method="post" onsubmit="return validateForm()" name="Form">
-
+                <form asp-controller="classes" asp-action="create" method="post">
+                    
                     <div class="form-group">
                         <label for="NameRole">Class Name</label>
-                        <input type="text" class="form-control" name="classname" placeholder="Class" asp-for="ClassName" required/>
+                        <input type="text" class="form-control" placeholder="Class" asp-for="Class.ClassName" required="required" />
                         <span></span>
 
                     </div>
 
                     <div class="form-group">
                         <label for="NameRole">Number of Student</label>
-                        <input type="number" class="form-control" placeholder="Class" asp-for="NumberOfStudent" min="0" max="100" required />
+                        <input type="number" class="form-control" placeholder="Class" asp-for="Class.NumberOfStudent" min="0" max="100" required="required"  />
                         <span></span>
 
                     </div>
                     <div class="form-group">
                         <label for="descRole">Description</label>
-                        <input type="text" class="form-control" name="desc" placeholder="Description" asp-for="Desc"  required/>
+                        <input type="text" class="form-control" placeholder="Description" asp-for="Class.Desc" required="required"  />
                         <span></span>
 
                     </div>
@@ -91,17 +179,41 @@
         </div>
     </div>
 </div>
-<script>
-    function validateForm() {
-        var classname = document.forms["Form"]["classname"].value.trim();
-        var desc = document.forms["Form"]["desc"].value.trim();
-        if (classname == null || classname == "") {
-            alert("Please Fill Class Name Field");
-            return false;
-        }
-        if (desc == null || desc == "") {
-            alert("Please Fill Description Field");
-            return false;
-        }
-    }
-</script>
+@*Modal Create*@
+
+
+@*Modal Edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="classes" asp-action="edit" method="post">
+                    <input type="hidden" asp-for="Class.ClassId" id="idclass" />
+                    <input type="hidden" asp-for="Class.Status" id="statusclass" />
+                    <input type="hidden" asp-for="Class.ClassName" id="nameclass" />
+
+                    <div class="form-group">
+                        <label >Class Name</label>
+                        <input type="text" class="form-control" asp-for="Class.ClassName" id="nameclasss" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Student</label>
+                        <input type="number" class="form-control" asp-for="Class.NumberOfStudent" min="0" max="100" id="numberclass" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" class="form-control" asp-for="Class.Desc" id="descclass" required="required" />
+                    </div>
+
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Modal Edit*@

@@ -47,11 +47,13 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             var course = await coursesService.FindAjax(courseid);
             var courseAjax = new Course
             {
+                CourseId = course.CourseId,
                CourseName = course.CourseName,
                Fee = course.Fee,
                Term = course.Term,
                Certificate = course.Certificate,
-               Desc = course.Desc
+               Desc = course.Desc,
+               Status = course.Status
             };
             return new JsonResult(courseAjax);
 
@@ -143,14 +145,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     if (await coursesService.Create(course) == 0)
                     {
                         TempData["msg"] = "<script>alert('Course has already existed!');</script>";
-                        return RedirectToAction(nameof(Index));
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
                     }
                     else
                     {
                         TempData["success"] = "success";
 
-                        return RedirectToAction(nameof(Index));
-
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
                     }
 
                 }
@@ -168,27 +171,26 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
                 }
             }
-            ViewBag.courses = await coursesService.FindAll();
-            return RedirectToAction(nameof(Index));
-
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
 
      // edit course
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit(Course course, string searchCourse, int? pageSize)
+        public async Task<IActionResult> Edit(CourseViewModel courseViewModel, string searchCourse, int? pageSize)
         {
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await coursesService.Update(course);
+                    await coursesService.Update(courseViewModel.Course);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!coursesService.RoleExists(course.CourseId))
+                    if (!coursesService.RoleExists(courseViewModel.Course.CourseId))
                     {
                         return NotFound();
                     }
@@ -199,24 +201,26 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 }
                 TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
-
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
             }
-            return View(course);
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
 
    
         // delete course
         [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete(CourseViewModel courseViewModel, string subjectKeyword, int? pageSize)
+        public async Task<IActionResult> Delete(CourseViewModel courseViewModel, string searchCourse, int? pageSize)
         {
 
             courseViewModel.Course.Status = false;
             await coursesService.Update(courseViewModel.Course);
             TempData["success"] = "success";
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
 
     }

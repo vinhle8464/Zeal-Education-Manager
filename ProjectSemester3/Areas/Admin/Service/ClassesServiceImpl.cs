@@ -30,18 +30,24 @@ namespace ProjectSemester3.Areas.Admin.Service
             if (context.Classes.Any(p => p.ClassName.Equals(classes.ClassName) && p.Status == true))
             {
                 return 0;
+
+            }else if (context.Classes.Any(p => p.ClassName.Equals(classes.ClassName) && p.Status == false))
+            {
+                classes.Status = true;
+                context.Entry(classes).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await context.SaveChangesAsync();
             }
             else
             {
                 context.Classes.Add(classes);
-                return await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
-           
+            return true;
         }
 
-        public async Task Delete(string ClassId)
+        public async Task Delete(string classId)
         {
-            var classes = context.Classes.Find(ClassId);
+            var classes = await context.Classes.FirstOrDefaultAsync(c => c.ClassId == classId);
             classes.Status = false;
             context.Entry(classes).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await context.SaveChangesAsync();
@@ -50,6 +56,11 @@ namespace ProjectSemester3.Areas.Admin.Service
         public async Task<Class> Find(string ClassId)
         {
             return await context.Classes.FindAsync(ClassId);
+        }
+
+        public async Task<Class> FindAjax(string classId)
+        {
+            return await context.Classes.FirstOrDefaultAsync(c => c.ClassId == classId && c.Status == true);
         }
 
         public async Task<List<Class>> FindAll()
@@ -70,6 +81,19 @@ namespace ProjectSemester3.Areas.Admin.Service
         }
 
         public bool RoleExists(string ClassId) => context.Classes.Any(e => e.ClassId == ClassId);
+
+        public async Task<List<Class>> Search(string searchCLass, int filterNumber)
+        {
+            var classes = context.Classes.AsQueryable();
+
+            if (filterNumber != 0) classes = classes.Where(s => s.NumberOfStudent > filterNumber);
+
+            if (searchCLass != null) classes = classes.Where(b => b.ClassName.StartsWith(searchCLass));;
+
+            var result = classes.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
 
         public async Task<Class> Update(Class classes)
         {

@@ -7,6 +7,10 @@ using ProjectSemester3.Models;
 using ProjectSemester3.Areas.Admin.Service;
 using ProjectSemester3.Services;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using ProjectSemester3.Areas.Admin.ViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -25,15 +29,35 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string classid)
+        {
+            var clas = await classesService.FindAjax(classid);
+            var accountAjax = new Class
+            {
+                ClassId = clas.ClassId,
+                ClassName = clas.ClassName,
+                NumberOfStudent = clas.NumberOfStudent,
+                Desc = clas.Desc,
+                Status = clas.Status
+            };
+            return new JsonResult(accountAjax);
 
+        }
 
         // Show page class
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchClass, string filterNumber, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.classes = await classesService.FindAll();
+                var classes = await  classesService.Search(searchClass, Convert.ToInt32(filterNumber));
+                ViewBag.searchClass = searchClass;
+                ViewBag.filterNumber = filterNumber;
+
+                LoadPagination(classes, page, pageSize);
+
                 return View();
             }
             else
@@ -41,16 +65,41 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
 
-           
         }
+
+        // load pagination
+        public void LoadPagination(List<Class> classes, int? page, int? pageSize)
+        {
+            var classViewModel = new ClassViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = classes.ToPagedList(pageNumber, pagesize);
+
+            classViewModel.PagedList = (PagedList<Class>)onePageOfProducts;
+
+            ViewBag.classes = classViewModel;
+        }
+
+
 
         // create class
         [HttpPost]
         [Route("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Class classes)
+        public async Task<IActionResult> Create(ClassViewModel classViewModel, string searchClass, string filterNumber, int? pageSize)
         {
-            if (ModelState.IsValid & classes != null)
+            if (ModelState.IsValid & classViewModel != null)
             {
                 // devided char and number
                 var numAlpha = new Regex("(?<Alpha>[a-zA-Z]*)(?<Numeric>[0-9]*)");
@@ -69,113 +118,86 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 {
                     if (num < 9)
                     {
-                        classes.ClassId = "class" + "0" + (num + 1);
+                        classViewModel.Class.ClassId = "class" + "0" + (num + 1);
 
                     }
                     else
                     {
-                        classes.ClassId = "class" + (num + 1);
+                        classViewModel.Class.ClassId = "class" + (num + 1);
 
                     }
-                    classes.Status = true;
-                    classes.ClassName = classes.ClassName.Trim();
-                    classes.NumberOfStudent = classes.NumberOfStudent;
-                    classes.Desc = classes.Desc.Trim();
+                    classViewModel.Class.Status = true;
+                    classViewModel.Class.ClassName = classViewModel.Class.ClassName.Trim();
+                    classViewModel.Class.NumberOfStudent = classViewModel.Class.NumberOfStudent;
+                    classViewModel.Class.Desc = classViewModel.Class.Desc.Trim();
 
-                    if (await classesService.Create(classes) == 0)
+                    if (await classesService.Create(classViewModel.Class) == 0)
                     {
                         TempData["msg"] = "<script>alert('Class has already existed!');</script>";
-                        return RedirectToAction(nameof(Index));
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
                     }
                     else
                     {
-                        return RedirectToAction(nameof(Index));
+                        TempData["success"] = "success";
+
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
 
                     }
-                   
+
 
                 }
                 else
                 {
-                    classes.ClassId = "class" + "01";
-                    classes.Status = true;
-                    classes.ClassName = classes.ClassName.Trim();
-                    classes.NumberOfStudent = classes.NumberOfStudent;
-                    classes.Desc = classes.Desc.Trim();
-                    await classesService.Create(classes);
+                    classViewModel.Class.ClassId = "class" + "01";
+                    classViewModel.Class.Status = true;
+                    classViewModel.Class.ClassName = classViewModel.Class.ClassName.Trim();
+                    classViewModel.Class.NumberOfStudent = classViewModel.Class.NumberOfStudent;
+                    classViewModel.Class.Desc = classViewModel.Class.Desc.Trim();
+                    await classesService.Create(classViewModel.Class);
                 }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
             }
-            ViewBag.classes = await classesService.FindAll();
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
 
         }
 
-        // open page edit class
-        [HttpGet]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var classes = await classesService.Find(id);
-            if (classes == null)
-            {
-                return NotFound();
-            }
-            return View("edit", classes);
-        }
-
+    
         // edit class in db
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit(Class classes)
+        public async Task<IActionResult> Edit(ClassViewModel classViewModel, string searchClass, string filterNumber, int? pageSize)
         {
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await classesService.Update(classes);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!classesService.RoleExists(classes.ClassId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    await classesService.Update(classViewModel.Class);
+               
+                TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
             }
-            return View(classes);
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
         }
 
         // hide class
-        [HttpGet]
+        [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(ClassViewModel classViewModel, string searchClass, string filterNumber, int? pageSize)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            await classesService.Delete(classViewModel.Class.ClassId);
+            TempData["success"] = "success";
 
-            await classesService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
-
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "classes", action = "index", searchClass = searchClass, filterNumber = filterNumber, pageSize = pageSize });
         }
 
 
