@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li>
-                    <a asp-area="faculty" asp-controller="student" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                    <a asp-area="faculty" asp-controller="student" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
                         <i class="fa fa-users"></i>Student
                     </a>
                 </li>
@@ -43,6 +43,11 @@
                 <li>
                     <a asp-area="faculty" asp-controller="batch" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
                         <i class="fa fa-tasks"></i>Batch Report
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="faculty" asp-controller="schedule" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                        <i class="fa fa-tasks"></i>Test Schedule
                     </a>
                 </li>
             </ul>

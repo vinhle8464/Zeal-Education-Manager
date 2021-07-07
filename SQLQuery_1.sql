@@ -434,7 +434,7 @@ ADD CONSTRAINT FK_scholarship_student_scholarship
  
 
   --// add account admin, faculty, student
- insert into account values('acc01', 'role01', null, 'account2021001', '$2b$10$v0VEYPQD9dCkBKyocENZrO007bQ1s5GRiUg15sKyDxsuVOVT/.YYG', 'admin', 'admin@gmail.com', '2020-12-12', '', 'True', '', 'e06d45a9e14c42f8a7472f28bdd034b7.jpeg', 'true', 'true')
+ insert into account values('acc01', 'role01', null, 'admin', '$2b$10$v0VEYPQD9dCkBKyocENZrO007bQ1s5GRiUg15sKyDxsuVOVT/.YYG', 'admin', 'admin@gmail.com', '2020-12-12', '', 'True', '', 'e06d45a9e14c42f8a7472f28bdd034b7.jpeg', 'true', 'true')
  --// faculty 
 
  insert into account values('acc02', 'role02', null, 'account2021002', '$2b$10$v0VEYPQD9dCkBKyocENZrO007bQ1s5GRiUg15sKyDxsuVOVT/.YYG', 'teacher1', 'teacher1@gmail.com', '2021-06-11 20:40:00.000', 'address', 'true', '00000000000', 'null.jpg', 'true', 'true')

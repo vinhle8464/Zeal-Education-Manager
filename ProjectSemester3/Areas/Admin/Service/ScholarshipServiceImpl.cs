@@ -23,7 +23,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Scholarship Scholarship)
         {
-            if (context.Scholarships.Any(p => p.ScholarshipName.Equals(Scholarship.ScholarshipName)))
+            if (context.Scholarships.Any(p => p.ScholarshipName.Equals(Scholarship.ScholarshipName) && p.Status == true))
             {
                 return 0;
             }

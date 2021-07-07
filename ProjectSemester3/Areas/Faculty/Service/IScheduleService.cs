@@ -11,5 +11,10 @@ namespace ProjectSemester3.Areas.Faculty.Service
         public List<Subject> subjects(string facultyid);
         public Account getfacultyid(string facultyid);
         public List<Schedule> schedules(string subjectid);
+        List<Subject> subjectsofclass(string classid);
+        List<Exam> exams(string subjectid);
+        Class getclass(string classid);
+        List<TestSchedule> testSchedules(string examid);
+        List<Class> classes(string facultyid);
     }
 }

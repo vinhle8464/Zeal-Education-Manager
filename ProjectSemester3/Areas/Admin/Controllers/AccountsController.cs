@@ -144,7 +144,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         [Route("create")]
         public async Task<dynamic> Create(IFormFile photo, AccountViewModel accountViewModel, string listClassName, string listScholarship, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
-        {
+        {   
             if (ModelState.IsValid)
             {
                 var numAlpha = new Regex("(?<Alpha>[a-zA-Z]*)(?<Numeric>[0-9][0-9]*)");
@@ -304,7 +304,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
                     }
                 }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 // Return view index and auto paging
                 return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
@@ -321,6 +321,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("edit")]
         public async Task<IActionResult> Edit(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
         {
 
@@ -331,7 +332,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 context.Update(accountViewModel.Account);
                 await context.SaveChangesAsync();
 
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 // Return view index and auto paging
                 return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
@@ -343,14 +344,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("delete")]
         public async Task<IActionResult> Delete(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
         {
-            var account = await context.Accounts.FindAsync(accountViewModel.Account.AccountId);
-            context.Accounts.Remove(account);
-            await context.SaveChangesAsync();
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            var account = context.Accounts.Find(accountViewModel.Account.AccountId);
+            account.Status = false;
+            accountService.Update(account);
+            TempData["success"] = "success";
 
             // Return view index and auto paging
             return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });

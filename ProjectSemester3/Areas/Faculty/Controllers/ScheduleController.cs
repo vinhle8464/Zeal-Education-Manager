@@ -31,6 +31,36 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             ViewBag.schedules = scheduleService.schedules(subjectid);
             return View("facultyschedule");
         }
+        [Route("class")]
+        public IActionResult Class(string facultyid)
+        {
+            ViewBag.faculty = scheduleService.getfacultyid(facultyid);
+            ViewBag.classes = scheduleService.classes(facultyid);
+            return View("Class");
+        }
+        [Route("subject")]
+        public IActionResult Subject(string facultyid, string classid)
+        {
+            ViewBag.classid = classid;
+            ViewBag.faculty = scheduleService.getfacultyid(facultyid);
+            ViewBag.subjects = scheduleService.subjectsofclass(classid);
+            return View("subject");
+        }
+        [Route("exam")]
+        public IActionResult Exam(string facultyid, string subjectid, string classid)
+        {
 
+            ViewBag.classes = scheduleService.getclass(classid);
+            ViewBag.faculty = scheduleService.getfacultyid(facultyid);
+            ViewBag.exams = scheduleService.exams(subjectid);
+            return View("exam");
+        }
+        [Route("testschedule")]
+        public IActionResult Testschedule(string facultyid, string examid)
+        {
+            ViewBag.faculty = scheduleService.getfacultyid(facultyid);
+            ViewBag.testschedules = scheduleService.testSchedules(examid);
+            return View("testschedule");
+        }
     }
 }

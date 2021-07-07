@@ -12,5 +12,6 @@ namespace ProjectSemester3.Areas.Faculty.Service
         List<Class> classes(string facultyid);
         List<Attendance> attendances(string subjectid);
         dynamic update(int attendanceid,string check);
+        List<Attendance> search(string search);
     }
 }

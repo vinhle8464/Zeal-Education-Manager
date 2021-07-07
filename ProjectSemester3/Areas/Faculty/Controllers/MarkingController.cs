@@ -62,14 +62,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             ViewBag.exams = markingService.exams(subjectid,classid);
             return View("exam");
         }
-        [Route("score")]
-        public IActionResult Score(string facultyid,string examid)
-        {
-            ViewBag.account = markingService.getfaculty(facultyid);
-          //  ViewBag.mark = markingService.score(examid);
-
-            return View("score");
-        }
+        
         
         [Route("edit")]
         [HttpPost]

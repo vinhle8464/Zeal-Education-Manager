@@ -27,7 +27,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Class classes)
         {
-            if (context.Classes.Any(p => p.ClassName.Equals(classes.ClassName)))
+            if (context.Classes.Any(p => p.ClassName.Equals(classes.ClassName) && p.Status == true))
             {
                 return 0;
             }

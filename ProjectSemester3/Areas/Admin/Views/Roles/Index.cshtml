@@ -1,7 +1,8 @@
 ﻿@model ProjectSemester3.Models.Role
 
 @{ ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; }
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
 
 @Html.Raw(TempData["msg"])
 @{var index = 1;}
@@ -10,33 +11,59 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Roles</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Role
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{ 
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                                }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Role</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Serial</th>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>Action</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var role in ViewBag.roles)
                             {
 
-                                <tr onclick="location.href = '@Url.Action("edit", "roles", new { id=role.RoleId })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@role.RoleName</td>
                                     <td>@role.Desc</td>
-                                    <td>
+                                    <td style="text-align: center;">
 
-                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@role.RoleId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-success editrole" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+
                                         <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@role.RoleId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        <input type="hidden" asp-for="RoleId" value="@role.RoleId" id="idrole" />
 
                                     </td>
                                 </tr>
@@ -50,8 +77,9 @@
         </div>
     </div>
 </div>
+@*Modal create*@
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -60,17 +88,17 @@
 
             </div>
             <div class="modal-body">
-                <form asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                <form asp-action="create" method="post" name="Form">
 
                     <div class="form-group">
                         <label for="NameRole">NameRole</label>
-                        <input type="text" class="form-control" asp-for="RoleName" name="rolename" />
+                        <input type="text" class="form-control" asp-for="RoleName" name="rolename" required="required" />
                     </div>
 
 
                     <div class="form-group">
                         <label asp-for="Desc">Description</label>
-                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                        <input type="text" class="form-control" asp-for="Desc" name="desc" required="required" />
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
@@ -79,20 +107,43 @@
         </div>
     </div>
 </div>
-<script>
-    function validateForm() {
-        var rolename = document.forms["Form"]["rolename"].value;
-        var desc = document.forms["Form"]["desc"].value;
-        if (rolename == null || rolename == "") {
-            alert("Please Fill Role Name Field");
-            return false;
-        }
-        if (desc == null || desc == "") {
-            alert("Please Fill Description Field");
-            return false;
-        }
-    }
-</script>
+@*Modal create*@
+
+
+@*Modal edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-action="edit" method="post" name="Form">
+                    <input type="hidden" id="roleid" asp-for="RoleId" />
+                    <input type="hidden" id="rolename" asp-for="RoleName" />
+
+                    <div class="form-group">
+                        <label for="NameRole">NameRole</label>
+                        <input type="text" class="form-control" asp-for="RoleName" id="namerole" disabled />
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="Desc">Description</label>
+                        <input type="text" class="form-control" asp-for="Desc" id="descrole" />
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Modal edit*@
+
+
 
 
 

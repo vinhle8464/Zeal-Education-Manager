@@ -36,7 +36,7 @@ namespace ProjectSemester3.Areas.Faculty.Service
         }
         public List<Exam> exams(string subjectid, string classid)
         {
-            
+
 
             return _context.Exams.Where(m => m.SubjectId == subjectid).ToList();
         }
@@ -46,9 +46,9 @@ namespace ProjectSemester3.Areas.Faculty.Service
             return _context.Accounts.FirstOrDefault(m => m.AccountId == facultyid);
         }
 
-       
 
-        
+
+
 
         public Class getclass(string classid)
         {
@@ -57,18 +57,37 @@ namespace ProjectSemester3.Areas.Faculty.Service
 
         public Exam getexam(string examid)
         {
-           
+
             return _context.Exams.FirstOrDefault(m => m.ExamId == examid);
         }
 
-        
 
-        public  Task update(List<Mark> marks)
+
+        public Task update(List<Mark> marks)
         {
-            foreach(var mark in marks)
+            foreach (var mark in marks)
+
             {
-                _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                 
+                if ((decimal)(mark.Mark1 / mark.MaxMark) * 100 >= mark.Rate)
+                {
+                    mark.StatusMark = "pass";
+                    _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                }
+                else
+                {
+                    mark.StatusMark = "fail";
+
+                    _context.Pays.Add(new Pay
+                    {
+                        AccountId = mark.StudentId,
+                        Payment = "Paypal",
+                        Title="finefee"
+
+                    });
+                    _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                }
+
+
             }
             _context.SaveChanges();
             return Task.CompletedTask;

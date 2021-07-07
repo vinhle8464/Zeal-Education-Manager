@@ -14,24 +14,27 @@ namespace ProjectSemester3.Areas.Admin.Service
             context = _context;
         }
 
-   
+
 
         public async Task<dynamic> Create(Professional professional)
         {
             if (context.Professionals.Any(p => p.FacultyId == professional.FacultyId && p.SubjectId == professional.SubjectId))
             {
-                return 0;
+                professional.Status = true;
+                context.Entry(professional).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                return await context.SaveChangesAsync();
+
             }
             else
             {
                 context.Professionals.Add(professional);
-              return await context.SaveChangesAsync();
+                return await context.SaveChangesAsync();
             }
-            
+
         }
 
 
-       public async Task<Professional> Find(string FacultyId, string SubjectId) => await context.Professionals.FirstOrDefaultAsync(p => p.FacultyId == FacultyId && p.SubjectId == SubjectId);
+        public async Task<Professional> Find(string FacultyId, string SubjectId) => await context.Professionals.FirstOrDefaultAsync(p => p.FacultyId == FacultyId && p.SubjectId == SubjectId);
 
         public async Task<List<Professional>> FindAll() => await context.Professionals.OrderBy(p => p.FacultyId).ToListAsync();
 
@@ -81,6 +84,45 @@ namespace ProjectSemester3.Areas.Admin.Service
                 var obj = result.FirstOrDefault(s => s.SubjectId == item);
                 result.Remove(obj);
             }
+            return result;
+        }
+
+        // get keyword by term
+        public async Task<List<string>> GetKeyWordByKeyword(string keyword)
+        {
+            var list = new List<string>();
+
+            var listFaculty = await context.Accounts
+                .Where(c => c.Fullname.ToLower().Contains(keyword.ToLower()) && c.Status == true && c.RoleId == "role02")
+                .Select(c => c.Fullname).ToListAsync();
+            foreach (var item in listFaculty)
+            {
+                list.Add(item);
+            }
+
+            var listSubject = await context.Subjects
+                .Where(c => c.SubjectName.ToLower().Contains(keyword.ToLower()) && c.Status == true)
+                .Select(c => c.SubjectName).ToListAsync();
+            foreach (var item in listSubject)
+            {
+                list.Add(item);
+            }
+
+            return list;
+        }
+
+
+
+        public async Task<List<Professional>> Search(string searchKeyword1, string subjectKeyword)
+        {
+            var professionals = context.Professionals.AsQueryable();
+
+            if (subjectKeyword != null) professionals = professionals.Where(s => s.Subject.SubjectName.StartsWith(subjectKeyword));
+
+            if (searchKeyword1 != null) professionals = professionals.Where(b => b.Faculty.Fullname.StartsWith(searchKeyword1) || b.Subject.SubjectName.StartsWith(searchKeyword1));
+
+            var result = professionals.Where(b => b.Status == true).ToList(); // execute query
+
             return result;
         }
     }

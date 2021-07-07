@@ -24,7 +24,20 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string idrole)
+        {
+            var role = await roleService.FindAjax(idrole);
+            var roleAjax = new Role
+            {
+                RoleId = role.RoleId,
+                RoleName = role.RoleName,
+                Desc = role.Desc,
+            };
+            return new JsonResult(roleAjax);
 
+        }
 
         // Show page role
         [Route("index")]
@@ -87,7 +100,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     }
                     else
                     {
-                        TempData["msg"] = "<script>alert('Successfully!');</script>";
+                        TempData["success"] = "success";
 
                         return RedirectToAction(nameof(Index));
 
@@ -102,7 +115,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     role.Desc = role.Desc.Trim();
                     role.Status = true;
                     await roleService.Create(role);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
                 }
 
@@ -112,17 +125,6 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         }
 
-        // open page edit role
-        [HttpGet]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id)
-        {
-           
-
-            var role = await roleService.Find(id);
-           
-            return View("edit", role);
-        }
 
         // edit role in db
         [HttpPost]
@@ -135,20 +137,16 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 try
                 {
+                    role.Status = true;
                     await roleService.Update(role);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!roleService.Exists(role.RoleId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    
                 }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
+
+                //TempData["msg"] = "<script>alert('Successfully!');</script>";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -166,7 +164,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
 
             await roleService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

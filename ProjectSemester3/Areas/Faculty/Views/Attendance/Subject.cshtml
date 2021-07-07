@@ -7,18 +7,19 @@
 
 <!-- MAIN CONTENT-->
 
-    <div class="section__content section__content--p30">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="overview-wrap">
-                        <h2 class="title-1">Subject</h2>
-                       
-                    </div>
+<div class="section__content section__content--p30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="overview-wrap">
+                    <h2 class="title-1">Subject</h2>
+
                 </div>
             </div>
-            <div class="row m-t-25">
-                @foreach (var subjects in ViewBag.subjects) {
+        </div>
+        <div class="row m-t-25">
+            @foreach (var subjects in ViewBag.subjects)
+            {
                 <div class="col-sm-6">
                     <div class="overview-item overview-item--c3">
                         <div class="overview__inner">
@@ -27,20 +28,20 @@
                                     <a asp-area="faculty" asp-controller="attendance" asp-action="attendances" asp-route-facultyid="@ViewBag.account.AccountId" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
                                 </div>
                                 <div class="text">
-                                    <h1>Subject Name: @subjects.SubjectName</h1>
-                                    <h1><span>@subjects.Status</span></h1>
+                                    <h3>@subjects.SubjectName</h3>
+                                    <span>@subjects.Status</span>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
 
-                }
+            }
 
-            </div>
         </div>
     </div>
+</div>
 
 
 

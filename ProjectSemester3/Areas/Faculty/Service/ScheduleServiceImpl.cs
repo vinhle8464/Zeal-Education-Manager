@@ -26,5 +26,30 @@ namespace ProjectSemester3.Areas.Faculty.Service
         {
             return context.Schedules.Where(m => m.SubjectId == subjectid).ToList();
         }
+        public List<Subject> subjectsofclass(string classid)
+        {
+            return context.CourseSubjects.Where(m => m.CourseId == context.Courses.FirstOrDefault(m => m.CourseId == context.Batches.FirstOrDefault(m => m.ClassId == classid).CourseId).CourseId).Select(m => m.Subject).ToList();
+        }
+        public List<Exam> exams(string subjectid)
+        {
+
+
+            return context.Exams.Where(m => m.SubjectId == subjectid).ToList();
+        }
+
+        public Class getclass(string classid)
+        {
+            return context.Classes.FirstOrDefault(m => m.ClassId == classid);
+        }
+
+        public List<TestSchedule> testSchedules(string examid)
+        {
+            return context.TestSchedules.Where(m => m.ExamId == examid).ToList();
+        }
+
+        public List<Class> classes(string facultyid)
+        {
+            return context.ClassAssignments.Where(m => m.FacultyId == facultyid).Select(n => n.Class).ToList();
+        }
     }
 }

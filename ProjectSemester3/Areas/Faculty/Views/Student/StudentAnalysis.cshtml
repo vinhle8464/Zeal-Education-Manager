@@ -217,7 +217,7 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        <form class="form-header" action="" method="POST">
+                        <form hidden class="form-header" action="" method="POST">
                             <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
                             <button class="au-btn--submit" type="submit">
                                 <i class="zmdi zmdi-search"></i>
@@ -456,7 +456,7 @@
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
                                         <h3 class="title-2 m-b-40">
-                                            Student Information
+                                            Exam Information
                                         </h3>
                                         <table class="table table-borderless table-striped table-earning">
                                             <thead>
@@ -481,7 +481,7 @@
                                                         <td>@students.Exam.Title</td>
                                                         <td>@students.Mark1"</td>
                                                         <td>@students.MaxMark</td>
-                                                        @if ((students.Mark1 / students.MaxMark) > (decimal)0.4)
+                                                        @if ((students.Mark1 / students.MaxMark) >= (decimal)0.4)
                                                         {
 
                                                             <td>Pass</td>

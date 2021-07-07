@@ -18,7 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Batch batch)
         {
-            if (context.Batches.Any(p => p.ClassId.Equals(batch.ClassId) && p.CourseId.Equals(batch.CourseId)))
+            if (context.Batches.Any(p => p.ClassId.Equals(batch.ClassId) && p.CourseId.Equals(batch.CourseId) && p.Status == true))
             {
                 return 0;
             }
@@ -176,110 +176,13 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<List<Batch>> Search(string searchKeyword, string courseKeyword, string classKeyword)
         {
-            var listBatch = new List<Batch>();
-            //if (searchKeyword == null && courseKeyword == null && classKeyword == null)
-            //{
-            //    var listAll = await context.Batches.Where(b => b.Status == true).OrderByDescending(b => b.StartDate).ToListAsync();
-            //    foreach (var item in listAll)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-            //else if (searchKeyword != null && courseKeyword == null && classKeyword == null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b => b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword) &&
-            //      b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-            //else if (searchKeyword == null && courseKeyword == null && classKeyword != null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b =>
-            //    b.Class.ClassName == classKeyword &&
-            //    b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-
-            //}
-            //else if (searchKeyword == null && courseKeyword != null && classKeyword == null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b => b.Course.CourseName == courseKeyword &&
-            //      b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-            //else if (searchKeyword != null && courseKeyword != null && classKeyword == null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b => b.Course.CourseName == courseKeyword && (b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword)) &&
-            //      b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-            //else if (searchKeyword != null && courseKeyword == null && classKeyword != null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b =>
-            //       b.Class.ClassName == classKeyword &&
-            //     (b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword)) &&
-            //       b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-
-            //}
-
-            //else if (searchKeyword == null && courseKeyword != null && classKeyword != null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b => b.Course.CourseName == courseKeyword &&
-            //      b.Class.ClassName == classKeyword &&
-            //      b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-            //else if (searchKeyword != null && courseKeyword != null && classKeyword != null)
-            //{
-            //    var listBySearch = await context.Batches.Where(b =>
-            //        b.Course.CourseName == courseKeyword &&
-            //        b.Class.ClassName == classKeyword &&
-            //        (b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword)) &&
-            //        b.Status == true)
-            //        .OrderByDescending(b => b.StartDate).ToListAsync();
-
-            //    foreach (var item in listBySearch)
-            //    {
-            //        listBatch.Add(item);
-            //    }
-            //}
-        
             var batches = context.Batches.AsQueryable();
             if (courseKeyword != null) batches = batches.Where(s => s.Course.CourseName.StartsWith(courseKeyword));
-            if (classKeyword != null) batches = batches.Where(s => s.Graduate.ToString().StartsWith(classKeyword));
+            if (classKeyword != null) batches = batches.Where(s => s.Graduate == Boolean.Parse(classKeyword));
 
             if (searchKeyword != null) batches = batches.Where(b => b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword));
            
-            var result = batches.ToList(); // execute query
+            var result = batches.Where(b => b.Status == true).ToList(); // execute query
 
             return result;
         }
