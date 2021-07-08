@@ -1,7 +1,7 @@
 ﻿@model ProjectSemester3.Models.Scholarship
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Scholarship";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,13 +11,39 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+
+                @*///////*@
                 <div class="card-body">
-                    <h1>Scholarship</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Scholarship
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Scholarship</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -32,15 +58,16 @@
                             @foreach (var scholarship in ViewBag.scholarships)
                             {
 
-                                <tr onclick="location.href = '@Url.Action("edit", "scholarships", new { id=scholarship.ScholarshipId })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@scholarship.ScholarshipName</td>
                                     <td>@scholarship.Discount</td>
                                     <td>@scholarship.Desc</td>
-                                    <td>
+                                    <td style="text-align: center;">
 
-                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@scholarship.ScholarshipId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-success editscholarship" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
                                         <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@scholarship.ScholarshipId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        <input type="hidden" asp-for="ScholarshipId" value="@scholarship.ScholarshipId" id="idscholarship" />
 
                                     </td>
                                 </tr>
@@ -55,30 +82,31 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" scholarship="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+@*Modal Create*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" scholarship="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create Scholarship</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
 
             </div>
             <div class="modal-body">
-                <form asp-controller="scholarships" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                <form asp-controller="scholarships" asp-action="create" method="post" name="Form">
 
                     <div class="form-group">
                         <label for="ScholarshipName">Name</label>
-                        <input type="text" class="form-control" asp-for="ScholarshipName" name="scholarshipName" />
+                        <input type="text" class="form-control" asp-for="ScholarshipName" required="required" />
                     </div>
 
                     <div class="form-group">
                         <label for="discount">Discount</label>
-                        <input type="number" class="form-control" asp-for="Discount" name="discount" min="0" max="100" />
+                        <input type="number" class="form-control" asp-for="Discount" min="0" max="100"  required="required"/>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="Desc">Description</label>
-                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                        <input type="text" class="form-control" asp-for="Desc" required="required"/>
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
@@ -87,23 +115,41 @@
         </div>
     </div>
 </div>
-@*<script>
-        function validateForm() {
-            var namee = document.forms["Form"]["scholarshipName"].value;
-            var desc = document.forms["Form"]["desc"].value;
-            var discount = document.forms["Form"]["discount"].value;
+@*Modal Create*@
 
-            if (namee == null || namee == "") {
-                alert("Please Fill Scholarship Name Field");
-                return false;
-            }
-            if (discount == null || discount == "") {
-                alert("Please Fill Discount Field");
-                return false;
-            }
-            if (desc == null || desc == "") {
-                alert("Please Fill Description Field");
-                return false;
-            }
-        }
-    </script>*@
+@*Modal Edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" scholarship="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-controller="scholarships" asp-action="edit" method="post" name="Form">
+                    <input type="hidden" asp-for="ScholarshipId" id="idscholarship" />
+                    <input type="hidden" asp-for="Status" id="statusscholarship" />
+
+                    <div class="form-group">
+                        <label for="ScholarshipName">Name</label>
+                        <input type="text" class="form-control" asp-for="ScholarshipName" id="namescholarship" required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discount">Discount</label>
+                        <input type="number" class="form-control" asp-for="Discount" min="0" max="100" id="discountscholarship" required="required" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Desc">Description</label>
+                        <input type="text" class="form-control" asp-for="Desc" id="descscholarship" required="required"/>
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Modal Edit*@

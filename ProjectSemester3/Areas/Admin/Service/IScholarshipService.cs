@@ -16,5 +16,6 @@ namespace ProjectSemester3.Areas.Admin.Service
          string GetNewestId();
          Task<Scholarship> Update(Scholarship Scholarship);
          bool Exists(string ScholarshipId);
+        public Task<Scholarship> FindAjax(string scholarshipId);
     }
 }

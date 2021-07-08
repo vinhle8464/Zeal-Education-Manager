@@ -25,7 +25,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<int> Create(Exam exam)
         {
-            if (context.Exams.Any(p => p.ExamId == exam.ExamId && p.SubjectId == exam.SubjectId && p.Status == true))
+            if (context.Exams.Any(p => p.Title == exam.Title && p.SubjectId == exam.SubjectId && p.Status == true))
             {
                 return 0;
             }
@@ -40,8 +40,9 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task Delete(string ExamId, string SubjectId)
         {
-            var exam = context.Exams.Where(p => p.ExamId == ExamId && p.SubjectId == SubjectId).FirstOrDefault();
-            context.Remove(exam);
+            var exam = await context.Exams.FirstOrDefaultAsync(p => p.ExamId == ExamId && p.SubjectId == SubjectId && p.Status == true);
+            exam.Status = false;
+            context.Entry(exam).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await context.SaveChangesAsync();
         }
 
@@ -69,8 +70,23 @@ namespace ProjectSemester3.Areas.Admin.Service
             return exam;
         }
 
+        public async Task<Exam> FindAjax(string examId)
+        {
+            return await context.Exams.FirstOrDefaultAsync(c => c.ExamId == examId && c.Status == true);
+        }
 
+        public async Task<List<Exam>> Search(string searchExam, string filterSubject)
+        {
+            var exams = context.Exams.AsQueryable();
 
+            if (filterSubject != null) exams = exams.Where(s => s.SubjectId.StartsWith(filterSubject));
+
+            if (searchExam != null) exams = exams.Where(b => b.Title.StartsWith(searchExam)); ;
+
+            var result = exams.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
 
     }
 }
