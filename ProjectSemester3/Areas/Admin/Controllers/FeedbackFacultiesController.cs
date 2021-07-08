@@ -90,7 +90,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 }
                 else
                 {
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -121,7 +121,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await feedbackFacultyService.Update(feedbackFaculty);
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -140,7 +140,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             ViewBag.feedbackFacultys = await feedbackFacultyService.FindAll();
             ViewData["FacultyId"] = new SelectList(_context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname");
             ViewData["FeedbackId"] = new SelectList(_context.Feedbacks, "FeedbackId", "FeedbackId");
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

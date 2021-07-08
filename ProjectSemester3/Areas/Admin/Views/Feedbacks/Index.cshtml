@@ -69,13 +69,13 @@
                                 <th>Specialize</th>
                                 <th>Assiduous</th>
                                 <th>Note</th>
-                                <th>Action</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var feedback in ViewBag.feedbacks.PagedList)
                             {
-                                <tr onclick="location.href = '@Url.Action("edit", "feedbacks", new { id=feedback.FeedbackId })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@feedback.Subject.SubjectName</td>
                                     <td>@feedback.Teaching</td>
@@ -83,10 +83,18 @@
                                     <td>@feedback.Specialize</td>
                                     <td>@feedback.Assiduous</td>
                                     <td>@feedback.Note</td>
-                                    <td>
+                                    <td style="text-align:center;">
 
-                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@feedback.FeedbackId"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@feedback.FeedbackId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        @*<a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@feedback.FeedbackId"><i class="fas fa-edit"></i></a>*@
+                                
+                                        <form asp-controller="feedbacks" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Feedback.FeedbackId" value="@feedback.FeedbackId" />
+                                            <input type="hidden" name="searchFeedback" value="@ViewBag.searchFeedback" />
+                                            <input type="hidden" name="page" value="@ViewBag.searchFeedback" />
+
+                                          
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
 
                                     </td>
                                 </tr>
@@ -117,7 +125,7 @@
 
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -125,7 +133,11 @@
                 <h4 class="modal-title" id="myModalLabel">Create Feedback</h4>
             </div>
             <div class="modal-body">
-                <form asp-controller="feedbacks" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                <form asp-controller="feedbacks" asp-action="create" method="post" name="Form">
+
+                    <input type="hidden" name="searchFeedback" value="@ViewBag.searchFeedback" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
                     @*Search autocomplete*@
                     <div class="form-group">
                         <label class="control-label">Faculty</label>
@@ -141,29 +153,29 @@
 
                     <div class="form-group">
                         <label for="teaching">Teaching</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Teaching" name="teaching" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Teaching"  required="required" />
                     </div>
                     <div class="form-group">
                         <label for="exercises">Exercises</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Exercises" name="exercises" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Exercises"  required="required" />
 
                     </div>
                     <div class="form-group">
                         <label for="teacherEthics">TeacherEthics</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.TeacherEthics" name="teacherEthics" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.TeacherEthics" required="required" />
 
                     </div>
                     <div class="form-group">
                         <label for="specialize">Specialize</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Specialize" name="specialize" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Specialize" required="required" />
                     </div>
                     <div class="form-group">
                         <label for="assiduous">Assiduous</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Assiduous" name="assiduous" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Assiduous"  required="required" />
                     </div>
                     <div class="form-group">
                         <label for="note">Note</label>
-                        <input type="text" class="form-control" asp-for="Feedback.Note" name="note" />
+                        <input type="text" class="form-control" asp-for="Feedback.Note" required="required" />
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
@@ -172,37 +184,5 @@
         </div>
     </div>
 </div>
-<script>
-    function validateForm() {
-        var teaching = document.forms["Form"]["teaching"].value.trim();
-        var exercises = document.forms["Form"]["exercises"].value.trim();
-        var teacherEthics = document.forms["Form"]["teacherEthics"].value.trim();
-        var specialize = document.forms["Form"]["specialize"].value.trim();
-        var assiduous = document.forms["Form"]["assiduous"].value.trim();
-        var note = document.forms["Form"]["note"].value.trim();
-        if (teaching == null || teaching == "") {
-            alert("Please Fill Teaching Field");
-            return false;
-        }
-        if (exercises == null || exercises == "") {
-            alert("Please Fill Exercises Field");
-            return false;
-        }
-        if (teacherEthics == null || teacherEthics == "") {
-            alert("Please Fill TeacherEthics Field");
-            return false;
-        }
-        if (specialize == null || specialize == "") {
-            alert("Please Fill Specialize Field");
-            return false;
-        }
-        if (assiduous == null || assiduous == "") {
-            alert("Please Fill Assiduous Field");
-            return false;
-        }
-        if (note == null || note == "") {
-            alert("Please Fill Note Field");
-            return false;
-        }
-    }
-</script>
+
+
