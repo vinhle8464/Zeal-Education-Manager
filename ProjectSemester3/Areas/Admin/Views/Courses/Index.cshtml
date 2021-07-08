@@ -133,23 +133,23 @@
                     <input type="hidden" name="pageSize" value="@ViewBag.psize" />
                     <div class="form-group">
                         <label for="CourseName">CourseName</label>
-                        <input type="text" class="form-control" asp-for="Course.CourseName" name="coursename" />
+                        <input type="text" class="form-control" asp-for="Course.CourseName" name="coursename" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="Fee">Fee</label>
-                        <input type="number" class="form-control" asp-for="Course.Fee" name="fee" />
+                        <input type="number" class="form-control" asp-for="Course.Fee" name="fee" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="Term">Term</label>
-                        <input type="text" class="form-control" asp-for="Course.Term" name="term" />
+                        <input type="text" class="form-control" asp-for="Course.Term" name="term" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="certificate">Certificate</label>
-                        <input type="text" class="form-control" asp-for="Course.Certificate" name="certificate" />
+                        <input type="text" class="form-control" asp-for="Course.Certificate" name="certificate" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="desc">Description</label>
-                        <input type="text" class="form-control" asp-for="Course.Desc" name="desc" />
+                        <input type="text" class="form-control" asp-for="Course.Desc" name="desc" required="required"/>
                     </div>
                     <br />
                     <input type="submit" value="ADD" class="btn btn-primary" />

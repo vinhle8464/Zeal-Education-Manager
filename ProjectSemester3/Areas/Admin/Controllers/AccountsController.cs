@@ -163,7 +163,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     }
                 }
                 var batch = await accountService.GetBatch(classid.ClassId);
-                if (batch == null)
+                var course = new Course();
+                if (batch == null && accountViewModel.Account.RoleId == "role03")
                 {
                     TempData["msg"] = "<script>alert('This Class do not have Batch! Please create a Batch and try again.');</script>";
                     // Return view index and auto paging
@@ -171,14 +172,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 }
                 else
                 {
-
-
+                     course = await accountService.GetCourse(batch.CourseId);
                 }
-                
 
-                var course = await accountService.GetCourse(batch.CourseId);
 
-                if (course != null)
+                if (course != null && accountViewModel.Account.RoleId == "role03")
                 {
                     // batch = await accountService.GetBatch(classid.ClassId);
                 }
@@ -192,7 +190,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
                 var scholarship = new Scholarship();
 
-                if (listScholarship != null)
+                if (listScholarship != null && accountViewModel.Account.RoleId == "role03")
                 {
                     scholarship = await context.Scholarships.FirstOrDefaultAsync(c => c.ScholarshipName == listScholarship.Trim());
                     if (scholarship == null)
