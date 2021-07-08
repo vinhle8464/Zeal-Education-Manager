@@ -43,5 +43,11 @@ namespace ProjectSemester3.Services
         {
             return context.Marks.Where(m => m.StatusMark == "fail" && m.StudentId == studentid).ToList();
         }
+
+        public List<Mark> GetPass(string studentid)
+        {
+            return context.Marks.Where(m => m.StatusMark == "pass" && m.StudentId == studentid).ToList();
+
+        }
     }
 }

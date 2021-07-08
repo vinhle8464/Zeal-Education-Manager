@@ -11,6 +11,8 @@ namespace ProjectSemester3.Services
         public List<Mark> GetMarkByStudentId(string studentid);
         public List<string> CheckStatus(string studentid);
         public List<Mark> GetSubjectFaid(string studentid);
+        public List<Mark> GetPass(string studentid);
+
 
 
     }

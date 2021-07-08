@@ -20,7 +20,10 @@
 </style>
 
 @{ var index = 1;
-    var index1 = 1;}
+    var index1 = 1;
+    var index2 = 1;
+    var index3 = 1;
+    }
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -38,7 +41,7 @@
                             <a class="nav-link" id="sem3-tab" data-toggle="tab" href="#sem3" role="tab" aria-controls="sem3" aria-selected="false">LIST MARK FAILED</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="sem4-tab" data-toggle="tab" href="#sem4" role="tab" aria-controls="sem4" aria-selected="false">Retest Subject</a>
+                            <a class="nav-link" id="sem4-tab" data-toggle="tab" href="#sem4" role="tab" aria-controls="sem4" aria-selected="false">RETEST SUBJECTS</a>
                         </li>
                     </ul>
                     <div class="tab-content ml-1" id="myTabContent">
@@ -85,12 +88,31 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="content">
-                                        @foreach (var item in ViewBag.listPassed)
-                                        {
-                                            <div class="form-control">
-                                                @item
-                                            </div>
-                                        }
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Serial</th>
+                                                    <th>Exam Title</th>
+                                                    <th>Subject</th>
+                                                    <th>Mark</th>
+                                                    <th>Max Mark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.listPassed)
+                                                {
+                                                    <tr>
+                                                        <td>@index1</td>
+                                                        <td>@item.Exam.Title</td>
+                                                        <td>@item.Exam.Subject.SubjectName</td>
+                                                        <td>@item.Mark1</td>
+                                                        <td>@item.MaxMark</td>
+                                                    </tr>
+                                                    index1++;
+                                                }
+                                            </tbody>
+                                        </table>
+
                                     </div>
                                 </div>
                             </div>
@@ -99,12 +121,30 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="content">
-                                        @foreach (var item in ViewBag.listFailed)
-                                        {
-                                            <div class="form-control">
-                                                @item
-                                            </div>
-                                        }
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Serial</th>
+                                                    <th>Exam Title</th>
+                                                    <th>Subject</th>
+                                                    <th>Mark</th>
+                                                    <th>Max Mark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.listFailed)
+                                                {
+                                                    <tr>
+                                                        <td>@index2</td>
+                                                        <td>@item.Exam.Title</td>
+                                                        <td>@item.Exam.Subject.SubjectName</td>
+                                                        <td>@item.Mark1</td>
+                                                        <td>@item.MaxMark</td>
+                                                    </tr>
+                                                    index2++;
+                                                }
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -130,13 +170,13 @@
                                                     @foreach (var item in ViewBag.retestSubject)
                                                     {
                                                         <tr>
-                                                            <td>@index1</td>
+                                                            <td>@index3</td>
                                                             <td>@item.Exam.Title</td>
                                                             <td>@item.Exam.Subject.SubjectName</td>
                                                             <td>@item.Mark1</td>
                                                             <td>@item.MaxMark</td>
                                                         </tr>
-                                                        index1++;
+                                                        index3++;
                                                     }
                                                 </tbody>
                                             </table>
