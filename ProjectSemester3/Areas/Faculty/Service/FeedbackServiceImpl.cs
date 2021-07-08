@@ -28,7 +28,13 @@ namespace ProjectSemester3.Areas.Faculty.Service
 
         public List<Subject> subjects(string facultyid)
         {
-            return context.CourseSubjects.Where(m => m.Course.Batches.FirstOrDefault().Class.ClassAssignments.FirstOrDefault().FacultyId == facultyid).Select(m => m.Subject).ToList();
+            List<Subject> subjects = new List<Subject>();
+            foreach (var subjectid in context.CourseSubjects.Where(m => m.Course.Batches.FirstOrDefault().Class.ClassAssignments.FirstOrDefault().FacultyId == facultyid).Distinct().Select(m => m.Subject.SubjectId).ToList())
+            {
+                subjects = subjects.Union(context.Subjects.Where(m => m.SubjectId == subjectid).ToList()).ToList();
+            }
+            
+            return subjects ;
 
             
         }

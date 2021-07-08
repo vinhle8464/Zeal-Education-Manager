@@ -26,14 +26,12 @@
                                     <a asp-area="faculty" asp-controller="feedback" asp-action="evaluate" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
                                 </div>
                                 <div class="text">
-
-                                    <h3>@subjects.Status</h3>
-                                    <span>@subjects.SubjectName</span>
+                                    
+                                    <h3>@subjects.SubjectName</h3>
+                                    <span>@subjects.Status</span>
                                 </div>
                             </div>
-                            <div class="overview-chart">
-                                <canvas id="widgetChart1"></canvas>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
