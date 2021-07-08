@@ -66,7 +66,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
                 ViewBag.feedbacks = await feedBackService.FindAll();
-                ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
+                //ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
 
                 var feedbacks = feedBackService.Search(searchFeedback);
                 ViewBag.searchFeedback = searchFeedback;
@@ -107,7 +107,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create(Feedback feedback, string feedbackFaculty, string subjectFeedback)
+        public async Task<IActionResult> Create(FeedbackViewModel feedbackViewModel, string feedbackFaculty, string subjectFeedback, string searchFeedback, int? pageSize)
         {
             if (ModelState.IsValid && subjectFeedback != null)
             {
@@ -116,17 +116,18 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 if (facultyId == null)
                 {
                     TempData["msg"] = "<script>alert('Faculty is not Exist!');</script>";
-                    return RedirectToAction(nameof(Index));
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "feedbacks", action = "index", searchFeedback = searchFeedback, pageSize = pageSize });
 
                     // Return view index and auto paging
                     //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
                 }
 
 
-                feedback.SubjectId = subjectFeedback;
-                feedback.Note = feedback.Note.Trim();
-                feedback.Status = true;
-                var result = await feedBackService.Create(feedback);
+                feedbackViewModel.Feedback.SubjectId = subjectFeedback;
+                feedbackViewModel.Feedback.Note = feedbackViewModel.Feedback.Note.Trim();
+                feedbackViewModel.Feedback.Status = true;
+                var result = await feedBackService.Create(feedbackViewModel.Feedback);
                 if(result != null)
                 {
                     await feedBackService.CreateFeedbackFaculty(new FeedbackFaculty {
@@ -135,56 +136,59 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                         Status = true
                     });
                 }
-                TempData["msg"] = "<script>alert('Successfully');</script>";
+                TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "feedbacks", action = "index", searchFeedback = searchFeedback, pageSize = pageSize });
 
 
             }
             ViewBag.feedbacks = await feedBackService.FindAll();
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
+            //ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "feedbacks", action = "index", searchFeedback = searchFeedback, pageSize = pageSize });
         }
 
-        // GET: Admin/Feedbacks/Edit/5
-        [Route("edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var feedback = await feedBackService.Find(id);
+        //// GET: Admin/Feedbacks/Edit/5
+        //[Route("edit")]
+        //public async Task<IActionResult> Edit(int id)
+        //{
+        //    var feedback = await feedBackService.Find(id);
 
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
-            return View("edit", feedback);
+        //    ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
+        //    return View("edit", feedback);
 
-        }
+        //}
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit")]
-        public async Task<IActionResult> Edit([Bind("FeedbackId,SubjectId,Teaching,Exercises,TeacherEthics,Specialize,Assiduous,Note")] Feedback feedback)
-        {
-            if (ModelState.IsValid)
-            {
-                await feedBackService.Update(feedback);
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Route("edit")]
+        //public async Task<IActionResult> Edit([Bind("FeedbackId,SubjectId,Teaching,Exercises,TeacherEthics,Specialize,Assiduous,Note")] Feedback feedback)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        await feedBackService.Update(feedback);
+        //        TempData["msg"] = "<script>alert('Successfully!');</script>";
 
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
-            return View(feedback);
-        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", feedback.SubjectId);
+        //    return View(feedback);
+        //}
 
         // GET: Admin/Feedbacks/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(FeedbackViewModel feedbackViewModel, string searchFeedback, int? pageSize)
         {
-            await feedBackService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            await feedBackService.Delete(feedbackViewModel.Feedback.FeedbackId);
+            TempData["success"] = "success";
 
             ViewBag.feedbacks = await feedBackService.FindAll();
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
+            // ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "feedbacks", action = "index", searchFeedback = searchFeedback, pageSize = pageSize });
         }
 
     }
