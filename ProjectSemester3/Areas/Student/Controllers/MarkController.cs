@@ -44,6 +44,9 @@ namespace ProjectSemester3.Areas.Student.Controllers
                         listPassed.Add(item);
                     }
                 }
+
+                ViewBag.retestSubject = markService.GetSubjectFaid(account.AccountId);
+
                 ViewBag.listFailed = listFailed;
                 ViewBag.listPassed = listPassed;
                 return View();

@@ -38,5 +38,10 @@ namespace ProjectSemester3.Services
             }
             return listRank;
         }
+
+        public List<Mark> GetSubjectFaid(string studentid)
+        {
+            return context.Marks.Where(m => m.StatusMark == "fail" && m.StudentId == studentid).ToList();
+        }
     }
 }

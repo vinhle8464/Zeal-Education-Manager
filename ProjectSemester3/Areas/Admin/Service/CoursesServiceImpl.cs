@@ -78,7 +78,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
             var courses = context.Courses.AsQueryable();
 
-            if (searchCourse != null) courses = courses.Where(b => b.CourseName.StartsWith(searchCourse) || b.Certificate.StartsWith(searchCourse));
+            if (searchCourse != null) courses = courses.Where(b => b.CourseName.Contains(searchCourse) || b.Certificate.Contains(searchCourse));
 
             var result = courses.Where(b => b.Status == true).ToList(); // execute query
 

@@ -17,6 +17,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         public Task<Feedback> Update(Feedback Feedback);
         public Task<List<string>> GetListFaculty(string keyword);
         public List<Subject> GetListSubjectAsync(string facultyName);
+        public List<Feedback> Search(string searchFeedback);
 
     }
 }

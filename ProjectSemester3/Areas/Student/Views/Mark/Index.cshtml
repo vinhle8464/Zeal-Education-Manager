@@ -19,7 +19,8 @@
     }
 </style>
 
-@{ var index = 1;}
+@{ var index = 1;
+    var index1 = 1;}
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -37,7 +38,7 @@
                             <a class="nav-link" id="sem3-tab" data-toggle="tab" href="#sem3" role="tab" aria-controls="sem3" aria-selected="false">LIST MARK FAILED</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="sem4-tab" data-toggle="tab" href="#sem4" role="tab" aria-controls="sem4" aria-selected="false">---</a>
+                            <a class="nav-link" id="sem4-tab" data-toggle="tab" href="#sem4" role="tab" aria-controls="sem4" aria-selected="false">Retest Subject</a>
                         </li>
                     </ul>
                     <div class="tab-content ml-1" id="myTabContent">
@@ -118,46 +119,25 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Serial</th>
-                                                        <th>Module</th>
+                                                        <th>Exam title</th>
+                                                        <th>Subject</th>
                                                         <th>Mark</th>
                                                         <th>Max Mark</th>
-                                                        <th>Rate</th>
-                                                        <th>Status</th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Web Component Development - WCD (LT)</td>
-                                                        <td>16.0</td>
-                                                        <td>20.0</td>
-                                                        <td>80.0</td>
-                                                        <td>DISTINCTION</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Web Component Development - WCD (TH)</td>
-                                                        <td>16.0</td>
-                                                        <td>20.0</td>
-                                                        <td>80.0</td>
-                                                        <td>DISTINCTION</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Web Component Development - WCD (LT)</td>
-                                                        <td>16.0</td>
-                                                        <td>20.0</td>
-                                                        <td>80.0</td>
-                                                        <td>DISTINCTION</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td>Web Component Development - WCD (TH)</td>
-                                                        <td>16.0</td>
-                                                        <td>20.0</td>
-                                                        <td>80.0</td>
-                                                        <td>DISTINCTION</td>
-                                                    </tr>
+                                                    @foreach (var item in ViewBag.retestSubject)
+                                                    {
+                                                        <tr>
+                                                            <td>@index1</td>
+                                                            <td>@item.Exam.Title</td>
+                                                            <td>@item.Exam.Subject.SubjectName</td>
+                                                            <td>@item.Mark1</td>
+                                                            <td>@item.MaxMark</td>
+                                                        </tr>
+                                                        index1++;
+                                                    }
                                                 </tbody>
                                             </table>
                                         </form>

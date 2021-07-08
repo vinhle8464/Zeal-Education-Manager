@@ -54,7 +54,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
             var feedbackFaculty = context.FeedbackFaculties.AsQueryable();
 
-            if (searchFeedbackFaculty != null) feedbackFaculty = feedbackFaculty.Where(b => b.Faculty.Fullname.StartsWith(searchFeedbackFaculty));
+            if (searchFeedbackFaculty != null) feedbackFaculty = feedbackFaculty.Where(b => b.Faculty.Fullname.Contains(searchFeedbackFaculty));
 
             var result = feedbackFaculty.Where(b => b.Status == true).ToList(); // execute query
 
