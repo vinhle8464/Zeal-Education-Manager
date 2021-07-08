@@ -1,7 +1,10 @@
-﻿@model ProjectSemester3.Models.Enquiry
-
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.EnquiryViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Enquiry";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 <script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
@@ -13,59 +16,126 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Enquiry</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Enquiry
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Enquiry</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchEnquiry" id="searchEnquiry" placeholder="Search..." value="@ViewBag.searchEnquiry" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Serial</th>
                                 <th>Title</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var enquiry in ViewBag.enquiries)
+                            @foreach (var enquiry in ViewBag.enquiries.PagedList)
                             {
-                                <tr  onclick="location.href = '@Url.Action("details", "enquiries", new { enquiryid=enquiry.Id })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@enquiry.Title</td>
+                                    <td style="text-align: center;">
+                                        <a type="button" class="btn btn-success editenquiry" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        @*//delete form*@
+                                        <form asp-controller="enquiries" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Enquiry.Id" value="@enquiry.Id" />
+                                            <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        @*//delete form*@
+
+                                        <input type="hidden" name="enquiryid" id="enquiryid" value="@enquiry.Id" />
+                                    </td>
                                 </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "enquiries", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.enquiries.PagedList.PageCount < ViewBag.enquiries.PagedList.PageNumber ? 0 : ViewBag.enquiries.PagedList.PageNumber) &nbsp;of @ViewBag.enquiries.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.enquiries.PagedList, page => Url.Action("index", "enquiries", new { searchEnquiry = ViewBag.searchEnquiry, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+@*Modal Create*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
             </div>
             <div class="modal-body">
                 <div class="content">
                     <div class="form-group">
                         <div class="col">
                             <div class="card card-primary card-outline">
-                                <form method="post" asp-controller="enquiries" asp-action="create" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+                                <form method="post" asp-controller="enquiries" asp-action="create" name="Form">
+                                    <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
+                                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
                                     <div class="card-header">
                                         <h3 class="card-title">Compose New Enquiry</h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group" id="title">
-                                            <label asp-for="Title" class="control-label">Title</label>
-                                            <input type="text" asp-for="Title" class="form-control" placeholder="Enter Title" name="title"/>
+                                            <label asp-for="Enquiry.Title" class="control-label">Title</label>
+                                            <input type="text" asp-for="Enquiry.Title" class="form-control" placeholder="Enter Title" required="required" />
                                         </div>
                                         <div class="form-group">
-                                            <textarea id="compose-textarea" class="form-control" style="height: 300px" asp-for="Answer" name="answer"></textarea>
+                                            <textarea id="compose-textarea" class="form-control" style="height: 300px" asp-for="Enquiry.Answer" required="required"></textarea>
                                         </div>
                                         <div class="card-footer">
                                             <div class="float-right">
@@ -82,35 +152,54 @@
         </div>
     </div>
 </div>
+@*Modal Create*@
 
-<div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="errorLabel" aria-hidden="true">
+
+
+@*Modal Edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
             </div>
             <div class="modal-body">
                 <div class="content">
                     <div class="form-group">
-                        @ViewBag.msg
+                        <div class="col">
+                            <div class="card card-primary card-outline">
+                                <form method="post" asp-controller="enquiries" asp-action="edit" name="Form">
+                                    <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
+                                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
+                                    <input type="hidden" asp-for="Enquiry.Id" id="idenquiry" />
+                                    <input type="hidden" asp-for="Enquiry.Status" id="statusenquiry" />
+
+                                    <div class="card-header">
+                                        <h3 class="card-title">Compose New Enquiry</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group" id="title">
+                                            <label asp-for="Enquiry.Title" class="control-label">Title</label>
+                                            <input type="text" asp-for="Enquiry.Title" class="form-control" id="titleenquiry" required="required" />
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea id="compose-textarea answerenquiry" class="form-control" style="height: 300px" asp-for="Enquiry.Answer" required="required"></textarea>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="float-right">
+                                                <input type="submit" value="ADD" class="btn btn-primary" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    function validateForm() {
-        var title = document.forms["Form"]["title"].value.trim();
-        var answer = document.forms["Form"]["answer"].value.trim();
-        if (title == null || title == "") {
-            alert("Please Fill Title Field");
-            return false;
-        }
-        if (answer == null || answer == "") {
-            alert("Please Fill Answer Field");
-            return false;
-        }
-    }
-</script>
+@*Modal Edit*@

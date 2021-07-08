@@ -151,7 +151,10 @@
             </div>
             <div class="modal-body">
                 <form asp-controller="classes" asp-action="create" method="post">
-                    
+                    <input type="hidden" name="searchExam" value="@ViewBag.searchExam" />
+                    <input type="hidden" name="filterSubject" value="@ViewBag.filterSubject" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
                     <div class="form-group">
                         <label for="NameRole">Class Name</label>
                         <input type="text" class="form-control" placeholder="Class" asp-for="Class.ClassName" required="required" />
@@ -161,13 +164,13 @@
 
                     <div class="form-group">
                         <label for="NameRole">Number of Student</label>
-                        <input type="number" class="form-control" placeholder="Class" asp-for="Class.NumberOfStudent" min="0" max="100" required="required"  />
+                        <input type="number" class="form-control" placeholder="Class" asp-for="Class.NumberOfStudent" min="0" max="100" required="required" />
                         <span></span>
 
                     </div>
                     <div class="form-group">
                         <label for="descRole">Description</label>
-                        <input type="text" class="form-control" placeholder="Description" asp-for="Class.Desc" required="required"  />
+                        <input type="text" class="form-control" placeholder="Description" asp-for="Class.Desc" required="required" />
                         <span></span>
 
                     </div>
@@ -196,8 +199,12 @@
                     <input type="hidden" asp-for="Class.Status" id="statusclass" />
                     <input type="hidden" asp-for="Class.ClassName" id="nameclass" />
 
+                    <input type="hidden" name="searchClass" value="@ViewBag.searchClass" />
+                    <input type="hidden" name="filterNumber" value="@ViewBag.filterNumber" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
                     <div class="form-group">
-                        <label >Class Name</label>
+                        <label>Class Name</label>
                         <input type="text" class="form-control" asp-for="Class.ClassName" id="nameclasss" disabled />
                     </div>
                     <div class="form-group">

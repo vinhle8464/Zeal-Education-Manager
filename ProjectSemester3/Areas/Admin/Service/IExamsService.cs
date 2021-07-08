@@ -16,5 +16,8 @@ namespace ProjectSemester3.Areas.Admin.Service
         string GetNewestId();
         Task<Exam> Update(Exam exam);
         bool Exists(string ExamId, string SubjectId);
+
+        public Task<Exam> FindAjax(string examId);
+        public Task<List<Exam>> Search(string searchExam, string filterSubject);
     }
 }

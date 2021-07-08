@@ -60,7 +60,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [HttpPost]
         [Route("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoleName,Desc")] Role role)
+        public async Task<IActionResult> Create(Role role)
         {
             if (ModelState.IsValid)
             {

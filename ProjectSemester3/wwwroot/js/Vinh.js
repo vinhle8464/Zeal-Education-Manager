@@ -148,6 +148,51 @@
     });
     //---------------- role ---------------------------
 
+    //---------------- Scholarship ---------------------------
+    $('table .editscholarship').on('click', function () {
+
+        var idscholarship = $(this).parent().find("#idscholarship").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { idscholarship: idscholarship },
+            url: ' /admin/scholarships/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #idscholarship').val(result.scholarshipId);
+                $('#ModalEdit #namescholarship').val(result.scholarshipName);
+                $('#ModalEdit #discountscholarship').val(result.discount);
+                $('#ModalEdit #descscholarship').val(result.desc);
+                $('#ModalEdit #statusscholarship').val(result.status);
+
+            }
+        });
+    });
+    //---------------- Scholarship ---------------------------
+
+    //---------------- Enquiry ---------------------------
+    $('table .editenquiry').on('click', function () {
+
+        var enquiryid = $(this).parent().find("#enquiryid").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { enquiryid: enquiryid },
+            url: ' /admin/enquiries/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #idenquiry').val(result.id);
+                $('#ModalEdit #titleenquiry').val(result.title);
+                $('#ModalEdit #answerenquiry').val(result.answer);
+                $('#ModalEdit #statusenquiry').val(result.status);
+
+            }
+        });
+    });
+    //---------------- Enquiry ---------------------------
+
 
     //---------------- class assignment ---------------------------
     $("#cbbClass").autocomplete({
@@ -261,6 +306,32 @@ $('table .editClass').on('click', function () {
     });
 });
 //---------------- Class ---------------------------
+
+
+//---------------- Exam ---------------------------
+
+
+$('table .editExam').on('click', function () {
+
+    var examid = $(this).parent().find("#examid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { examid: examid },
+        url: ' /admin/exams/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+
+            $('#ModalEdit #idexam').val(result.examId);
+            $('#ModalEdit #idsubject').val(result.subjectId);
+            $('#ModalEdit #statusexam').val(result.status);
+            $('#ModalEdit #titleexam').val(result.title);
+            $('#ModalEdit #descexam').val(result.desc);
+        }
+    });
+});
+//---------------- Exam ---------------------------
 
 
 //---------------- Course ---------------------------

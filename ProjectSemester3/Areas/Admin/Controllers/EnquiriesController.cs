@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -27,55 +29,122 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(int enquiryid)
+        {
+            var enquiry = await enquiryService.FindAjax(enquiryid);
+            var enquiryAjax = new Enquiry
+            {
+                Id = enquiry.Id,
+                Title = enquiry.Title,
+                Answer = enquiry.Answer,
+                Status = enquiry.Status
+            };
+            return new JsonResult(enquiryAjax);
+
+        }
+
         [Route("index")]
         // GET: Admin/Enquiries
-        public IActionResult Index()
+        public IActionResult Index(string searchEnquiry, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.enquiries = enquiryService.FindAll();
-                return View();
+                var enquiries = enquiryService.Search(searchEnquiry);
+                ViewBag.searchEnquiry = searchEnquiry;
 
+                LoadPagination(enquiries, page, pageSize);
+
+                return View();
             }
             else
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
+        }
+
+
+        // load pagination
+        public void LoadPagination(List<Enquiry> enquiries, int? page, int? pageSize)
+        {
+            var enquiryViewModel = new EnquiryViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = enquiries.ToPagedList(pageNumber, pagesize);
+
+            enquiryViewModel.PagedList = (PagedList<Enquiry>)onePageOfProducts;
+
+            ViewBag.enquiries = enquiryViewModel;
         }
 
         [HttpPost]
         [Route("create")]
-        public IActionResult Create(Enquiry enquiry)
+        public IActionResult Create(EnquiryViewModel enquiryViewModel, string searchEnquiry, int? pageSize)
         {
             if (ModelState.IsValid)
             {
                 var currentEnquiry = new Enquiry();
-                currentEnquiry.Title = enquiry.Title.Trim();
-                currentEnquiry.Answer = enquiry.Answer.Trim();
+                currentEnquiry.Title = enquiryViewModel.Enquiry.Title.Trim();
+                currentEnquiry.Answer = enquiryViewModel.Enquiry.Answer.Trim();
                 currentEnquiry.Status = true;
                 enquiryService.Create(currentEnquiry);
-                ViewBag.msg = "Create Successfull";
-                return RedirectToAction("Index");
+                TempData["success"] = "success";
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
             }
             ViewBag.msg = "Create fail";
-            return RedirectToAction("Index");
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
         }
 
-        [HttpGet]
-        [Route("details")]
-        public IActionResult Detail(int enquiryid)
+
+        // edit course
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit")]
+        public async Task<IActionResult> Edit(EnquiryViewModel enquiryViewModel, string searchEnquiry, int? pageSize)
         {
-            if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
-            {
-                ViewBag.enquiry = enquiryService.Find(enquiryid);
-                return View("detail");
 
-            }
-            else
+            if (ModelState.IsValid)
             {
-                return RedirectToRoute(new { controller = "account", action = "signin" });
+                await enquiryService.Update(enquiryViewModel.Enquiry);
+
+                TempData["success"] = "success";
+
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
             }
-            
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
         }
+
+
+        // delete course
+        [HttpPost]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(EnquiryViewModel enquiryViewModel, string searchEnquiry, int? pageSize)
+        {
+
+            enquiryViewModel.Enquiry.Status = false;
+            await enquiryService.Update(enquiryViewModel.Enquiry);
+            TempData["success"] = "success";
+
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
+        }
+
     }
 }

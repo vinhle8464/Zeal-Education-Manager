@@ -27,6 +27,23 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string idscholarship)
+        {
+            var scholarship = await scholarshipService.FindAjax(idscholarship);
+            var scholarshipAjax = new Scholarship
+            {
+                ScholarshipId = scholarship.ScholarshipId,
+                ScholarshipName = scholarship.ScholarshipName,
+                Discount = scholarship.Discount,
+                Desc = scholarship.Desc,
+                Status = scholarship.Status
+            };
+            return new JsonResult(scholarshipAjax);
+
+        }
+
 
         // Show page scholarship
         [Route("index")]
@@ -91,7 +108,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     }
                     else
                     {
-                        TempData["msg"] = "<script>alert('Successfully!');</script>";
+                        TempData["success"] = "success";
 
                         return RedirectToAction(nameof(Index));
                     }
@@ -105,7 +122,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     scholarship.Desc = scholarship.Desc.Trim();
                     scholarship.Status = true;
                     await scholarshipService.Create(scholarship);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
                 }
 
@@ -114,48 +131,20 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // open page edit scholarship
-        [HttpGet]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var scholarship = await scholarshipService.Find(id);
-            if (scholarship == null)
-            {
-                return NotFound();
-            }
-            return View("edit", scholarship);
-        }
+ 
 
         // edit scholarship in db
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit([Bind("ScholarshipId,ScholarshipName,Discount,Desc,Status")] Scholarship scholarship)
+        public async Task<IActionResult> Edit(Scholarship scholarship)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
+             
                     await scholarshipService.Update(scholarship);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!scholarshipService.Exists(scholarship.ScholarshipId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+
+                TempData["success"] = "success";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -173,7 +162,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
 
             await scholarshipService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

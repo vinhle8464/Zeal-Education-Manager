@@ -47,7 +47,7 @@ namespace ProjectSemester3
             services.AddScoped<Areas.Admin.Service.IFeedbackFacultyService, Areas.Admin.Service.FeedbackFacultyServiceImpl>();
 
 
-            services.AddScoped<Areas.Faculty.Service.IAccountService, Areas.Faculty.Service.AccountServiceImpl>();
+            
             services.AddScoped<Areas.Faculty.Service.IMarkingService, Areas.Faculty.Service.MarkingServiceImpl>();
             services.AddScoped<Areas.Faculty.Service.IDashboardService, Areas.Faculty.Service.DashboardServiceImpl>();
             services.AddScoped<Areas.Faculty.Service.IAttendanceService, Areas.Faculty.Service.AttendanceServiceImpl>();
