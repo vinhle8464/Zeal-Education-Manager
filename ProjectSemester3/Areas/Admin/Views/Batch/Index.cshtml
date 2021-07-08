@@ -30,11 +30,11 @@
                                     {
                                         if (batch.Graduate == true)
                                         {
-                                            <a asp-area="faculty" asp-controller="batch" asp-action="endingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
+                                            <a asp-area="admin" asp-controller="batch" asp-action="endingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
                                             break;
                                         }
                                         else
-                                        {<a asp-area="faculty" asp-controller="batch" asp-action="startingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
+                                        {<a asp-area="admin" asp-controller="batch" asp-action="startingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
                                             break;
                                         }
                                     }
