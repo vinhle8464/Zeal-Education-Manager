@@ -16,5 +16,10 @@ namespace ProjectSemester3.Services
       //  public string GetNewestId();
         public Task<Account> GetFaculty(string facultyid);
         public Task<Schedule> GetBySubjectId(string subjectid, string classid);
+        public Task<List<Class>> Search(string searchClassSchedule);
+
+        public List<Account> GetListFaculty(string subjectId);
+
+        public Task<Schedule> FindAjax(int scheduleid);
     }
 }

@@ -107,5 +107,37 @@ namespace ProjectSemester3.Services
 
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<Class>> Search(string searchClassSchudule)
+        {
+            var Classes = context.Classes.AsQueryable();
+
+            if (searchClassSchudule != null) Classes = Classes.Where(s => s.ClassName.StartsWith(searchClassSchudule));
+
+            var result = Classes.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
+
+        public List<Account> GetListFaculty(string subjectId)
+        {
+            var listFaculty = new List<Account>();
+            var listFacultyid = context.Professionals.Where(p => p.SubjectId == subjectId).Select(p => p.FacultyId).ToList();
+
+            foreach (var item in listFacultyid)
+            {
+                var obj = context.Accounts.FirstOrDefault(a => a.AccountId == item);
+                listFaculty.Add(obj);
+            }
+
+            return listFaculty;
+
+        }
+
+        public async Task<Schedule> FindAjax(int scheduleid)
+        {
+            return await context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleid);
+        }
+
     }
 }

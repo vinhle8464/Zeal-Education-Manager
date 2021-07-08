@@ -381,6 +381,7 @@ $('table .editsubject').on('click', function () {
         success: function (result) {
             $('#ModalEdit #subjectidid').val(result.subjectId);
             $('#ModalEdit #namesubject').val(result.subjectName);
+            $('#ModalEdit #namesubject1').val(result.subjectName);
             $('#ModalEdit #descsubject').val(result.desc);
             $('#ModalEdit #subjectsatus').val(result.status);
 
@@ -416,6 +417,44 @@ $(document).ready(function () {
     });
 });
 //---------------- FeedBack ---------------------------
+
+//---------------- schedule ---------------------------
+// get data to modal edit Batch
+$('table .editschedule').on('click', function () {
+
+    var scheduleid = $(this).parent().find("#scheduleid").val();
+    var subjectid = $(this).parent().find("#subjectid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { scheduleid: scheduleid },
+        url: ' /admin/schedule/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #idclass').val(result.classId);
+            $('#ModalEdit #statusschedule').val(result.status);
+            $('#ModalEdit #idschedule').val(result.scheduleId);
+            $('#ModalEdit #subjectidsche').val(result.subjectId);
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        data: { subjectid: subjectid },
+        url: '/admin/schedule/findFaculty',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (listFaculty) {
+            var s = '';
+            for (var i = 0; i < listFaculty.length; i++) {
+                s += '<option value="' + listFaculty[i].id + '">' + listFaculty[i].name + '</option>';
+            }
+            $('#listFaculty').html(s);
+        }
+    });
+});
+//---------------- schedule ---------------------------
 
 
 $(function () {

@@ -113,8 +113,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 ViewBag.keyword = await batchesService.GetKeyWord();
 
                 // this is a list for form create and edit
-                ViewBag.listClass = await context.Classes.Select(c => c.ClassName).ToListAsync();
-                ViewBag.listCourse = await context.Courses.Select(c => c.CourseName).ToListAsync();
+                ViewBag.listClass = await context.Classes.Where(c => c.Status == true).Select(c => c.ClassName).ToListAsync();
+                ViewBag.listCourse = await context.Courses.Where(c => c.Status == true).Select(c => c.CourseName).ToListAsync();
                 // this is a list for form create and edit
 
                 ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName");

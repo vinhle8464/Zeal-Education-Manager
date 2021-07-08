@@ -117,10 +117,11 @@
                 <form asp-area="admin" asp-controller="subjects" asp-action="edit" method="post" name="Form">
                     <input type="hidden" id="subjectidid" asp-for="SubjectId" />
                     <input type="hidden" id="subjectsatus" asp-for="Status" />
+                    <input type="hidden" id="namesubject1" asp-for="SubjectName" />
 
                     <div class="form-group">
                         <label for="NameSubject">NameSubject</label>
-                        <input type="text" class="form-control" id="namesubject" asp-for="SubjectName" required="required" />
+                        <input type="text" class="form-control" id="namesubject" asp-for="SubjectName" required="required" disabled />
                     </div>
                     <div class="form-group">
                         <label for="desc">Description</label>
