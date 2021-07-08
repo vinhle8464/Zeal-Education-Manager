@@ -11,7 +11,7 @@ namespace ProjectSemester3.Services
         public Task<Class> GetClass(string classid);
     //    public Task<List<Subject>> GetListSubject(string classid);
 
-        public Task<dynamic> Add(Schedule schedule);
+        public void Add(Schedule schedule);
         public Task CreateAttendance(Schedule schedule);
       //  public string GetNewestId();
         public Task<Account> GetFaculty(string facultyid);

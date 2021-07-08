@@ -16,10 +16,10 @@ namespace ProjectSemester3.Services
             context = _context;
         }
 
-        public async Task<dynamic> Add(Schedule schedule)
+        public void Add(Schedule schedule)
         {
             context.Entry(schedule).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-           return  await context.SaveChangesAsync();
+             context.SaveChanges();
 
         }
 
@@ -100,7 +100,7 @@ namespace ProjectSemester3.Services
             await context.SaveChangesAsync();
         }
 
-        public  List<Class> Search(string searchClassSchudule)
+        public List<Class> Search(string searchClassSchudule)
         {
             var Classes = context.Classes.AsQueryable();
 

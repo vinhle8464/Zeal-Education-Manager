@@ -60,7 +60,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 ViewBag.filterSubject = filterSubject;
 
                 LoadPagination(exams, page, pageSize);
-                ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
+                ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(s => s.Status == true), "SubjectId", "SubjectName");
 
                 return View();
             }

@@ -32,10 +32,10 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             var schedule = await scheduleService.FindAjax(scheduleid);
             var scheduleAjax = new Schedule
             {
-               ScheduleId = schedule.ScheduleId,
-               ClassId = schedule.ClassId,
-               SubjectId = schedule.SubjectId,
-               Status = schedule.Status
+                ScheduleId = schedule.ScheduleId,
+                ClassId = schedule.ClassId,
+                SubjectId = schedule.SubjectId,
+                Status = schedule.Status
             };
             return new JsonResult(scheduleAjax);
 
@@ -61,15 +61,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
         [Route("index")]
-        public  IActionResult Index(string searchClassSchedule, int? page, int? pageSize)
+        public IActionResult Index(string searchClassSchedule, int? page, int? pageSize)
         {
-            
+
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
                 var classes = scheduleService.Search(searchClassSchedule);
                 ViewBag.searchClassSchedule = searchClassSchedule;
-              
-            
+
+
 
                 LoadPagination(classes, page, pageSize);
 
@@ -117,8 +117,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 ViewBag.schedule = await scheduleService.SelectShedule(classid);
                 ViewBag.classitem = await scheduleService.GetClass(classid);
 
-            //    ViewBag.listSubject = await scheduleService.GetListSubject(classid);
-                
+                //    ViewBag.listSubject = await scheduleService.GetListSubject(classid);
+
                 return View();
             }
             else
@@ -133,28 +133,31 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-               
 
-                if (await scheduleService.Add(schedule) == 0)
+                 scheduleService.Add(new Schedule
                 {
-                    TempData["msg"] = "<script>alert('Error!');</script>";
-                    return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
+                    ScheduleId = schedule.ScheduleId,
+                    ClassId = schedule.ClassId,
+                    SubjectId = schedule.SubjectId,
+                    FacultyId = schedule.FacultyId,
+                    TimeDay = schedule.TimeDay,
+                    StartDate = schedule.StartDate,
+                    EndDate = schedule.EndDate,
+                    StudyDay = schedule.StudyDay,
+                    Status = true
 
-                }
-                else
-                {
+                });
 
                     await scheduleService.CreateAttendance(schedule);
-                    TempData["success"] = "success";
-                    return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
+                TempData["success"] = "success";
+                return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
 
-                }
 
             }
             ViewBag.schedule = await scheduleService.SelectShedule(schedule.ClassId);
             ViewBag.classitem = await scheduleService.GetClass(schedule.ClassId);
-         
-            return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId});
+
+            return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
         }
 
 
