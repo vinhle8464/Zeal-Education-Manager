@@ -18,7 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         Task<Class> Update(Class classes);
         bool RoleExists(string ClassId);
         public Task<Class> FindAjax(string classId);
-        public Task<List<Class>> Search(string searchCLass, int filterNumber);
+        public List<Class> Search(string searchCLass, int filterNumber);
 
     }
 }

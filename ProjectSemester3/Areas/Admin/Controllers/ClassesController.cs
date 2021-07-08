@@ -48,11 +48,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // Show page class
         [Route("index")]
-        public async Task<IActionResult> Index(string searchClass, string filterNumber, int? page, int? pageSize)
+        public IActionResult Index(string searchClass, string filterNumber, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var classes = await  classesService.Search(searchClass, Convert.ToInt32(filterNumber));
+                var classes = classesService.Search(searchClass, Convert.ToInt32(filterNumber));
                 ViewBag.searchClass = searchClass;
                 ViewBag.filterNumber = filterNumber;
 

@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -25,14 +28,53 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
 
-        [Route("index")]
-        public async Task<IActionResult> Index()
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(int testscheduleid)
         {
+            var testschedule = await testScheduleService.FindAjax(testscheduleid);
+            var testscheduleAjax = new TestSchedule
+            {
+                TestScheduleId = testschedule.TestScheduleId,
+                ClassId = testschedule.ClassId,
+                ExamId = testschedule.ExamId,
+                Status = testschedule.Status
+
+            };
+            return new JsonResult(testscheduleAjax);
+
+        }
+
+        //Find Faculty In Class
+        [HttpGet]
+        [Route("findFaculty")]
+        public IActionResult FindSubject(string examid)
+        {
+            var listFaculty = testScheduleService.GetListFaculty(examid.Trim());
+            if (listFaculty == null)
+            {
+                return NotFound();
+            }
+            var result = new List<ListSubjectViewModel>();
+            listFaculty.ForEach(s => result.Add(new ListSubjectViewModel
+            {
+                Id = s.AccountId,
+                Name = s.Fullname
+            }));
+            return new JsonResult(result);
+        }
+
+
+        [Route("index")]
+        public IActionResult Index(string searchClassSchedule, int? page, int? pageSize)
+        {
+
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.listClass = await testScheduleService.SelectClasses();
-                ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName");
-                ViewData["ExamId"] = new SelectList(context.Exams, "ExamId", "Title");
+                var classes =  testScheduleService.Search(searchClassSchedule);
+                ViewBag.searchClassSchedule = searchClassSchedule;
+
+                LoadPagination(classes, page, pageSize);
 
                 return View();
             }
@@ -42,6 +84,32 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
         }
 
+        // load pagination
+        public void LoadPagination(List<Class> classes, int? page, int? pageSize)
+        {
+            var testscheduleViewModel = new TestScheduleViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = classes.ToPagedList(pageNumber, pagesize);
+
+            testscheduleViewModel.PagedList = (PagedList<Class>)onePageOfProducts;
+
+            ViewBag.listClass = testscheduleViewModel;
+        }
+
+
+
         [HttpGet]
         [Route("detail")]
         public async Task<IActionResult> Detail(string classid)
@@ -50,10 +118,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 ViewBag.testschedules = await testScheduleService.SelectTestShedule(classid);
                 ViewBag.classitem = await testScheduleService.GetClass(classid);
-                ViewData["ExamId"] = new SelectList(context.Exams, "ExamId", "Title");
-
-                ViewData["ClassId"] = new SelectList(context.Classes.Where(c => c.ClassId == classid), "ClassId", "ClassName");
-                ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.Role.RoleName == "faculty"), "AccountId", "Fullname");
+               
 
 
                 return View();
@@ -72,27 +137,35 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
 
                 testSchedule.Status = true;
-                if (await testScheduleService.Add(testSchedule) == 0)
-                {
-                    TempData["msg"] = "<script>alert('Test-Schedule has already existed!');</script>";
-                }
-                else
-                {
+                await testScheduleService.Add(testSchedule);
+                await testScheduleService.CreateMarkBySubject(testSchedule.ExamId, maxmark, rate);
+                TempData["success"] = "success";
 
-                    await testScheduleService.CreateMarkBySubject(testSchedule.ExamId, maxmark, rate);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
 
-                }
 
             }
             ViewBag.testschedules = await testScheduleService.SelectTestShedule(testSchedule.ClassId);
             ViewBag.classitem = await testScheduleService.GetClass(testSchedule.ClassId);
-            ViewData["ExamId"] = new SelectList(context.Exams, "ExamId", "Title");
+          
 
-            ViewData["ClassId"] = new SelectList(context.Classes.Where(c => c.ClassId == testSchedule.ClassId), "ClassId", "ClassName");
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.Role.RoleName == "faculty"), "AccountId", "Fullname");
+            return RedirectToRoute(new
+            {
+                controller = "testschedules",
+                action = "detail",
+                classid = testSchedule.ClassId
+            });
+        }
 
-            return RedirectToRoute(new { controller = "testschedules", action = "detail", classid = testSchedule.ClassId });
+
+
+        [HttpGet]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(int id, string idclass)
+        {
+            await testScheduleService.Delete(id);
+            return RedirectToRoute(new { controller = "testschedules", action = "detail", classid = idclass });
+
+
         }
     }
 }

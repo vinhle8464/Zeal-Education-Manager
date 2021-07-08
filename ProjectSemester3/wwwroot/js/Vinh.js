@@ -436,6 +436,9 @@ $('table .editschedule').on('click', function () {
             $('#ModalEdit #statusschedule').val(result.status);
             $('#ModalEdit #idschedule').val(result.scheduleId);
             $('#ModalEdit #subjectidsche').val(result.subjectId);
+            $('#ModalEdit #subjectidschedule').val(result.subjectId);
+
+            
         }
     });
 
@@ -456,6 +459,46 @@ $('table .editschedule').on('click', function () {
 });
 //---------------- schedule ---------------------------
 
+
+
+//---------------- test schedule ---------------------------
+// get data to modal edit Batch
+$('table .edittestschedule').on('click', function () {
+
+    var testscheduleid = $(this).parent().find("#testscheduleid").val();
+    var examid = $(this).parent().find("#examid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { testscheduleid: testscheduleid },
+        url: ' /admin/testschedules/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #idtestschedule').val(result.testScheduleId);
+            $('#ModalEdit #idclass').val(result.classId);
+            $('#ModalEdit #statusschedule').val(result.status);
+            $('#ModalEdit #examid').val(result.examId);
+            $('#ModalEdit #idexam').val(result.examId);
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        data: { examid: examid },
+        url: '/admin/testschedules/findFaculty',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (listFaculty) {
+            var s = '';
+            for (var i = 0; i < listFaculty.length; i++) {
+                s += '<option value="' + listFaculty[i].id + '">' + listFaculty[i].name + '</option>';
+            }
+            $('#facultyid').html(s);
+        }
+    });
+});
+//---------------- test schedule ---------------------------
 
 $(function () {
     $('#student').hide();
@@ -507,7 +550,7 @@ function CheckDate(id) {
 
     var UserDate = document.getElementById(id).value;
     var ToDate = new Date();
-    if (new Date(UserDate).getTime() <= ToDate.getTime()) {
+    if (new Date(UserDate).getTime() < ToDate.getTime()) {
         alert("The Date must be Bigger or Equal to today date");
         $("#" + id).val("MM-dd-yyyy");
         return false;

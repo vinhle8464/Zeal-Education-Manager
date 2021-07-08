@@ -85,7 +85,7 @@ namespace ProjectSemester3.Areas.Faculty.Service
 ;
                     _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     await _context.SaveChangesAsync();
-                    CreatePay(_context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).AccountId, _context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).Email);
+                   await CreatePay(_context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).AccountId, _context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).Email);
                 }
 
 

@@ -89,7 +89,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var acounts = await accountService.Search(searchKeyword, roleKeyword, genderKeyword, statusKeyword);
+                var acounts = accountService.Search(searchKeyword, roleKeyword, genderKeyword, statusKeyword);
                 ViewBag.searchKeyword = searchKeyword;
                 ViewBag.roleKeyword = roleKeyword;
                 ViewBag.genderKeyword = genderKeyword;
@@ -347,7 +347,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("delete")]
-        public async Task<IActionResult> Delete(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
+        public  IActionResult Delete(AccountViewModel accountViewModel, string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword, int? pageSize)
         {
             var account = context.Accounts.Find(accountViewModel.Account.AccountId);
             account.Status = false;

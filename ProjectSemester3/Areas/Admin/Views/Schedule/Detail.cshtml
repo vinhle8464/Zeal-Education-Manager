@@ -13,169 +13,173 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-            <div class="card-body">
-                <a asp-controller="schedule" asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
+                <div class="card-body">
+                    <a asp-controller="schedule" asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        @{
-                            var success = "";
-                            if (TempData["success"] != null)
-                            {
-                                success = TempData["success"].ToString();
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
                             }
-                        }
-                        @if (success.Equals("success"))
-                        {
-                            <span class="au-alert-success" id="notification">Successfully!</span>
-                        }
-                        <!-- DATA TABLE -->
-                        <h1 class="m-b-35">Detail Schedule Of Class @ViewBag.classitem.ClassName</h1>
-                        <div class="table-data__tool">
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Detail Schedule Of Class @ViewBag.classitem.ClassName</h1>
+                            <div class="table-data__tool">
 
+                            </div>
+                            <!-- END DATA TABLE -->
                         </div>
-                        <!-- END DATA TABLE -->
                     </div>
-                </div>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Serial</th>
-                            <th>Subject</th>
-                            <th>Faculty</th>
-                            <th>Time</th>
-                            <th>Study Day</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th style="text-align: center;">Action</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var s in ViewBag.schedule)
-                        {
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <td>@index</td>
-                                <td>@s.Subject.SubjectName</td>
-                                <td>@(s.FacultyId != null ? s.Faculty.Fullname : "none")</td>
-                                <td>@(s.TimeDay != null ? s.TimeDay : "none")</td>
-                                <td>@(s.StudyDay != null ? s.StudyDay : "none")</td>
-                                <td>@(Convert.ToInt32(s.StartDate.ToString("yyyy")) > 1000 ? s.StartDate.ToString("MM/dd/yyyy") : "none")</td>
-                                <td>@(Convert.ToInt32(s.EndDate.ToString("yyyy")) > 1000 ? s.EndDate.ToString("MM/dd/yyyy") : "none")</td>
-                                <td style="text-align: center;">
-                                    <a type="button" class="btn btn-success editschedule" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
-                                    <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@s.ScheduleId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                <th>Serial</th>
+                                <th>Subject</th>
+                                <th>Faculty</th>
+                                <th>Time</th>
+                                <th>Study Day</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th style="text-align: center;">Action</th>
 
-                                    <input type="hidden" name="scheduleid" id="scheduleid" value="@s.ScheduleId" />
-                                    <input type="hidden" name="subjectid" id="subjectid" value="@s.SubjectId" />
-
-                                </td>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in ViewBag.schedule)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@s.Subject.SubjectName</td>
+                                    <td>@(s.FacultyId != null ? s.Faculty.Fullname : "none")</td>
+                                    <td>@(s.TimeDay != null ? s.TimeDay : "none")</td>
+                                    <td>@(s.StudyDay != null ? s.StudyDay : "none")</td>
+                                    <td>@(Convert.ToInt32(s.StartDate.ToString("yyyy")) > 2000 ? s.StartDate.ToString("MM/dd/yyyy") : "none")</td>
+                                    <td>@(Convert.ToInt32(s.EndDate.ToString("yyyy")) > 2000 ? s.EndDate.ToString("MM/dd/yyyy") : "none")</td>
+                                    <td style="text-align: center;">
+                                        @if (s.FacultyId == null)
+                                        {
+                                            <a type="button" class="btn btn-success editschedule" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        }
+                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@s.ScheduleId" asp-route-idclass="@ViewBag.classitem.ClassId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                        <input type="hidden" name="scheduleid" id="scheduleid" value="@s.ScheduleId" />
+                                        <input type="hidden" name="subjectid" id="subjectid" value="@s.SubjectId" />
+
+                                    </td>
+                                </tr>
 
 
-                            index++;
-                        }
-                    </tbody>
-                </table>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+    <div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <form asp-area="admin" asp-controller="schedule" asp-action="create" method="post"  name="Form">
+                        <input type="hidden" asp-for="ScheduleId" id="idschedule" />
+                        <input type="hidden" asp-for="ClassId" id="idclass" />
+                        <input type="hidden" asp-for="Status" id="statusschedule" />
+                        <input type="hidden" asp-for="SubjectId" id="subjectidschedule" />
 
-<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+                        <div class="form-group">
+                            <label asp-for="SubjectId" class="control-label">Subject</label>
+                            <input class="form-control" asp-for="SubjectId" type="text" id="subjectidsche" required="required" disabled />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="FacultyId" class="control-label">Faculty</label>
+                            <select asp-for="FacultyId" class="form-control" id="listFaculty"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="TimeDay" class="control-label" for="appt">Time Day</label>
+                            <input class="form-control" asp-for="TimeDay" type="time" name="timeday" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="StartDate" class="control-label">Start Date</label>
+                            <input asp-for="StartDate" class="form-control" type="date" name="startdate" required="required" id="startdate" onchange="CheckDate(this.id);CompareDateStart();" />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="EndDate" class="control-label">End Date</label>
+                            <input asp-for="EndDate" class="form-control" type="date" name="enddate" id="enddate" onchange="CheckDate(this.id); CompareDateEnd();" required="required" />
+                        </div>
+
+                        <div class="form-group" id="studyday">
+                            <label class="control-label">Study Day</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="monday" value="Monday" onclick="calculate()">
+                                <label class="form-check-label" for="monday">Monday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tuesday" value="Tuesday" onclick="calculate()">
+                                <label class="form-check-label" for="tuesday">Tuesday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="wednesday" value="Wednesday" onclick="calculate()">
+                                <label class="form-check-label" for="wednesday">Wednesday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="thursday" value="Thursday" onclick="calculate()">
+                                <label class="form-check-label" for="thursday">Thursday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="friday" value="Friday" onclick="calculate()">
+                                <label class="form-check-label" for="friday">Friday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="saturday" value="Saturday" onclick="calculate()">
+                                <label class="form-check-label" for="saturday">Saturday</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sunday" value="Sunday" onclick="calculate()">
+                                <label class="form-check-label" for="sunday">Sunday</label>
+                            </div>
+                            Day: <br />
+                            <textarea  id="res" asp-for="StudyDay" cols="56" rows="5" style="background-color: darkgrey;"></textarea>
+                        </div>
+
+                        <br />
+                        <input type="submit" value="ADD" class="btn btn-primary" />
+                    </form>
+                </div>
+
             </div>
-            <div class="modal-body">
-                <form asp-area="admin" asp-controller="schedule" asp-action="create" method="post" enctype="multipart/form-data" name="Form">
-                    <input type="hidden" asp-for="ScheduleId" id="idschedule" />
-                    <input type="hidden" asp-for="ClassId" id="idclass" />
-                    <input type="hidden" asp-for="Status" id="statusschedule" />
-
-                    <div class="form-group">
-                        <label asp-for="SubjectId" class="control-label">Subject</label>
-                        <input class="form-control" asp-for="SubjectId" type="text" id="subjectidsche" required="required" disabled/>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="FacultyId" class="control-label">Faculty</label>
-                        <select asp-for="FacultyId" class="form-control" id="listFaculty"></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="TimeDay" class="control-label" for="appt">Time Day</label>
-                        <input class="form-control" asp-for="TimeDay" type="time" name="timeday" required="required" />
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="StartDate" class="control-label">Start Date</label>
-                        <input asp-for="StartDate" class="form-control" type="date" name="startdate" required="required" id="startdate" onchange="CheckDate(this.id);CompareDateStart();" />
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="EndDate" class="control-label">End Date</label>
-                        <input asp-for="EndDate" class="form-control" type="date" name="enddate" id="enddate" onchange="CheckDate(this.id); CompareDateEnd();" required="required" />
-                    </div>
-
-                    <div class="form-group" id="studyday">
-                        <label class="control-label">Study Day</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="monday" value="Monday" onclick="calculate()">
-                            <label class="form-check-label" for="monday">Monday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="tuesday" value="Tuesday" onclick="calculate()">
-                            <label class="form-check-label" for="tuesday">Tuesday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="wednesday" value="Wednesday" onclick="calculate()">
-                            <label class="form-check-label" for="wednesday">Wednesday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="thursday" value="Thursday" onclick="calculate()">
-                            <label class="form-check-label" for="thursday">Thursday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="friday" value="Friday" onclick="calculate()">
-                            <label class="form-check-label" for="friday">Friday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="saturday" value="Saturday" onclick="calculate()">
-                            <label class="form-check-label" for="saturday">Saturday</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="sunday" value="Sunday" onclick="calculate()">
-                            <label class="form-check-label" for="sunday">Sunday</label>
-                        </div>
-                        Day: <br />
-                        <textarea id="res" asp-for="StudyDay" cols="56" rows="5" style="background-color: darkgrey;" name="studyday" disabled="disabled"></textarea>
-                    </div>
-
-                    <br />
-                    <input type="submit" value="ADD" class="btn btn-primary" />
-                </form>
-            </div>
-
         </div>
     </div>
-</div>
 
-<script>
+    <script>
 
-    function calculate() {
-        var arr = $.map($('#studyday input[type=checkbox]:checked'), function (e, i) {
-            return e.value;
-        });
-        $('#res').text(arr.join(','));
-    }
+        function calculate() {
+            var arr = $.map($('#studyday input[type=checkbox]:checked'), function (e, i) {
+                return e.value;
+            });
+            $('#res').text(arr.join(','));
+        }
 
-    calculate();
-    $('#studyday').delegate('input:checkbox', 'click', calculate);
+        calculate();
+        $('#studyday').delegate('input:checkbox', 'click', calculate);
 
 
-</script>
+    </script>
 

@@ -61,12 +61,12 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
         [Route("index")]
-        public async Task<IActionResult> Index(string searchClassSchedule, int? page, int? pageSize)
+        public  IActionResult Index(string searchClassSchedule, int? page, int? pageSize)
         {
             
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var classes = await scheduleService.Search(searchClassSchedule);
+                var classes = scheduleService.Search(searchClassSchedule);
                 ViewBag.searchClassSchedule = searchClassSchedule;
               
             
@@ -117,12 +117,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 ViewBag.schedule = await scheduleService.SelectShedule(classid);
                 ViewBag.classitem = await scheduleService.GetClass(classid);
 
-                ViewBag.listSubject = await scheduleService.GetListSubject(classid);
-                ViewData["ClassId"] = new SelectList(context.Classes.Where(c => c.ClassId == classid), "ClassId", "ClassName");
-                ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
-                ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.Role.RoleName == "faculty"), "AccountId", "Fullname");
-
-
+            //    ViewBag.listSubject = await scheduleService.GetListSubject(classid);
+                
                 return View();
             }
             else
@@ -137,37 +133,39 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var scheduleCurrenr = new Schedule();
-                scheduleCurrenr.ClassId = schedule.ClassId;
-                scheduleCurrenr.SubjectId = schedule.SubjectId;
-                scheduleCurrenr.FacultyId = schedule.FacultyId;
-                scheduleCurrenr.TimeDay = schedule.TimeDay;
-                scheduleCurrenr.StartDate = schedule.StartDate;
-                scheduleCurrenr.EndDate = schedule.EndDate;
-                scheduleCurrenr.StudyDay = schedule.StudyDay;
-                scheduleCurrenr.Status = true;
-                //await scheduleService.Add(scheduleCurrenr);
+               
 
-
-                if (await scheduleService.Add(scheduleCurrenr) == 0)
+                if (await scheduleService.Add(schedule) == 0)
                 {
-                    TempData["msg"] = "<script>alert('Schedule has already existed!');</script>";
+                    TempData["msg"] = "<script>alert('Error!');</script>";
+                    return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
+
                 }
                 else
                 {
 
                     await scheduleService.CreateAttendance(schedule);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
+                    return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId });
 
                 }
 
             }
             ViewBag.schedule = await scheduleService.SelectShedule(schedule.ClassId);
             ViewBag.classitem = await scheduleService.GetClass(schedule.ClassId);
-            ViewData["ClassId"] = new SelectList(context.Classes.Where(c => c.ClassId == schedule.ClassId), "ClassId", "ClassName");
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.Role.RoleName == "faculty"), "AccountId", "Fullname");
+         
             return RedirectToRoute(new { controller = "schedule", action = "details", classid = schedule.ClassId});
+        }
+
+
+        [HttpGet]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(int id, string idclass)
+        {
+            await scheduleService.Delete(id);
+            return RedirectToRoute(new { controller = "schedule", action = "details", classid = idclass });
+
+
         }
     }
 }

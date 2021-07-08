@@ -18,17 +18,9 @@ namespace ProjectSemester3.Services
 
         public async Task<dynamic> Add(Schedule schedule)
         {
-            if (context.Schedules.Any(p => p.ClassId == schedule.ClassId && p.SubjectId == schedule.SubjectId))
-            {
-                return 0;
-            }
-            else
-            {
-                context.Schedules.Add(schedule);
-                await context.SaveChangesAsync();
-                return 1;
-            }
-           
+            context.Entry(schedule).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+           return  await context.SaveChangesAsync();
+
         }
 
         public async Task<List<Class>> SelectClasses()
@@ -55,10 +47,10 @@ namespace ProjectSemester3.Services
         {
             return await context.Classes.SingleOrDefaultAsync(c => c.ClassId == classid && c.Status == true);
         }
-        public async Task<List<Subject>> GetListSubject(string classid)
-        {
-            return null;
-        }
+        //public async Task<List<Subject>> GetListSubject(string classid)
+        //{
+        //    return null;
+        //}
 
         public async Task<Account> GetFaculty(string facultyid)
         {
@@ -108,11 +100,11 @@ namespace ProjectSemester3.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Class>> Search(string searchClassSchudule)
+        public  List<Class> Search(string searchClassSchudule)
         {
             var Classes = context.Classes.AsQueryable();
 
-            if (searchClassSchudule != null) Classes = Classes.Where(s => s.ClassName.StartsWith(searchClassSchudule));
+            if (searchClassSchudule != null) Classes = Classes.Where(s => s.ClassName.Contains(searchClassSchudule));
 
             var result = Classes.Where(b => b.Status == true).ToList(); // execute query
 
@@ -139,5 +131,12 @@ namespace ProjectSemester3.Services
             return await context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleid);
         }
 
+        public async Task Delete(int id)
+        {
+            var obj = await context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
+            obj.Status = false;
+            context.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
     }
 }

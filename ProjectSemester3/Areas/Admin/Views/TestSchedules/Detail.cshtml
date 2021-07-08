@@ -15,13 +15,28 @@
             <div class="card">
                 <div class="card-body">
                     <a asp-controller="testschedules" asp-action="Index"><i class="fa fa-arrow-circle-left" style="font-size: 30px"></i></a>
-                    <h1>Detail Test Schedule Of Class @ViewBag.classitem.ClassName</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Test Schedule
-                    </button>
-                    <br />
-                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Detail Test Schedule Of Class @ViewBag.classitem.ClassName</h1>
+                            <div class="table-data__tool">
+
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -29,17 +44,29 @@
                                 <th>Exam</th>
                                 <th>Date</th>
                                 <th>Faculty</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var s in ViewBag.testschedules)
                             {
-                                <tr>
-                                    <td>@index</td>
-                                    <td>@s.Exam.Title</td>
-                                    <td>@s.Date.ToString("MM/dd/yyyy")</td>
-                                    <td>@s.Faculty.Fullname</td>
-                                </tr>
+                            <tr>
+                                <td>@index</td>
+                                <td>@s.Exam.Title</td>
+                                <td>@(Convert.ToInt32(s.Date.ToString("yyyy")) > 2000 ? s.Date.ToString("MM/dd/yyyy") : "none")</td>
+                                <td>@(s.FacultyId != null ? s.Faculty.Fullname : "none")</td>
+                                    <td style="text-align: center;">
+                                    @if (s.FacultyId == null)
+                                    {
+                                        <a type="button" class="btn btn-success edittestschedule" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                    }
+                                    <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@s.TestScheduleId" asp-route-idclass="@ViewBag.classitem.ClassId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                    <input type="hidden" name="testscheduleid" id="testscheduleid" value="@s.TestScheduleId" />
+                                    <input type="hidden" name="examid" id="examid" value="@s.ExamId" />
+
+                                </td>
+                            </tr>
                                 index++;
                             }
                         </tbody>
@@ -51,43 +78,40 @@
 </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create</h4>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
             </div>
             <div class="modal-body">
-                <form asp-area="admin" asp-controller="testschedules" asp-action="create" method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="ClassId" />
+                <form asp-area="admin" asp-controller="testschedules" asp-action="create" method="post">
+                 
+                    <input type="hidden" asp-for="TestScheduleId" id="idtestschedule" />
+                    <input type="hidden" asp-for="ClassId" id="idclass" />
+                    <input type="hidden" asp-for="Status" id="statusschedule" />
+                    <input type="hidden" asp-for="ExamId" id="examid" />
 
                     <div class="form-group">
                         <label asp-for="ExamId" class="control-label">Exam</label>
-                        <select asp-for="ExamId" class="form-control" asp-items="ViewBag.ExamId"></select>
-                        <span asp-validation-for="ExamId" class="text-danger"></span>
+                        <input class="form-control" asp-for="ExamId" type="text" id="idexam" required="required" disabled />
                     </div>
-
                     <div class="form-group">
                         <label asp-for="FacultyId" class="control-label">Faculty</label>
-                        <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
-                        <span asp-validation-for="FacultyId" class="text-danger"></span>
+                        <select asp-for="FacultyId" class="form-control" id="facultyid" required="required" onchange="CheckDate(this.id);"></select>
                     </div>
-
                     <div class="form-group">
                         <label asp-for="Date" class="control-label" for="appt">Time Day</label>
-                        <input class="form-control" asp-for="Date" type="datetime-local" />
-                        <span asp-validation-for="Date" class="text-danger"></span>
+                        <input class="form-control" asp-for="Date" type="datetime-local" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="maxmark">Max Mark</label>
-                        <input type="number" class="form-control" name="maxmark" min="0" max="100" />
-
+                        <input type="number" class="form-control" name="maxmark" min="0" max="100" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="rate">Rate</label>
-                        <input type="number" class="form-control" name="rate" min="0" max="100" />
-
+                        <input type="number" class="form-control" name="rate" min="0" max="100" required="required"/>
                     </div>
                     <br />
                     <input type="submit" value="ADD" class="btn btn-primary" />

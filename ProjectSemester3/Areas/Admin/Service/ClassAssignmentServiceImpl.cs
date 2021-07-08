@@ -108,6 +108,15 @@ namespace ProjectSemester3.Areas.Admin.Service
             return classAssignment;
         }
 
+        public List<ClassAssignment> Search(string searchClassAssignment)
+        {
+            var classAssignments = context.ClassAssignments.AsQueryable();
 
+            if (searchClassAssignment != null) classAssignments = classAssignments.Where(b => b.Faculty.Fullname.Contains(searchClassAssignment) || b.Class.ClassName.Contains(searchClassAssignment) || b.SubjectName.Contains(searchClassAssignment));
+
+            var result = classAssignments.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
     }
 }

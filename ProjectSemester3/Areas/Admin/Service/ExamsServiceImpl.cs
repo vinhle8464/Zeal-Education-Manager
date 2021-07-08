@@ -75,7 +75,7 @@ namespace ProjectSemester3.Areas.Admin.Service
             return await context.Exams.FirstOrDefaultAsync(c => c.ExamId == examId && c.Status == true);
         }
 
-        public async Task<List<Exam>> Search(string searchExam, string filterSubject)
+        public List<Exam> Search(string searchExam, string filterSubject)
         {
             var exams = context.Exams.AsQueryable();
 

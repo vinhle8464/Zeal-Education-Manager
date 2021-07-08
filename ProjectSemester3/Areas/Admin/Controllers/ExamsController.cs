@@ -51,11 +51,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/Exams
         [Route("index")]
-        public async Task<IActionResult> Index(string searchExam, string filterSubject, int? page, int? pageSize)
+        public IActionResult Index(string searchExam, string filterSubject, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var exams = await examsService.Search(searchExam, filterSubject);
+                var exams = examsService.Search(searchExam, filterSubject);
                 ViewBag.searchExam = searchExam;
                 ViewBag.filterSubject = filterSubject;
 

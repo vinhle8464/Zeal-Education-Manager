@@ -31,7 +31,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/FeedbackFaculties
         [Route("index")]
-        public async Task<IActionResult> Index(string searchFeedbackFaculty, int? page, int? pageSize)
+        public IActionResult Index(string searchFeedbackFaculty, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {

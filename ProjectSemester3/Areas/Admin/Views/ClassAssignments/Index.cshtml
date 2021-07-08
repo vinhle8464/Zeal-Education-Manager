@@ -1,7 +1,11 @@
-﻿@model ProjectSemester3.Models.ClassAssignment
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.ClassAssignmentViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Class Assignment";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,75 +19,95 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
                             <!-- DATA TABLE -->
-                            <h1 class="title-5 m-b-35">Class assignment</h1>
+                            <h1 class="m-b-35">Class Assignment</h1>
                             <div class="table-data__tool">
-                                @*<div class="table-data__tool-left padding_search_bar">
-                                        <form class="form-header" asp-action="search" method="post">
-                                            <div class="rs-select2--light rs-select2--md">
-
-                                                <select asp-for="FacultyId" class="js-select2" name="course" asp-items="ViewBag.FacultyId"></select>
-                                                <div class="dropDownSelect2"></div>
-                                            </div>
-                                            <div class="rs-select2--light rs-select2--sm">
-
-                                                <select asp-for="ClassId" class="js-select2" name="class" asp-items="ViewBag.ClassId"></select>
-                                                <div class="dropDownSelect2"></div>
-                                            </div>
-                                            <div class="rs-select2--light">
-                                                <input class="au-input au-input--" type="text" list="datal" name="keyword" placeholder="Search for Course" />
-                                                <datalist id="datal">
-                                                    @foreach (var item in ViewBag.keyword)
-                                                    {
-                                                        <option value="@item"></option>
-                                                    }
-                                                </datalist>
-
-                                            </div>
-                                            <div class="rs-select2--light">
-                                                <button class="au-btn au-btn-load au-btn--small" type="submit">
-                                                    <i class="zmdi zmdi-search"></i>Search
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>*@
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchClassAssignment" id="searchClassAssignment" placeholder="Search..." value="@ViewBag.searchClassAssignment" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="table-data__tool-right">
-                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#myModal">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
                                         <i class="zmdi zmdi-plus"></i>add item
                                     </button>
                                 </div>
                             </div>
-
                             <!-- END DATA TABLE -->
                         </div>
                     </div>
-
                     <table class="table table-hover">
                         <thead>
+                            <tr>
                             <tr>
                                 <th>Serial</th>
                                 <th>Class</th>
                                 <th>Faculty</th>
                                 <th>Subject</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var c in ViewBag.classassignments)
+                            @foreach (var c in ViewBag.classassignments.PagedList)
                             {
-                            <tr onclick="location.href = '@Url.Action("details", "classassignments", new { facultyid = c.FacultyId, classid=c.ClassId })'">
-                                <td>@index</td>
-                                <td>@c.Class.ClassName</td>
-                                <td>@c.Faculty.Fullname</td>
-                                <td>@c.SubjectName</td>
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@c.Class.ClassName</td>
+                                    <td>@c.Faculty.Fullname</td>
+                                    <td>@c.SubjectName</td>
+                                    <td style="text-align: center;">
+                                        @*//delete form*@
+                                        <form asp-controller="classassignments" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="ClassAssignment.ClassAssignmentId" value="@c.ClassAssignmentId" />
+                                            <input type="hidden" name="searchClassAssignment" value="@ViewBag.searchClassAssignment" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        @*//delete form*@
 
-                                <td>
-                                    <a asp-controller="classassignments" asp-action="details" asp-route-classid="@c.ClassId" asp-route-facultyid="@c.FacultyId">View</a>
-                                </td>
-                            </tr>
+                                        <input type="hidden" name="classassignmentid" id="classassignmentid" value="@c.ClassAssignmentId" />
+                                    </td>
+                                </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "classassignments", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchClassAssignment" value="@ViewBag.searchClassAssignment" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.classassignments.PagedList.PageCount < ViewBag.classassignments.PagedList.PageNumber ? 0 : ViewBag.classassignments.PagedList.PageNumber) &nbsp;of @ViewBag.classassignments.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.classassignments.PagedList, page => Url.Action("index", "classassignments", new { searchClassAssignment = ViewBag.searchClassAssignment, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
@@ -91,21 +115,20 @@
 </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Inbox</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
             </div>
             <div class="modal-body">
-                <form  asp-action="create" method="post" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
-
+                <form asp-action="create" method="post" enctype="multipart/form-data" name="Form">
+                    <input type="hidden" name="searchClassAssignment" value="@ViewBag.searchClassAssignment" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
                     <div class="form-group">
-                        <label asp-for="ClassId" class="control-label">Class</label>
-                        <input class="form-control" type="text" name="cbbClass" id="cbbClass" placeholder="Choose Class" asp-for="Class.ClassName" required="required" />
-
-                     
+                        <label asp-for="ClassAssignment.ClassAssignmentId" class="control-label">Class</label>
+                        <input class="form-control" type="text" name="cbbClass" id="cbbClass" placeholder="Choose Class" asp-for="ClassAssignment.Class.ClassName" required="required" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Subject</label>
@@ -113,12 +136,8 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Faculty</label>
-                        <select class="form-control" id="cbbFaculty" asp-for="FacultyId"></select>
+                        <select class="form-control" id="cbbFaculty" asp-for="ClassAssignment.FacultyId"></select>
                     </div>
-                    @*<div class="form-group">
-            <label asp-for="FacultyId" class="control-label">Faculty</label>
-            <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
-        </div>*@
 
                     <br />
                     <input type="submit" value="ADD" class="btn btn-primary" />
