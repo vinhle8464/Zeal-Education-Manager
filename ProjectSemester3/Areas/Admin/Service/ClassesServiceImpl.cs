@@ -42,7 +42,7 @@ namespace ProjectSemester3.Areas.Admin.Service
                 context.Classes.Add(classes);
                 await context.SaveChangesAsync();
             }
-            return true;
+            return 1;
         }
 
         public async Task Delete(string classId)
