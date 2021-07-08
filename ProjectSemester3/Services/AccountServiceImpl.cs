@@ -408,11 +408,11 @@ namespace ProjectSemester3.Services
         {
 
             var accounts = context.Accounts.AsQueryable();
-            if (roleKeyword != null) accounts = accounts.Where(s => s.Role.RoleName.StartsWith(roleKeyword));
+            if (roleKeyword != null) accounts = accounts.Where(s => s.Role.RoleName.Contains(roleKeyword));
             if (genderKeyword != null) accounts = accounts.Where(s => s.Gender == Boolean.Parse(genderKeyword));
             if (statusKeyword != null) accounts = accounts.Where(s => s.Active == Boolean.Parse(statusKeyword));
 
-            if (searchKeyword != null) accounts = accounts.Where(b => b.Fullname.StartsWith(searchKeyword) || b.Phone.StartsWith(searchKeyword) || b.Email.StartsWith(searchKeyword));
+            if (searchKeyword != null) accounts = accounts.Where(b => b.Fullname.Contains(searchKeyword) || b.Phone.Contains(searchKeyword) || b.Email.Contains(searchKeyword));
 
             var result = accounts.Where(a => a.RoleId != "role01" && a.Status == true).ToList(); // execute query
 
