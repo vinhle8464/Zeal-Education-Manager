@@ -27,14 +27,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // get data to modal edit
         [Route("findajax")]
-        public async Task<IActionResult> FindAjax(string scheduleid)
+        public async Task<IActionResult> FindAjax(int scheduleid)
         {
             var schedule = await scheduleService.FindAjax(scheduleid);
             var scheduleAjax = new Schedule
             {
-                RoleId = role.RoleId,
-                RoleName = role.RoleName,
-                Desc = role.Desc,
+               ScheduleId = schedule.ScheduleId,
+               ClassId = schedule.ClassId,
+               SubjectId = schedule.SubjectId,
+               Status = schedule.Status
             };
             return new JsonResult(scheduleAjax);
 
