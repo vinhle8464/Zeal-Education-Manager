@@ -170,46 +170,116 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
-                        <li class="active has-sub">
-                            <a asp-area="faculty" asp-controller="dashboard" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="fas fa-tachometer-alt"></i>Dashboard
-                            </a>
-
-                        </li>
-
                         <li>
-                            <a asp-area="faculty" asp-controller="marking" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="far fa-check-square"></i>Marking
+                            <a asp-area="admin" asp-controller="accounts" asp-action="index">
+                                <i class="fas fa-chart-bar"></i>Account
                             </a>
                         </li>
                         <li>
-                            <a asp-area="faculty" asp-controller="attendance" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="far fa-calendar"></i>Attendance
+                            <a asp-area="admin" asp-controller="roles" asp-action="index">
+                                <i class="fas fa-chart-bar"></i>Role
                             </a>
                         </li>
                         <li>
-                            <a asp-area="faculty" asp-controller="student" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="fa fa-users"></i>Student
-                            </a>
-                        </li>
-
-                        <li>
-                            <a asp-area="faculty" asp-controller="schedule" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="fa fa-calendar"></i>Schedule
+                            <a asp-area="admin" asp-controller="professionals" asp-action="index">
+                                <i class="fas fa-chart-bar"></i>Professional
                             </a>
                         </li>
                         <li>
-                            <a asp-area="faculty" asp-controller="examination" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="fa fa-book"></i>Examination analysis
+                            <a asp-area="admin" asp-controller="batches" asp-action="index">
+                                <i class="fas fa-chart-bar"></i>Batch
                             </a>
                         </li>
-
                         <li>
-                            <a asp-area="faculty" asp-controller="schedule" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                                <i class="fa fa-calendar"></i>Test Schedule
+                            <a asp-area="admin" asp-controller="courses" asp-action="index">
+                                <i class="fas fa-table"></i>Course
                             </a>
                         </li>
-
+                        <li>
+                            <a asp-area="admin" asp-controller="subjects" asp-action="index">
+                                <i class="fas fa-table"></i>Subjects
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="coursesubjects" asp-action="index">
+                                <i class="fas fa-table"></i>Course-Subject
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="classes" asp-action="index">
+                                <i class="fas fa-table"></i>Class
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="classassignments" asp-action="index">
+                                <i class="fas fa-table"></i>Class Assignment
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="exams" asp-action="index">
+                                <i class="fas fa-table"></i>Exam
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="schedule" asp-action="index">
+                                <i class="fas fa-map-marker-alt"></i>Schedule
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="testschedules" asp-action="index">
+                                <i class="fas fa-map-marker-alt"></i>Test Schedule
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="mails" asp-action="index">
+                                <i class="far fa-check-square"></i>Mail
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="pays" asp-action="index">
+                                <i class="far fa-check-square"></i>Pay
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="scholarships" asp-action="index">
+                                <i class="fas fa-calendar-alt"></i>Scholarship
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="scholarshipstudents" asp-action="index">
+                                <i class="fas fa-calendar-alt"></i>Scholarship Student
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="enquiries" asp-action="index">
+                                <i class="fas fa-calendar-alt"></i>Enquiry
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="attendances" asp-action="index">
+                                <i class="fas fa-map-marker-alt"></i>Attendance
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="feedbacks" asp-action="index">
+                                <i class="fas fa-map-marker-alt"></i>Feedback
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="feedbackfaculties" asp-action="index">
+                                <i class="fas fa-map-marker-alt"></i>Feedback Faculty
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="batch" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                                <i class="fas fa-map-marker-alt"></i>Batch Report
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="admin" asp-controller="finance" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                                <i class="fas fa-map-marker-alt"></i>Finance Report
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -278,50 +348,49 @@
             </div>
         </header>
         <div class="page-container">
-            
+
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            Overal Feedback!
+                            Finance Report
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner" style="height:500px">
                                         <h3 class="title-2 m-b-40">
-                                            faculty Information
+                                            Exam Information
                                         </h3>
                                         <table class="table table-hover">
+
                                             <tr>
-                                                <th>Avartar</th>
-                                                <td> <img style="width:100px;height:100px" src="~/images/@ViewBag.account.Avatar" alt="John Doe" /></td>
+                                                <th>Course Name</th>
+                                                <td>@ViewBag.coursename</td>
 
                                             </tr>
                                             <tr>
-                                                <th>Name</th>
-                                                <td>@ViewBag.account.Fullname</td>
+                                                <th>Total amount expected to receive</th>
+                                                <td>@ViewBag.totalmoney</td>
 
                                             </tr>
                                             <tr>
-                                                <th>Age</th>
-                                                <td>@(DateTime.Now - ViewBag.account.Dob)</td>
+                                                <th>Total amount received</th>
+                                                <td>@ViewBag.realmoney</td>
 
                                             </tr>
-                                            
                                             <tr>
-                                                <th>Email</th>
-                                                <td>@ViewBag.account.Email</td>
+                                                <th>Total amount spent on scholarships</th>
+                                                <td>@ViewBag.sholarshipmoney</td>
                                             </tr>
                                             <tr>
-                                                <th>Address</th>
-                                                <td>@ViewBag.account.Address</td>
+                                                <th>Total amount not received</th>
+                                                <td>@ViewBag.notpaidmoney</td>
                                             </tr>
                                             <tr>
-                                                <th>PhoneNumber</th>
-                                                <td>@ViewBag.account.Phone</td>
-
+                                                <th>Total amount of money the student paid for the re-test</th>
+                                                <td>@ViewBag.finemoney</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -331,9 +400,86 @@
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner" style="height:500px">
                                         <h3 class="title-2 m-b-40">
-                                            Overall analysis of my feedback
+                                            Finance Analysis
                                         </h3>
-                                        <canvas id="faculty"></canvas>
+                                        <canvas id="finance"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="au-card m-b-30" style="height:500px">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2 m-b-40">
+                                            List of students who have not paid for re-test fee
+
+                                        </h3>
+                                        <table class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr>
+                                                    <th>Student Name</th>
+                                                    <th>Class Name</th>
+                                                    <th>learning status</th>
+
+                                                </tr>
+
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var student in ViewBag.studentwithfinefee)
+                                                {
+                                                    <tr>
+                                                        <td>@student.Fullname</td>
+                                                        <td>@student.Class.ClassName</td>
+                                                       
+                                                        <td><a asp-area="faculty" asp-controller="student" asp-action="studentanalysis" asp-route-classid="@student.Class.ClassId" asp-route-studentid="@student.AccountId"><i class="fa fa-eye"></i></a></td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="au-card m-b-30" style="height:500px">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2 m-b-40">
+                                            List of students who have not paid tuition fees
+                                        </h3>
+                                        <table class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr>
+                                                    <th>Student Name</th>
+                                                    <th>Student Class</th>
+
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var students in ViewBag.studentwithoutlearningfee)
+                                                {
+                                                    <tr>
+                                                        <td>@students.Fullname</td>
+                                                        <td>@students.Class.ClassName</td>
+
+                                                        <td>
+                                                            <a asp-area="faculty" asp-controller="student" asp-action="studentanalysis" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@students.ClassId" asp-route-studentid="@students.AccountId"><i class="fa fa-eye"></i></a>
+
+
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -369,24 +515,25 @@
     <!-- Main JS-->
     <script src="~/admin/js/main.js"></script>
     <script>
+
+
         try {
 
-            //radar chart
-            var ctx = document.getElementById("faculty");
+            // single bar chart
+            var ctx = document.getElementById("finance");
             if (ctx) {
-                ctx.height = 200;
+                ctx.height = 150;
                 var myChart = new Chart(ctx, {
-                    type: 'radar',
+                    type: 'bar',
                     data: {
-                        labels: [["Teaching", "Ability"], ["Exercise", "Eficiency"], "Teacher-Ethics", ["Specialize", "Talent"], "Assidous"],
-                        defaultFontFamily: 'Poppins',
+                        labels: ["All", "Recieve", "Scholarship", "Fine","Not paid"],
                         datasets: [
                             {
-                                label: "Overall",
-                                data: [@ViewBag.feedback.Teaching, @ViewBag.feedback.Exercises, @ViewBag.feedback.TeacherEthics, @ViewBag.feedback.Specialize, @ViewBag.feedback.Assiduous],
-                                borderColor: "rgba(0, 123, 255, 0.6)",
-                                borderWidth: "1",
-                                backgroundColor: "rgba(0, 123, 255, 0.4)"
+                                label: "Score statistics",
+                                data: [@ViewBag.totalmoney, @ViewBag.realmoney, @ViewBag.sholarshipmoney, @ViewBag.finemoney, @ViewBag.notpaidmoney],
+                                borderColor: "rgba(0,255,0,0.3)",
+                                borderWidth: "0",
+                                backgroundColor: ["rgba(0, 123, 255, 0.5)", "rgba(0,255,0,0.3)", "rgba(234, 133, 235, 1)", "rgba(255, 255, 0, 1)", "rgba(255,0,0,0.3)"]
                             }
                         ]
                     },
@@ -398,20 +545,27 @@
                             }
 
                         },
-                        scale: {
-                            ticks: {
-                                beginAtZero: true,
-                                fontFamily: "Poppins"
-                            }
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    fontFamily: "Poppins"
+
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    fontFamily: "Poppins"
+                                }
+                            }]
                         }
                     }
                 });
             }
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-
 
     </script>
 

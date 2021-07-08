@@ -136,7 +136,7 @@ namespace ProjectSemester3.Services
         {
             var mails = context.Mail.AsQueryable();
 
-            if (searchMail != null) mails = mails.Where(b => b.Title.StartsWith(searchMail) || b.EmailUser.StartsWith(searchMail) || b.Fullname.StartsWith(searchMail));
+            if (searchMail != null) mails = mails.Where(b => b.Title.Contains(searchMail) || b.EmailUser.Contains(searchMail) || b.Fullname.Contains(searchMail));
 
             var result = mails.Where(b => b.Status == true).ToList(); // execute query
 

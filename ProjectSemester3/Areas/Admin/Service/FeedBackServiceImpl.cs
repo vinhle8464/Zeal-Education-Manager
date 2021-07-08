@@ -60,5 +60,16 @@ namespace ProjectSemester3.Areas.Admin.Service
             return Feedback;
         }
 
+        public List<Feedback> Search(string searchFeedback)
+        {
+            var feedbacks = context.Feedbacks.AsQueryable();
+
+            if (searchFeedback != null) feedbacks = feedbacks.Where(b => b.Subject.SubjectName.Contains(searchFeedback));
+
+            var result = feedbacks.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
+
     }
 }

@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.Feedback
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.FeedbackViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Index";
@@ -12,13 +16,49 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                @*///////////*@
+
                 <div class="card-body">
-                    <h1>FeedBacks</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new FeedBack
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Feedback</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchFeedback" id="searchFeedback" placeholder="Search..." value="@ViewBag.searchFeedback" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -33,27 +73,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var feedback in ViewBag.feedbacks)
+                            @foreach (var feedback in ViewBag.feedbacks.PagedList)
                             {
-                            <tr onclick="location.href = '@Url.Action("edit", "feedbacks", new { id=feedback.FeedbackId })'">
-                                <td>@index</td>
-                                <td>@feedback.Subject.SubjectId</td>
-                                <td>@feedback.Teaching</td>
-                                <td>@feedback.Exercises</td>
-                                <td>@feedback.Specialize</td>
-                                <td>@feedback.Assiduous</td>
-                                <td>@feedback.Note</td>
-                                <td>
+                                <tr onclick="location.href = '@Url.Action("edit", "feedbacks", new { id=feedback.FeedbackId })'">
+                                    <td>@index</td>
+                                    <td>@feedback.Subject.SubjectName</td>
+                                    <td>@feedback.Teaching</td>
+                                    <td>@feedback.Exercises</td>
+                                    <td>@feedback.Specialize</td>
+                                    <td>@feedback.Assiduous</td>
+                                    <td>@feedback.Note</td>
+                                    <td>
 
-                                    <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@feedback.FeedbackId"><i class="fas fa-edit"></i></a>
-                                    <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@feedback.FeedbackId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@feedback.FeedbackId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@feedback.FeedbackId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
 
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "feedbacks", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchFeedback" value="@ViewBag.searchFeedback" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.feedbacks.PagedList.PageCount < ViewBag.feedbacks.PagedList.PageNumber ? 0 : ViewBag.feedbacks.PagedList.PageNumber) &nbsp;of @ViewBag.feedbacks.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.feedbacks.PagedList, page => Url.Action("index", "feedbacks", new { searchFeedback = ViewBag.searchFeedback, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
@@ -86,29 +141,29 @@
 
                     <div class="form-group">
                         <label for="teaching">Teaching</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Teaching" name="teaching" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Teaching" name="teaching" />
                     </div>
                     <div class="form-group">
                         <label for="exercises">Exercises</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Exercises" name="exercises" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Exercises" name="exercises" />
 
                     </div>
                     <div class="form-group">
                         <label for="teacherEthics">TeacherEthics</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="TeacherEthics" name="teacherEthics" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.TeacherEthics" name="teacherEthics" />
 
                     </div>
                     <div class="form-group">
                         <label for="specialize">Specialize</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Specialize" name="specialize" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Specialize" name="specialize" />
                     </div>
                     <div class="form-group">
                         <label for="assiduous">Assiduous</label>
-                        <input type="number" min="0" max="100" class="form-control" asp-for="Assiduous" name="assiduous" />
+                        <input type="number" min="0" max="100" class="form-control" asp-for="Feedback.Assiduous" name="assiduous" />
                     </div>
                     <div class="form-group">
                         <label for="note">Note</label>
-                        <input type="text" class="form-control" asp-for="Note" name="note" />
+                        <input type="text" class="form-control" asp-for="Feedback.Note" name="note" />
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>

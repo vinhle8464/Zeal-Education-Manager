@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjectSemester3.Areas.Faculty.Controllers
+namespace ProjectSemester3.Areas.Admin.Controllers
 {
-    [Area("admin")]
+    [Area("faculty")]
     [Route("batch")]
-    [Route("admin/batch")]
+    [Route("faculty/batch")]
     public class BatchController : Controller
     {
         private readonly IBatchService batchService;
@@ -88,7 +88,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             {
                 foreach(var scholarship in student.ScholarshipStudents)
                 {
-                    scholarshipfee +=((decimal)Convert.ToInt32(  scholarship.Scholarship.Discount)/(decimal)100 )* course.Fee;
+                    scholarshipfee +=(decimal)(Convert.ToInt32(scholarship.Scholarship.Discount))/(decimal)100 * course.Fee;
                     break;
                 }
             }

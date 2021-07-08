@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
 using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -60,12 +61,17 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/Feedbacks
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchFeedback, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
                 ViewBag.feedbacks = await feedBackService.FindAll();
                 ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
+
+                var feedbacks = feedBackService.Search(searchFeedback);
+                ViewBag.searchFeedback = searchFeedback;
+
+                LoadPagination(feedbacks, page, pageSize);
                 return View();
             }
             else
@@ -74,7 +80,29 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
         }
 
+        // load pagination
+        public void LoadPagination(List<Feedback> feedbacks, int? page, int? pageSize)
+        {
+            var feedbackViewModel = new FeedbackViewModel();
 
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = feedbacks.ToPagedList(pageNumber, pagesize);
+
+            feedbackViewModel.PagedList = (PagedList<Feedback>)onePageOfProducts;
+
+            ViewBag.feedbacks = feedbackViewModel;
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

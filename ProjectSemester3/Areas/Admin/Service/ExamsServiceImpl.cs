@@ -79,9 +79,9 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
             var exams = context.Exams.AsQueryable();
 
-            if (filterSubject != null) exams = exams.Where(s => s.SubjectId.StartsWith(filterSubject));
+            if (filterSubject != null) exams = exams.Where(s => s.SubjectId.Contains(filterSubject));
 
-            if (searchExam != null) exams = exams.Where(b => b.Title.StartsWith(searchExam)); ;
+            if (searchExam != null) exams = exams.Where(b => b.Title.Contains(searchExam)); ;
 
             var result = exams.Where(b => b.Status == true).ToList(); // execute query
 

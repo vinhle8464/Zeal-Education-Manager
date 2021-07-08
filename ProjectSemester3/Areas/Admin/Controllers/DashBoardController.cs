@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectSemester3.Models;
 using ProjectSemester3.Services;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         private IProfileService profileService;
         private IAccountService accountService;
         private IWebHostEnvironment webHostEnvironment;
+        private DatabaseContext context;
 
-        public DashBoardController(IProfileService profileService, IAccountService accountService, IWebHostEnvironment webHostEnvironment)
+        public DashBoardController(IProfileService profileService, IAccountService accountService, IWebHostEnvironment webHostEnvironment, DatabaseContext _context)
         {
             this.profileService = profileService;
             this.accountService = accountService;
             this.webHostEnvironment = webHostEnvironment;
+            context = _context;
         }
 
         [Route("index")]
@@ -32,6 +35,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
+                ViewBag.faculty = accountService.Find(HttpContext.Session.GetString("username"));
+                ViewBag.totalstudent = context.Accounts.Where(m=>m.RoleId=="role03").ToList().Count();
+                ViewBag.totalfaculty= context.Accounts.Where(m => m.RoleId == "role02").ToList().Count();
+                ViewBag.totalmoney= context.Pays.Where(m => m.PayStatus == true).Sum(m=>m.Total);
+                ViewBag.totalmail= context.Mail.ToList().Count();
                 return View();
             }
             else

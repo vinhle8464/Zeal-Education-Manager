@@ -121,9 +121,9 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
             var professionals = context.Professionals.AsQueryable();
 
-            if (subjectKeyword != null) professionals = professionals.Where(s => s.Subject.SubjectName.StartsWith(subjectKeyword));
+            if (subjectKeyword != null) professionals = professionals.Where(s => s.Subject.SubjectName.Contains(subjectKeyword));
 
-            if (searchKeyword1 != null) professionals = professionals.Where(b => b.Faculty.Fullname.StartsWith(searchKeyword1) || b.Subject.SubjectName.StartsWith(searchKeyword1));
+            if (searchKeyword1 != null) professionals = professionals.Where(b => b.Faculty.Fullname.Contains(searchKeyword1) || b.Subject.SubjectName.Contains(searchKeyword1));
 
             var result = professionals.Where(b => b.Status == true).ToList(); // execute query
 

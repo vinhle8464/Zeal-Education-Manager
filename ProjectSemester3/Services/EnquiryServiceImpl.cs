@@ -50,7 +50,7 @@ namespace ProjectSemester3.Services
         {
             var enquiries = context.Enquiries.AsQueryable();
 
-            if (searchEnquiry != null) enquiries = enquiries.Where(b => b.Title.StartsWith(searchEnquiry));
+            if (searchEnquiry != null) enquiries = enquiries.Where(b => b.Title.Contains(searchEnquiry));
 
             var result = enquiries.Where(b => b.Status == true).ToList(); // execute query
 

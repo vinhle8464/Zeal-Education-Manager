@@ -180,10 +180,10 @@ namespace ProjectSemester3.Areas.Admin.Service
         public List<Batch> Search(string searchKeyword, string courseKeyword, string classKeyword)
         {
             var batches = context.Batches.AsQueryable();
-            if (courseKeyword != null) batches = batches.Where(s => s.Course.CourseName.StartsWith(courseKeyword));
+            if (courseKeyword != null) batches = batches.Where(s => s.Course.CourseName.Contains(courseKeyword));
             if (classKeyword != null) batches = batches.Where(s => s.Graduate == Boolean.Parse(classKeyword));
 
-            if (searchKeyword != null) batches = batches.Where(b => b.Class.ClassName.StartsWith(searchKeyword) || b.Course.CourseName.StartsWith(searchKeyword));
+            if (searchKeyword != null) batches = batches.Where(b => b.Class.ClassName.Contains(searchKeyword) || b.Course.CourseName.Contains(searchKeyword));
            
             var result = batches.Where(b => b.Status == true).ToList(); // execute query
 

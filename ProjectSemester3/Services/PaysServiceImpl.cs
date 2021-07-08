@@ -55,7 +55,7 @@ namespace ProjectSemester3.Services
         {
             var pays = context.Pays.AsQueryable();
 
-            if (searchPay != null) pays = pays.Where(b => b.Title.StartsWith(searchPay) || b.Payment.StartsWith(searchPay) || b.Fee.ToString().StartsWith(searchPay));
+            if (searchPay != null) pays = pays.Where(b => b.Title.Contains(searchPay) || b.Payment.Contains(searchPay) || b.Fee.ToString().Contains(searchPay));
 
             var result = pays.ToList(); // execute query
 
