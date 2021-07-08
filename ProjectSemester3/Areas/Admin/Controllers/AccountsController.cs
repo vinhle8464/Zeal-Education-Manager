@@ -98,11 +98,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                // ViewBag.keyword = await accountService.GetKeyWord();
 
                 // this is a list for form create and edit
-                ViewBag.listRole = await context.Roles.Select(c => c.RoleName).ToListAsync();
+                ViewBag.listRole = await context.Roles.Where(r => r.RoleId != "role01").Select(c => c.RoleName).ToListAsync();
                 //ViewBag.listCourse = await context.Courses.Select(c => c.CourseName).ToListAsync();
                 // this is a list for form create and edit
 
-                 ViewData["RoleId"] = new SelectList(context.Roles, "RoleId", "RoleName");
+                 ViewData["RoleId"] = new SelectList(context.Roles.Where(a => a.RoleId != "role01"), "RoleId", "RoleName");
 
                 LoadPagination(acounts, page, pageSize);
 

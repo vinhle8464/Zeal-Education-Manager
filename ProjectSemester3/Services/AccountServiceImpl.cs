@@ -177,7 +177,7 @@ namespace ProjectSemester3.Services
 
         public List<Account> Findall()
         {
-            return context.Accounts.Where(p => p.Role.RoleName != "admin" && p.Status == true).ToList();
+            return context.Accounts.Where(p => p.Role.RoleId != "role01" && p.Status == true).ToList();
         }
 
         public async Task<int> Create(IFormFile photo, Account account)
