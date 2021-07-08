@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -28,17 +30,46 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.context = _context;
         }
 
+        // get list Faculty autocomplete
+        [HttpGet]
+        [Route("listCourse")]
+        public async Task<IActionResult> ListCourse([FromQuery(Name = "term")] string term)
+        {
+            var listCourse = await courseSubjectService.GetAllCourse(term);
 
+            return new JsonResult(listCourse);
+
+        }
+
+        //Find Subject In Class
+        [HttpGet]
+        [Route("findSubject")]
+        public IActionResult FindSubject(string courseName)
+        {
+            var listSubject = courseSubjectService.GetListSubject(courseName.Trim());
+            if (listSubject == null)
+            {
+                return NotFound();
+            }
+            var result = new List<ListSubjectViewModel>();
+            listSubject.ForEach(s => result.Add(new ListSubjectViewModel
+            {
+                Id = s.SubjectId,
+                Name = s.SubjectName
+            }));
+            return new JsonResult(result);
+        }
 
         // GET: Admin/CourseSubjects
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchCourseSubject, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.courseSubjectes = await courseSubjectService.FindAll();
-                ViewData["CourseId"] = new SelectList(context.Courses, "CourseId", "CourseName");
-                ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
+                var courseSubjectes = courseSubjectService.Search(searchCourseSubject);
+                ViewBag.searchCourseSubject = searchCourseSubject;
+
+                LoadPagination(courseSubjectes, page, pageSize);
 
                 return View();
             }
@@ -48,64 +79,87 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
         }
 
-      
+
+        // load pagination
+        public void LoadPagination(List<CourseSubject> courseSubjectes, int? page, int? pageSize)
+        {
+            var courseSubjectViewModel = new CourseSubjectViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = courseSubjectes.ToPagedList(pageNumber, pagesize);
+
+            courseSubjectViewModel.PagedList = (PagedList<CourseSubject>)onePageOfProducts;
+
+            ViewBag.courseSubjectes = courseSubjectViewModel;
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create([Bind("CourseId,SubjectId")] CourseSubject courseSubject)
+        public async Task<IActionResult> Create(CourseSubjectViewModel courseSubjectViewModel, string courselist, string subjectlist, string searchCourseSubject, int? pageSize)
         {
             if (ModelState.IsValid)
             {
+
+                var courseid = await context.Courses.FirstOrDefaultAsync(c => c.CourseName == courselist.Trim());
+
+                if (courseid == null)
+                {
+                    TempData["msg"] = "<script>alert('Course is not Exist!');</script>";
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "coursesubjects", action = "index", searchCourseSubject = searchCourseSubject, pageSize = pageSize });
+                }
+                var courseSubject = new CourseSubject
+                {
+                    CourseId = courseid.CourseId,
+                    SubjectId = subjectlist,
+                    Status = true
+                };
                 if (await courseSubjectService.Create(courseSubject) == 0)
                 {
                     TempData["msg"] = "<script>alert('Course-Subject has already existed!');</script>";
-                    return RedirectToAction(nameof(Index));
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "coursesubjects", action = "index", searchCourseSubject = searchCourseSubject, pageSize = pageSize });
                 }
                 else
                 {
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
-                    return RedirectToAction(nameof(Index));
+                    // Return view index and auto paging
+                    return RedirectToRoute(new { controller = "coursesubjects", action = "index", searchCourseSubject = searchCourseSubject, pageSize = pageSize });
                 }
             }
 
-            ViewBag.courseSubjectes = await courseSubjectService.FindAll();
 
-            ViewData["CourseId"] = new SelectList(context.Courses, "CourseId", "CourseName", courseSubject.CourseId);
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectName", "SubjectId", courseSubject.SubjectId);
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "coursesubjects", action = "index", searchCourseSubject = searchCourseSubject, pageSize = pageSize });
         }
 
-        // GET: Admin/CourseSubjects/Edit/5
-        public async Task<IActionResult> Edit(string courseid, string subjectid)
+        // delete professional
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete(CourseSubjectViewModel courseSubjectViewModel, string searchCourseSubject, int? pageSize)
         {
-            var courseSubject = await courseSubjectService.Find(courseid, subjectid);
-         
-            ViewData["CourseId"] = new SelectList(context.Courses, "CourseId", "CourseName", courseSubject.CourseId);
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", courseSubject.SubjectId);
 
-            return View("edit", courseSubject);
-        }
+            courseSubjectViewModel.CourseSubject.Status = false;
+            await courseSubjectService.Update(courseSubjectViewModel.CourseSubject);
 
-     
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(CourseSubject courseSubject)
-        {
-            if (ModelState.IsValid)
-            {
-                await courseSubjectService.Update(courseSubject);
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["CourseId"] = new SelectList(context.Courses, "CourseId", "CourseName", courseSubject.CourseId);
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName", courseSubject.SubjectId);
-
-            return View(courseSubject);
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "coursesubjects", action = "index", searchCourseSubject = searchCourseSubject, pageSize = pageSize });
         }
 
     }

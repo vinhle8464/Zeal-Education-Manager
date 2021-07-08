@@ -390,6 +390,36 @@ $('table .editsubject').on('click', function () {
 });
 //---------------- Subject ---------------------------
 
+
+//---------------- Course Subject ---------------------------
+$("#courselist").autocomplete({
+    source: "/admin/coursesubjects/listCourse",
+});
+$("#courselist").autocomplete("option", "appendTo", ".eventInsForm");
+
+$(document).ready(function () {
+    $('#courselist').on('change', function () {
+        $('subjectlist option').remove();
+        var courseName = $('#courselist').val();
+        $.ajax({
+            type: 'GET',
+            data: { courseName: courseName },
+            url: '/admin/coursesubjects/findSubject',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (listSubject) {
+                var s = '';
+                for (var i = 0; i < listSubject.length; i++) {
+                    s += '<option value="' + listSubject[i].id + '">' + listSubject[i].name + '</option>';
+                }
+                $('#subjectlist').html(s);
+            }
+        });
+    });
+});
+//----------------  Course Subject ---------------------------
+
+
 //---------------- FeedBack ---------------------------
 $("#feedbackFaculty").autocomplete({
     source: "/feedbacks/listFaculty",

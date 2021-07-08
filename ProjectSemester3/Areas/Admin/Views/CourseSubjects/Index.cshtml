@@ -1,7 +1,11 @@
-﻿@model ProjectSemester3.Models.CourseSubject
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.CourseSubjectViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Course Subject";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,31 +17,76 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Course - Subject</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Course-Subject
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Course Subject</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchCourseSubject" id="searchCourseSubject" placeholder="Search..." value="@ViewBag.searchCourseSubject" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
+                            <tr>
                             <tr>
                                 <th>Serial</th>
                                 <th>Course</th>
                                 <th>Subject</th>
-                                <th>Action</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var coursesubject in ViewBag.courseSubjectes)
+                            @foreach (var coursesubject in ViewBag.courseSubjectes.PagedList)
                             {
-                                <tr onclick="location.href = '@Url.Action("edit", "coursesubjectes", new { courseid=coursesubject.CourseId,  subjectid=coursesubject.SubjectId})'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@coursesubject.Course.CourseName</td>
                                     <td>@coursesubject.Subject.SubjectName</td>
-                                    <td>
+                                    <td style="text-align: center;">
+                                        @*//delete form*@
+                                        <form asp-controller="coursesubjects" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="CourseSubject.CourseId" value="@coursesubject.CourseId" />
+                                            <input type="hidden" asp-for="CourseSubject.SubjectId" value="@coursesubject.SubjectId" />
+                                            <input type="hidden" name="searchCourseSubject" value="@ViewBag.searchCourseSubject" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        @*//delete form*@
 
-                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-courseid="@coursesubject.CourseId" asp-route-subjectid="@coursesubject.SubjectId"><i class="fas fa-edit"></i></a>
+                                        <input type="hidden" name="courseid" id="courseid" value="@coursesubject.CourseId" />
+                                        <input type="hidden" name="subjectid" id="subjectid" value="@coursesubject.SubjectId" />
 
                                     </td>
                                 </tr>
@@ -45,31 +94,52 @@
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "coursesubjects", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchCourseSubject" value="@ViewBag.searchCourseSubject" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.courseSubjectes.PagedList.PageCount < ViewBag.courseSubjectes.PagedList.PageNumber ? 0 : ViewBag.courseSubjectes.PagedList.PageNumber) &nbsp;of @ViewBag.courseSubjectes.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.courseSubjectes.PagedList, page => Url.Action("index", "coursesubjects", new { searchCourseSubject = ViewBag.searchCourseSubject, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" coursesubject="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCreate" tabindex="-1" coursesubject="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create Course-Subject</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
 
             </div>
             <div class="modal-body">
-                <form asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                <form asp-action="create" method="post" name="Form">
+                    @*search paging*@
+                    <input type="hidden" name="searchCourseSubject" value="@ViewBag.searchCourseSubject" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                    @*search paging*@
+
                     <div class="form-group">
-                        <label asp-for="CourseId" class="control-label"></label>
-                        <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                        <label asp-for="CourseSubject.CourseId" class="control-label">Course</label>
+                        <input class="form-control" type="text" name="courselist" id="courselist" placeholder="Choose Course" asp-for="CourseSubject.Course.CourseName" required="required" />
                     </div>
                     <div class="form-group">
-                        <label asp-for="SubjectId" class="control-label"></label>
-                        <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                        <label asp-for="CourseSubject.SubjectId" class="control-label">Subject</label>
+                        <select class="form-control" name="subjectlist" id="subjectlist" required="required"></select>
+
                     </div>
-                   
+
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
             </div>
@@ -77,20 +147,3 @@
         </div>
     </div>
 </div>
-@*<script>
-    function validateForm() {
-        var startdate = document.forms["Form"]["startdate"].value.trim();
-        var enddate = document.forms["Form"]["enddate"].value.trim();
-
-
-        if (startdate == null || startdate == "") {
-            alert("Please Choose StartDate");
-            return false;
-        }
-        if (enddate == null || enddate == "") {
-            alert("Please Choose EndDate");
-            return false;
-        }
-
-    }
-</script>*@

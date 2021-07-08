@@ -12,5 +12,10 @@ namespace ProjectSemester3.Areas.Admin.Service
         public Task<List<CourseSubject>> FindAll();
         public Task<dynamic> Create(CourseSubject curseSubject);
         public Task<dynamic> Update(CourseSubject courseSubject);
+
+        public Task<List<string>> GetAllCourse(string keyword);
+        public List<Subject> GetListSubject(string courseName);
+        public List<CourseSubject> Search(string searchCourseSubject);
+
     }
 }
