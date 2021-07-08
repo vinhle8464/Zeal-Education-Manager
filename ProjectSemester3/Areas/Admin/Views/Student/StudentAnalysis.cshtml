@@ -280,6 +280,7 @@
                                 <i class="fas fa-map-marker-alt"></i>Finance Report
                             </a>
                         </li>
+
                     </ul>
                 </nav>
             </div>
@@ -288,7 +289,7 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        <form class="form-header" action="" method="POST">
+                        <form  class="form-header" action="" method="POST">
                             
                         </form>
                         <div class="header-button">
@@ -323,16 +324,7 @@
                                                     <i class="zmdi zmdi-account"></i>Account
                                                 </a>
                                             </div>
-                                            <div class="account-dropdown__item">
-                                                <a href="#">
-                                                    <i class="zmdi zmdi-settings"></i>Setting
-                                                </a>
-                                            </div>
-                                            <div class="account-dropdown__item">
-                                                <a href="#">
-                                                    <i class="zmdi zmdi-money-box"></i>Billing
-                                                </a>
-                                            </div>
+                                           
                                         </div>
                                         <div class="account-dropdown__footer">
                                             <a asp-controller="dashboard" asp-action="logout">
@@ -354,39 +346,45 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            Ending Batch Report
-                        </div>
-                        <div class="row">
                             <div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner" style="height:500px">
-                                        <h3 class="title-2 m-b-40">
-                                            Course Information
+                                        <h3 class="title-2 m-b-40" >
+                                            Student Information
                                         </h3>
                                         <table class="table table-hover">
-
                                             <tr>
-                                                <th>Course Name</th>
-                                                <td>@ViewBag.coursename</td>
-
-                                            </tr>
-                                            <tr>
-                                                <th>All student in course</th>
-                                                <td>@ViewBag.totalstudent</td>
+                                                <th>Avartar</th>
+                                                <td> <img style="width:100px;height:100px" src="~/images/@ViewBag.account.Avatar" alt="John Doe" /></td>
 
                                             </tr>
                                             <tr>
-                                                <th> Number of student graduate</th>
-                                                <td>@ViewBag.numbergraduate</td>
+                                                <th>Name</th>
+                                                <td>@ViewBag.account.Fullname</td>
 
                                             </tr>
                                             <tr>
-                                                <th>Number of student fail</th>
-                                                <td>@ViewBag.numberfail</td>
+                                                <th>Age</th>
+                                                <td>@(DateTime.Now - ViewBag.account.Dob)</td>
+
                                             </tr>
                                             <tr>
-                                                <th>estimated total amount earned</th>
-                                                <td>@ViewBag.totalmoney</td>
+                                                <th>Class</th>
+                                                <td>@ViewBag.account.Class.ClassName</td>
+
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td>@ViewBag.account.Email</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Address</th>
+                                                <td>@ViewBag.account.Address</td>
+                                            </tr>
+                                            <tr>
+                                                <th>PhoneNumber</th>
+                                                <td>@ViewBag.account.Phone</td>
+
                                             </tr>
                                         </table>
                                     </div>
@@ -396,9 +394,9 @@
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner" style="height:500px">
                                         <h3 class="title-2 m-b-40">
-                                            Batch Report
+                                            Overall analysis of medium score in all subjects
                                         </h3>
-                                        <canvas id="batch"></canvas>
+                                        <canvas id="subject"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -406,60 +404,21 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="au-card m-b-30" style="height:500px">
+                                <div class="au-card m-b-30">
                                     <div class="au-card-inner">
                                         <h3 class="title-2 m-b-40">
-                                            List of educated students scholarship in the course
+                                            Exam Information
                                         </h3>
                                         <table class="table table-borderless table-striped table-earning">
                                             <thead>
                                                 <tr>
-                                                    <th>Student Name</th>
-                                                    <th>Class Name</th>
-                                                    <th>Scholarship Name</th>
-                                                    <th>Discount Percent</th>
-                                                    <th>learning status</th>
-
-                                                </tr>
-
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var student in ViewBag.scholarshipstudent)
-                                                {
-                                                    <tr>
-                                                        <td>@student.Fullname</td>
-                                                        <td>@student.Class.ClassName</td>
-                                                        @foreach (var scholarship in student.ScholarshipStudents)
-                                                        {
-                                                            <td>@scholarship.Scholarship.ScholarshipName</td>
-                                                            <td>@scholarship.Scholarship.Discount</td>
-                                                            break;
-                                                        }
-                                                        <td><a asp-area="admin" asp-controller="student" asp-action="studentanalysis" asp-route-classid="@student.Class.ClassId" asp-route-studentid="@student.AccountId"><i class="fa fa-eye"></i></a></td>
-                                                    </tr>
-
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="au-card m-b-30" style="height:500px">
-                                    <div class="au-card-inner">
-                                        <h3 class="title-2 m-b-40">
-                                            List of educated students scholarship in the course
-                                        </h3>
-                                        <table class="table table-borderless table-striped table-earning">
-                                            <thead>
-                                                <tr>
-                                                    <th>Student Name</th>
-                                                    <th>Student Class</th>
-
-                                                    <th>Action</th>
+                                                    
+                                                    <th>Subject Name</th>
+                                                    <th>Exam Name</th>
+                                                    <th>Score</th>
+                                                    <th>Maximum_Score</th>
+                                                    <th>Classify</th>
+                                                    
 
                                                 </tr>
                                             </thead>
@@ -467,13 +426,22 @@
                                                 @foreach (var students in ViewBag.students)
                                                 {
                                                     <tr>
-                                                        <td>@students.Fullname</td>
-                                                        <td>@students.Class.ClassName</td>
 
+                                                        
+                                                        <td>@students.Exam.Subject.SubjectName</td>
+                                                        <td>@students.Exam.Title</td>
+                                                        <td>@students.Mark1"</td>
+                                                        <td>@students.MaxMark</td>
+                                                        @if ((students.Mark1 / students.MaxMark) >= (decimal)0.4)
+                                                        {
+
+                                                            <td>Pass</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>Fail</td>
+                                                        }
                                                         <td>
-                                                            <a asp-area="faculty" asp-controller="student" asp-action="studentanalysis" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-classid="@students.ClassId" asp-route-studentid="@students.AccountId"><i class="fa fa-eye"></i></a>
-
-
                                                         </td>
                                                     </tr>
 
@@ -486,6 +454,20 @@
                                 </div>
                             </div>
 
+
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-lg-12" >
+                                <div class="au-card m-b-30">
+                                    <div class="au-card-inner" >
+                                        <h3 class="title-2 m-b-40">
+                                            Student attendance overview
+                                        </h3>
+                                        <canvas style="height:700px" id="wise"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -517,25 +499,80 @@
     <!-- Main JS-->
     <script src="~/admin/js/main.js"></script>
     <script>
-
-
         try {
-
-            // single bar chart
-            var ctx = document.getElementById("batch");
+            var arr =@Html.Raw(Json.Serialize(ViewBag.subjectslist));
+            var arrdata =@Html.Raw(Json.Serialize(ViewBag.datasubjectslist));
+            console.log(arr);
+            //radar chart
+            var ctx = document.getElementById("subject");
             if (ctx) {
-                ctx.height = 150;
+                ctx.height = 200;
+
                 var myChart = new Chart(ctx, {
-                    type: 'bar',
+                    type: 'radar',
                     data: {
-                        labels: ["Total student in course", "Graduate","Fail"],
+                        labels: arr,
+                        defaultFontFamily: 'Poppins',
                         datasets: [
                             {
-                                label: "Score statistics",
-                                data: [@ViewBag.totalstudent, @ViewBag.numbergraduate, @ViewBag.numberfail],
-                                borderColor: "rgba(0,255,0,0.3)",
+                                label: "Overall",
+                                data: arrdata,
+                                borderColor: "rgba(0, 123, 255, 0.6)",
+                                borderWidth: "1",
+                                backgroundColor: "rgba(0, 123, 255, 0.4)"
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                fontFamily: 'Poppins'
+                            }
+
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true,
+                                fontFamily: "Poppins"
+                            }
+                        }
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+        try {
+            var arr =@Html.Raw(Json.Serialize(ViewBag.subjectslist));
+            var ful =@Html.Raw(Json.Serialize(ViewBag.fulllesson));
+            var abs =@Html.Raw(Json.Serialize(ViewBag.absentlessson));
+            //bar chart
+            var ctx = document.getElementById("wise");
+            if (ctx) {
+                ctx.height = 200;
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    defaultFontFamily: 'Poppins',
+                    data: {
+                        labels: arr,
+                        datasets: [
+                            {
+                                label: "Total number of lessonses",
+                                data: ful,
+                                borderColor: "rgba(0, 123, 255, 0.9)",
                                 borderWidth: "0",
-                                backgroundColor: ["rgba(0, 123, 255, 0.5)", "rgba(0,255,0,0.3)","rgba(255,0,0,0.3)"]
+                                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                                fontFamily: "Poppins"
+                            },
+                            {
+                                label: "Number of days students are absent",
+                                data: abs,
+                                borderColor: "rgba(0,0,0,0.09)",
+                                borderWidth: "0",
+                                backgroundColor: "rgba(0,255,0,0.3)",
+                                fontFamily: "Poppins"
                             }
                         ]
                     },
@@ -564,6 +601,7 @@
                     }
                 });
             }
+
 
         } catch (error) {
             console.log(error);

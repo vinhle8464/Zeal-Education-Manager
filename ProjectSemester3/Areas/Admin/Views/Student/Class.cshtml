@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "Marking";
+    Layout = "~/Areas/Faculty/Views/Shared/_Layout.cshtml";
+}
+<!-- MAIN CONTENT-->
+
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="overview-wrap">
+                        <h2 class="title-1">Class</h2>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-25">
+                @foreach (var cls in ViewBag.classes)
+                {
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="overview-item overview-item--c2">
+                            <div class="overview__inner">
+                                <div class="overview-box clearfix">
+                                    <div class="icon">
+                                        <a asp-area="admin" asp-controller="student" asp-action="index" asp-route-facultyid="acc01" asp-route-classid="@cls.ClassId"> <i class="zmdi zmdi-home"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        <h2>@cls.ClassName</h2>
+                                        <span>@cls.Desc</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+
+
+        </div>
+    </div>
+
