@@ -149,61 +149,68 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 var numAlpha = new Regex("(?<Alpha>[a-zA-Z]*)(?<Numeric>[0-9][0-9]*)");
                 int numId = 0;
+                Class classid = null;
 
-                var classid = new Class();
-                if (listClassName != null)
+                Scholarship scholarship = null;
+
+                Course course = null;
+
+                if (accountViewModel.Account.RoleId == "role03")
                 {
-                    classid = await context.Classes.FirstOrDefaultAsync(c => c.ClassName == listClassName.Trim());
-                    if (classid == null)
-                    {
-                        TempData["msg"] = "<script>alert('Class is not Exist!');</script>";
 
+
+                 
+                    if (listClassName != null)
+                    {
+                        classid = await context.Classes.FirstOrDefaultAsync(c => c.ClassName == listClassName.Trim());
+                        if (classid == null)
+                        {
+                            TempData["msg"] = "<script>alert('Class is not Exist!');</script>";
+
+                            // Return view index and auto paging
+                            return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
+                        }
+                    }
+                    var batch = await accountService.GetBatch(classid.ClassId);
+             
+                    if (batch == null && accountViewModel.Account.RoleId == "role03")
+                    {
+                        TempData["msg"] = "<script>alert('This Class do not have Batch! Please create a Batch and try again.');</script>";
                         // Return view index and auto paging
                         return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
                     }
-                }
-                var batch = await accountService.GetBatch(classid.ClassId);
-                var course = new Course();
-                if (batch == null && accountViewModel.Account.RoleId == "role03")
-                {
-                    TempData["msg"] = "<script>alert('This Class do not have Batch! Please create a Batch and try again.');</script>";
-                    // Return view index and auto paging
-                    return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
-                }
-                else
-                {
-                     course = await accountService.GetCourse(batch.CourseId);
-                }
-
-
-                if (course != null && accountViewModel.Account.RoleId == "role03")
-                {
-                    // batch = await accountService.GetBatch(classid.ClassId);
-                }
-                else
-                {
-                    TempData["msg"] = "<script>alert('This Batch has some error with Course! Please try it later.');</script>";
-                    // Return view index and auto paging
-                    return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
-
-                }
-
-                var scholarship = new Scholarship();
-
-                if (listScholarship != null && accountViewModel.Account.RoleId == "role03")
-                {
-                    scholarship = await context.Scholarships.FirstOrDefaultAsync(c => c.ScholarshipName == listScholarship.Trim());
-                    if (scholarship == null)
+                    else
                     {
-                        TempData["msg"] = "<script>alert('Scholarship is not Exist!');</script>";
+                        course = await accountService.GetCourse(batch.CourseId);
+                    }
+
+
+                    if (course != null)
+                    {
+                        // batch = await accountService.GetBatch(classid.ClassId);
+                    }
+                    else
+                    {
+                        TempData["msg"] = "<script>alert('This Batch has some error with Course! Please try it later.');</script>";
                         // Return view index and auto paging
                         return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
 
-                        // Return view index and auto paging
-                        //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
+                    }
+
+                    if (listScholarship != null)
+                    {
+                        scholarship = await context.Scholarships.FirstOrDefaultAsync(c => c.ScholarshipName == listScholarship.Trim());
+                        if (scholarship == null)
+                        {
+                            TempData["msg"] = "<script>alert('Scholarship is not Exist!');</script>";
+                            // Return view index and auto paging
+                            return RedirectToRoute(new { controller = "accounts", action = "index", searchKeyword = searchKeyword, roleKeyword = roleKeyword, genderKeyword = genderKeyword, statusKeyword = statusKeyword, pageSize = pageSize });
+
+                            // Return view index and auto paging
+                            //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
+                        }
                     }
                 }
-
 
 
                 // devided char and number
@@ -230,7 +237,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     {
                         accountViewModel.Account.AccountId = "acc" + (numId + 1);
                     }
-                    accountViewModel.Account.ClassId = classid.ClassId;
+                    if (classid != null)
+                    {
+                        accountViewModel.Account.ClassId = classid.ClassId;
+
+                    }
                     accountViewModel.Account.Username = "account" + accountService.RandomCode(4) + accountService.RandomCode(4);
                     accountViewModel.Account.Fullname = accountViewModel.Account.Fullname.Trim();
                     accountViewModel.Account.Email = accountViewModel.Account.Email.Trim();
