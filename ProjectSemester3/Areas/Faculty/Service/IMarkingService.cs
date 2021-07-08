@@ -15,8 +15,8 @@ namespace ProjectSemester3.Areas.Faculty.Service
         List<Subject> subjects(string classid);
         List<Exam> exams(string subjectid,string classid);
 
-      
-        Task update(List<Mark> marks);
+
+        Task<dynamic> update(List<Mark> marks);
        
         Class getclass(string classid);
         Exam getexam(string examid);

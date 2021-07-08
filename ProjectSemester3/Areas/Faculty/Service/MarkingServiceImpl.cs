@@ -1,8 +1,11 @@
-﻿using ProjectSemester3.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectSemester3.Models;
+using ProjectSemester3.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProjectSemester3.Areas.Faculty.Service
@@ -10,8 +13,10 @@ namespace ProjectSemester3.Areas.Faculty.Service
     public class MarkingServiceImpl : IMarkingService
     {
         private DatabaseContext _context;
-        public MarkingServiceImpl(DatabaseContext context)
+        private readonly IMailService mailService;
+        public MarkingServiceImpl(DatabaseContext context, IMailService _mailService)
         {
+            mailService = _mailService;
             _context = context;
         }
 
@@ -63,7 +68,7 @@ namespace ProjectSemester3.Areas.Faculty.Service
 
 
 
-        public Task update(List<Mark> marks)
+        public async Task<dynamic> update(List<Mark> marks)
         {
             foreach (var mark in marks)
 
@@ -72,25 +77,40 @@ namespace ProjectSemester3.Areas.Faculty.Service
                 {
                     mark.StatusMark = "pass";
                     _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
                     mark.StatusMark = "fail";
-
-                    _context.Pays.Add(new Pay
-                    {
-                        AccountId = mark.StudentId,
-                        Payment = "Paypal",
-                        Title="finefee"
-
-                    });
+;
                     _context.Entry(mark).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    CreatePay(_context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).AccountId, _context.Accounts.FirstOrDefault(m => m.AccountId == mark.StudentId).Email);
                 }
 
 
             }
-            _context.SaveChanges();
-            return Task.CompletedTask;
+          return 1;
+            
+        }
+        public async Task<dynamic> CreatePay(string AccountId, string email)
+        {
+
+            var pay = new Pay();
+            pay.AccountId = AccountId;
+            pay.Payment = "Paypal";
+            pay.Title = "Finefee";
+            pay.Fee = 100;
+            pay.Discount = 0;
+            pay.Total = pay.Fee - pay.Discount;
+            pay.DateRequest = DateTime.Now;
+            pay.DatePaid = null;
+            pay.PayStatus = false;
+            _context.Pays.Add(pay);
+            await _context.SaveChangesAsync();
+            string content = "<h2>Your finfee is " + Convert.ToInt32(pay.Total) + ".</h2> <br/>" + "Please pay it in the shortest time!" + "<br/><br/>" + "Best regards," + "<br/>" + "<b>Zeal Education<b/>" + "<br/><br/> Link: http://localhost:58026/";
+            mailService.Reply(email, pay.Title, content);
+            return true;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿<aside class="menu-sidebar d-none d-lg-block">
     <div class="logo">
-        <a href="#">
+        <a asp-area="faculty" asp-controller="dashboard" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
             <img src="~/admin/images/Capture.jpg" style="width:229px; height:77px"   alt="Zeal Education" />
         </a>
     </div>
@@ -40,16 +40,13 @@
                         <i class="fa fa-book"></i>Examination analysis
                     </a>
                 </li>
-                <li>
-                    <a asp-area="faculty" asp-controller="batch" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                        <i class="fa fa-tasks"></i>Batch Report
-                    </a>
-                </li>
+                
                 <li>
                     <a asp-area="faculty" asp-controller="schedule" asp-action="class" asp-route-facultyid="@ViewBag.faculty.AccountId">
-                        <i class="fa fa-tasks"></i>Test Schedule
+                        <i class="fa fa-calendar"></i>Test Schedule
                     </a>
                 </li>
+               
             </ul>
         </nav>
     </div>
