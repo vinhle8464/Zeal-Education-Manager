@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -29,15 +31,35 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string examid)
+        {
+            var exam = await examsService.FindAjax(examid);
+            var examAjax = new Exam
+            {
+              ExamId = exam.ExamId,
+              SubjectId = exam.SubjectId,
+              Title = exam.Title,
+              Desc = exam.Desc,
+              Status = exam.Status
+            };
+            return new JsonResult(examAjax);
+
+        }
 
 
         // GET: Admin/Exams
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchExam, string filterSubject, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.exams = await examsService.FindAll();
+                var exams = await examsService.Search(searchExam, filterSubject);
+                ViewBag.searchExam = searchExam;
+                ViewBag.filterSubject = filterSubject;
+
+                LoadPagination(exams, page, pageSize);
                 ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
 
                 return View();
@@ -46,14 +68,37 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
+        }
 
+        // load pagination
+        public void LoadPagination(List<Exam> exams, int? page, int? pageSize)
+        {
+            var examViewModel = new ExamViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = exams.ToPagedList(pageNumber, pagesize);
+
+            examViewModel.PagedList = (PagedList<Exam>)onePageOfProducts;
+
+            ViewBag.exams = examViewModel;
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create(Exam exam)
+        public async Task<IActionResult> Create(ExamViewModel examViewModel, string searchExam, string filterSubject, int? pageSize)
         {
             if (ModelState.IsValid)
             {
@@ -75,110 +120,83 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 {
                     if (num < 9)
                     {
-                        exam.ExamId = "exam" + "0" + (num + 1);
+                        examViewModel.Exam.ExamId = "exam" + "0" + (num + 1);
 
                     }
                     else
                     {
-                        exam.ExamId = "exam" + (num + 1);
+                        examViewModel.Exam.ExamId = "exam" + (num + 1);
 
                     }
-                    exam.Title = exam.Title.Trim();
-                    exam.Desc = exam.Desc.Trim();
-                    exam.Status = true;
-                    if (await examsService.Create(exam) == 0)
+                    examViewModel.Exam.Title = examViewModel.Exam.Title.Trim();
+                    examViewModel.Exam.Desc = examViewModel.Exam.Desc.Trim();
+                    examViewModel.Exam.Status = true;
+                    if (await examsService.Create(examViewModel.Exam) == 0)
                     {
                         TempData["msg"] = "<script>alert('Exam has already existed!');</script>";
-                        return RedirectToAction(nameof(Index));
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
                     }
                     else
                     {
-                        TempData["msg"] = "<script>alert('Successfully!');</script>";
+                        TempData["success"] = "success";
 
-                        return RedirectToAction(nameof(Index));
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
                     }
                 }
                 else
                 {
-                    exam.ExamId = "exam" + "01";
-                    exam.Title = exam.Title.Trim();
-                    exam.Desc = exam.Desc.Trim();
-                    exam.Status = true;
-                    await examsService.Create(exam);
+                    examViewModel.Exam.ExamId = "exam" + "01";
+                    examViewModel.Exam.Title = examViewModel.Exam.Title.Trim();
+                    examViewModel.Exam.Desc = examViewModel.Exam.Desc.Trim();
+                    examViewModel.Exam.Status = true;
+                    await examsService.Create(examViewModel.Exam);
 
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
                 }
             }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", exam.SubjectId);
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
         }
 
-        // GET: Admin/Exams/Edit/5
-        [HttpGet]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string examid, string subjectid)
-        {
-            if (examid == null || subjectid == null)
-            {
-                return NotFound();
-            }
 
-            var exam = await examsService.Find(examid, subjectid);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", exam.SubjectId);
-            return View("edit", exam);
-
-        }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit([Bind("ExamId,SubjectId,Title,Desc")] Exam exam)
+        public async Task<IActionResult> Edit(ExamViewModel examViewModel, string searchExam, string filterSubject, int? pageSize)
         {
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await examsService.Update(exam);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!examsService.Exists(exam.ExamId, exam.SubjectId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
 
-                return RedirectToAction(nameof(Index));
+                await examsService.Update(examViewModel.Exam);
+
+
+                TempData["success"] = "success";
+
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
             }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", exam.SubjectId);
-            return View(exam);
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
         }
 
-        // GET: Admin/Exams/Delete/5
-        public async Task<IActionResult> Delete(string examid, string subjectid)
+        // hide exam
+        [HttpPost]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(ExamViewModel examViewModel, string searchExam, string filterSubject, int? pageSize)
         {
-            if (examid == null || subjectid == null)
-            {
-                return NotFound();
-            }
+            await examsService.Delete(examViewModel.Exam.ExamId, examViewModel.Exam.SubjectId);
+            TempData["success"] = "success";
 
-            await examsService.Delete(examid, subjectid);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
-
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "exams", action = "index", searchExam = searchExam, filterSubject = filterSubject, pageSize = pageSize });
         }
+
 
 
     }

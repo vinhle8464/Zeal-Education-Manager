@@ -174,7 +174,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         //    .Where(c => c.CourseName.ToLower().Contains(keyword.ToLower()) && c.Status == true)
         //    .ToListAsync();
 
-        public async Task<List<Batch>> Search(string searchKeyword, string courseKeyword, string classKeyword)
+        public List<Batch> Search(string searchKeyword, string courseKeyword, string classKeyword)
         {
             var batches = context.Batches.AsQueryable();
             if (courseKeyword != null) batches = batches.Where(s => s.Course.CourseName.StartsWith(courseKeyword));

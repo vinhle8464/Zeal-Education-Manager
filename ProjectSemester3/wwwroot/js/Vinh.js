@@ -148,6 +148,51 @@
     });
     //---------------- role ---------------------------
 
+    //---------------- Scholarship ---------------------------
+    $('table .editscholarship').on('click', function () {
+
+        var idscholarship = $(this).parent().find("#idscholarship").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { idscholarship: idscholarship },
+            url: ' /admin/scholarships/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #idscholarship').val(result.scholarshipId);
+                $('#ModalEdit #namescholarship').val(result.scholarshipName);
+                $('#ModalEdit #discountscholarship').val(result.discount);
+                $('#ModalEdit #descscholarship').val(result.desc);
+                $('#ModalEdit #statusscholarship').val(result.status);
+
+            }
+        });
+    });
+    //---------------- Scholarship ---------------------------
+
+    //---------------- Enquiry ---------------------------
+    $('table .editenquiry').on('click', function () {
+
+        var enquiryid = $(this).parent().find("#enquiryid").val();
+
+        $.ajax({
+            type: 'GET',
+            data: { enquiryid: enquiryid },
+            url: ' /admin/enquiries/findajax',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                $('#ModalEdit #idenquiry').val(result.id);
+                $('#ModalEdit #titleenquiry').val(result.title);
+                $('#ModalEdit #answerenquiry').val(result.answer);
+                $('#ModalEdit #statusenquiry').val(result.status);
+
+            }
+        });
+    });
+    //---------------- Enquiry ---------------------------
+
 
     //---------------- class assignment ---------------------------
     $("#cbbClass").autocomplete({
@@ -233,6 +278,116 @@ $(document).ready(function () {
 });
 //---------------- Professional ---------------------------
 
+
+
+//---------------- Class ---------------------------
+
+
+$('table .editClass').on('click', function () {
+
+    var classid = $(this).parent().find("#classid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { classid: classid },
+        url: ' /admin/classes/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+
+            $('#ModalEdit #idclass').val(result.classId);
+            $('#ModalEdit #nameclass').val(result.className);
+            $('#ModalEdit #numberclass').val(result.numberOfStudent);
+            $('#ModalEdit #descclass').val(result.desc);
+            $('#ModalEdit #statusclass').val(result.status);
+            $('#ModalEdit #nameclasss').val(result.className);
+
+        }
+    });
+});
+//---------------- Class ---------------------------
+
+
+//---------------- Exam ---------------------------
+
+
+$('table .editExam').on('click', function () {
+
+    var examid = $(this).parent().find("#examid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { examid: examid },
+        url: ' /admin/exams/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+
+            $('#ModalEdit #idexam').val(result.examId);
+            $('#ModalEdit #idsubject').val(result.subjectId);
+            $('#ModalEdit #statusexam').val(result.status);
+            $('#ModalEdit #titleexam').val(result.title);
+            $('#ModalEdit #descexam').val(result.desc);
+        }
+    });
+});
+//---------------- Exam ---------------------------
+
+
+//---------------- Course ---------------------------
+//search autocomplete
+$("#searchCourse").autocomplete({
+    source: "/admin/courses/searchautocomplete",
+});
+
+$('table .editcourse').on('click', function () {
+
+    var courseid = $(this).parent().find("#courseid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { courseid: courseid },
+        url: ' /admin/courses/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #courseidid').val(result.courseId);
+            $('#ModalEdit #namecourse').val(result.courseName);
+            $('#ModalEdit #feecourse').val(result.fee);
+            $('#ModalEdit #termcourse').val(result.term);
+            $('#ModalEdit #certificatecourse').val(result.certificate);
+            $('#ModalEdit #desccourse').val(result.desc);
+            $('#ModalEdit #coursestatus').val(result.status);
+
+            
+        }
+    });
+});
+//---------------- Course ---------------------------
+
+
+//---------------- Subject ---------------------------
+
+$('table .editsubject').on('click', function () {
+
+    var subjectid = $(this).parent().find("#subjectid").val();
+
+    $.ajax({
+        type: 'GET',
+        data: { subjectid: subjectid },
+        url: ' /admin/subjects/findajax',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            $('#ModalEdit #subjectidid').val(result.subjectId);
+            $('#ModalEdit #namesubject').val(result.subjectName);
+            $('#ModalEdit #descsubject').val(result.desc);
+            $('#ModalEdit #subjectsatus').val(result.status);
+
+        }
+    });
+});
+//---------------- Subject ---------------------------
 
 //---------------- FeedBack ---------------------------
 $("#feedbackFaculty").autocomplete({

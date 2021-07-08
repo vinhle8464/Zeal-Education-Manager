@@ -8,49 +8,64 @@ namespace ProjectSemester3.Areas.Admin.Service
 {
     public class CoursesServiceImpl : ICoursesService
     {
-        private readonly DatabaseContext _context;
-        public CoursesServiceImpl(DatabaseContext context)
+        private readonly DatabaseContext context;
+        public CoursesServiceImpl(DatabaseContext _context)
         {
-            _context = context;
+            context = _context;
         }
 
         public async Task<int> CountId()
         {
-           return await _context.Courses.Where(p => p.Status == true).CountAsync();
+           return await context.Courses.Where(p => p.Status == true).CountAsync();
         }
 
        // public async Task<int> CountIdById(string RoleId) => await _context.Roles.Where(p => p.RoleId.Contains(RoleId) && p.Status == true).CountAsync();
 
         public async Task<dynamic> Create(Course course)
         {
-            if (_context.Courses.Any(p => p.CourseName == course.CourseName && p.Status == true))
+            if (context.Courses.Any(p => p.CourseName == course.CourseName && p.Status == true))
             {
                 return 0;
             }
             else
             {
-                _context.Courses.Add(course);
-              return await _context.SaveChangesAsync();
+                context.Courses.Add(course);
+              return await context.SaveChangesAsync();
             }
             
         }
 
         public async Task Delete(string CourseId)
         {
-            var course = _context.Courses.Find(CourseId);
+            var course = context.Courses.Find(CourseId);
             course.Status = false;
-            _context.Entry(course).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+            context.Entry(course).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
         }
 
-       public async Task<Course> Find(string CourseId) => await _context.Courses.FirstOrDefaultAsync(p => p.CourseId == CourseId && p.Status == true);
+       public async Task<Course> Find(string CourseId) => await context.Courses.FirstOrDefaultAsync(p => p.CourseId == CourseId && p.Status == true);
 
-        public async Task<List<Course>> FindAll() => await _context.Courses.Where(p => p.Status == true).Take(10).ToListAsync();
+        public async Task<List<Course>> FindAll() => await context.Courses.Where(p => p.Status == true).Take(10).ToListAsync();
+
+        public async Task<List<string>> GetKeyWordByKeyword(string keyword)
+        {
+            var list = new List<string>();
+
+            var listCourse = await context.Courses
+                .Where(c => c.CourseName.ToLower().Contains(keyword.ToLower()) && c.Status == true)
+                .Select(c => c.CourseName).ToListAsync();
+            foreach (var item in listCourse)
+            {
+                list.Add(item);
+            }
+
+            return list;
+        }
 
         public string GetNewestId()
         {
 
-            return (from courses in _context.Courses
+            return (from courses in context.Courses
                     where
                       courses.Status == true
                     orderby
@@ -59,15 +74,29 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         }
 
-        public bool RoleExists(string CourseId) => _context.Courses.Any(e => e.CourseId == CourseId && e.Status == true);
+        public List<Course> Search(string searchCourse)
+        {
+            var courses = context.Courses.AsQueryable();
+
+            if (searchCourse != null) courses = courses.Where(b => b.CourseName.StartsWith(searchCourse) || b.Certificate.StartsWith(searchCourse));
+
+            var result = courses.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
+
+        public bool RoleExists(string CourseId) => context.Courses.Any(e => e.CourseId == CourseId && e.Status == true);
 
         public async Task<Course> Update(Course course)
         {
-            _context.Entry(course).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+            context.Entry(course).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
             return course;
         }
 
-
+        public async Task<Course> FindAjax(string courseId)
+        {
+            return await context.Courses.FirstOrDefaultAsync(c => c.CourseId == courseId && c.Status == true);
+        }
     }
 }

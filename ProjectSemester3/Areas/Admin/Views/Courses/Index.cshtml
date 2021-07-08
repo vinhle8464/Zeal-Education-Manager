@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.Course
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.CourseViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Index";
@@ -13,12 +17,46 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Courses</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Course
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Course</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchCourse" id="searchCourse" placeholder="Search..." value="@ViewBag.searchCourse" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -28,74 +66,92 @@
                                 <th>Term</th>
                                 <th>Certificate</th>
                                 <th>Desciption</th>
-                                <th>Action</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var course in ViewBag.courses)
+                            @foreach (var course in ViewBag.courses.PagedList)
                             {
-                            <tr onclick="location.href = '@Url.Action("edit", "courses", new { id=course.CourseId })'">
-                                <td>@index</td>
-                                <td>@course.CourseName</td>
-                                <td>@course.Fee</td>
-                                <td>@course.Term</td>
-                                <td>@course.Certificate</td>
-                                <td>@course.Desc</td>
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@course.CourseName</td>
+                                    <td>@course.Fee</td>
+                                    <td>@course.Term</td>
+                                    <td>@course.Certificate</td>
+                                    <td>@course.Desc</td>
+                                    <td style="text-align: center;">
+                                        <a type="button" class="btn btn-success editcourse" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                        @*//delete form*@
+                                        <form asp-controller="courses" asp-action="delete" method="post" style="display: inline-block;">
+                                            <input type="hidden" asp-for="Course.CourseId" value="@course.CourseId" />
+                                            <input type="hidden" name="searchCourse" value="@ViewBag.searchCourse" />
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                        </form>
+                                        @*//delete form*@
 
-                                <td>
-
-                                    <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@course.CourseId"><i class="fas fa-edit"></i></a>
-                                    <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@course.CourseId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
-
-                                </td>
-                            </tr>
+                                        <input type="hidden" name="courseid" id="courseid" value="@course.CourseId" />
+                                    </td>
+                                </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "courses", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchCourse" value="@ViewBag.searchCourse" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.courses.PagedList.PageCount < ViewBag.courses.PagedList.PageNumber ? 0 : ViewBag.courses.PagedList.PageNumber) &nbsp;of @ViewBag.courses.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.courses.PagedList, page => Url.Action("index", "courses", new { searchCourse = ViewBag.searchCourse, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
-
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+@*Modal Create*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create Course</h4>
-
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
             </div>
             <div class="modal-body">
-                <form asp-controller="courses" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
-
+                <form asp-area="admin" asp-controller="courses" asp-action="create" method="post" enctype="multipart/form-data" name="Form">
+                    <input type="hidden" name="searchCourse" value="@ViewBag.searchCourse" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
                     <div class="form-group">
                         <label for="CourseName">CourseName</label>
-                        <input type="text" class="form-control" asp-for="CourseName" name="coursename" />
+                        <input type="text" class="form-control" asp-for="Course.CourseName" name="coursename" />
                     </div>
                     <div class="form-group">
                         <label for="Fee">Fee</label>
-                        <input type="text" class="form-control" asp-for="Fee" name="fee" />
-
+                        <input type="number" class="form-control" asp-for="Course.Fee" name="fee" />
                     </div>
                     <div class="form-group">
                         <label for="Term">Term</label>
-                        <input type="text" class="form-control" asp-for="Term" name="term" />
-
+                        <input type="text" class="form-control" asp-for="Course.Term" name="term" />
                     </div>
                     <div class="form-group">
                         <label for="certificate">Certificate</label>
-                        <input type="text" class="form-control" asp-for="Certificate" name="certificate" />
-
+                        <input type="text" class="form-control" asp-for="Course.Certificate" name="certificate" />
                     </div>
                     <div class="form-group">
                         <label for="desc">Description</label>
-                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                        <input type="text" class="form-control" asp-for="Course.Desc" name="desc" />
                     </div>
-
+                    <br />
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
             </div>
@@ -103,33 +159,50 @@
         </div>
     </div>
 </div>
-<script>
-    function validateForm() {
-        var coursename = document.forms["Form"]["coursename"].value.trim();
-        var fee = document.forms["Form"]["fee"].value.trim();
-        var term = document.forms["Form"]["term"].value.trim();
-        var certificate = document.forms["Form"]["certificate"].value.trim();
-        var desc = document.forms["Form"]["desc"].value.trim();
+@*Modal Create*@
 
-        if (coursename == null || coursename == "") {
-            alert("Please Fill Course Name Field");
-            return false;
-        }
-        if (fee == null || fee == "") {
-            alert("Please Fill Fee Field");
-            return false;
-        }
-        if (term == null || term == "") {
-            alert("Please Fill Term Field");
-            return false;
-        }
-        if (certificate == null || certificate == "") {
-            alert("Please Fill Term Field");
-            return false;
-        }
-        if (desc == null || desc == "") {
-            alert("Please Fill Description Field");
-            return false;
-        }
-    }
-</script>
+
+@*Modal Edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-area="admin" asp-controller="courses" asp-action="edit" method="post" name="Form">
+                    <input type="hidden" name="searchCourse" value="@ViewBag.searchCourse" />
+                    <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                    <input type="hidden" id="courseidid" asp-for="Course.CourseId" />
+                    <input type="hidden" id="coursestatus" asp-for="Course.Status" />
+
+                    <div class="form-group">
+                        <label for="CourseName">CourseName</label>
+                        <input type="text" class="form-control" id="namecourse" asp-for="Course.CourseName" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="Fee">Fee</label>
+                        <input type="number" class="form-control" asp-for="Course.Fee" id="feecourse" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Term">Term</label>
+                        <input type="text" class="form-control" asp-for="Course.Term" id="termcourse" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="certificate">Certificate</label>
+                        <input type="text" class="form-control" id="certificatecourse" asp-for="Course.Certificate" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" class="form-control" id="desccourse" asp-for="Course.Desc" required="required" />
+                    </div>
+                    <br />
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Modal Edit*@

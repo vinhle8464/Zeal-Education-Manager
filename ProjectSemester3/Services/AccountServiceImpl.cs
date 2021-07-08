@@ -317,7 +317,7 @@ namespace ProjectSemester3.Services
             var pay = new Pay();
             pay.AccountId = AccountId;
             pay.Payment = "Paypal";
-            pay.Title = "Fee of " + course.CourseName;
+            pay.Title = "Coursefee";
             pay.Fee = (decimal)course.Fee;
             pay.Discount = (pay.Fee * Int32.Parse(discount)) / 100;
             pay.Total = pay.Fee - pay.Discount;

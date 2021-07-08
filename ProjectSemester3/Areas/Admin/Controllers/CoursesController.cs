@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -27,55 +29,86 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             this.accountService = accountService;
         }
 
+        // get data autocomplete
+        [HttpGet]
+        [Route("searchautocomplete")]
+        public async Task<IActionResult> SearchByKeyword([FromQuery(Name = "term")] string term)
+        {
+            var keyword = await coursesService.GetKeyWordByKeyword(term);
+            return new JsonResult(keyword);
+
+        }
+
+
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string courseid)
+        {
+            var course = await coursesService.FindAjax(courseid);
+            var courseAjax = new Course
+            {
+                CourseId = course.CourseId,
+               CourseName = course.CourseName,
+               Fee = course.Fee,
+               Term = course.Term,
+               Certificate = course.Certificate,
+               Desc = course.Desc,
+               Status = course.Status
+            };
+            return new JsonResult(courseAjax);
+
+        }
 
         // GET: Admin/Courses
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchCourse, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.courses = await coursesService.FindAll();
+                var courses = coursesService.Search(searchCourse);
+                ViewBag.searchCourse = searchCourse;
+              
+                LoadPagination(courses, page, pageSize);
+
                 return View();
             }
             else
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
-
-
         }
 
-        //// GET: Admin/Courses/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var course = await _context.Courses
-        //        .FirstOrDefaultAsync(m => m.CourseId == id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // load pagination
+        public void LoadPagination(List<Course> course, int? page, int? pageSize)
+        {
+            var courseViewModel = new CourseViewModel();
 
-        //    return View(course);
-        //}
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
 
-        // GET: Admin/Courses/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = course.ToPagedList(pageNumber, pagesize);
 
-        // POST: Admin/Courses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            courseViewModel.PagedList = (PagedList<Course>)onePageOfProducts;
+
+            ViewBag.courses = courseViewModel;
+        }
+
+
+        // create course
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create([Bind("CourseName,Fee,Term,Certificate,Desc")] Course course)
+        public async Task<IActionResult> Create(Course course, string searchCourse, int? pageSize)
         {
             if (ModelState.IsValid)
             {
@@ -112,14 +145,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     if (await coursesService.Create(course) == 0)
                     {
                         TempData["msg"] = "<script>alert('Course has already existed!');</script>";
-                        return RedirectToAction(nameof(Index));
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
                     }
                     else
                     {
-                        TempData["msg"] = "<script>alert('Successfully!');</script>";
+                        TempData["success"] = "success";
 
-                        return RedirectToAction(nameof(Index));
-
+                        // Return view index and auto paging
+                        return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
                     }
 
                 }
@@ -133,51 +167,30 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     course.Desc = course.Desc.Trim();
                     course.Status = true;
                     await coursesService.Create(course);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
                 }
             }
-            ViewBag.courses = await coursesService.FindAll();
-            return RedirectToAction(nameof(Index));
-
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
 
-        // GET: Admin/Courses/Edit/5
-        [HttpGet]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await coursesService.Find(id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-            return View("edit", course);
-        }
-
-        // POST: Admin/Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+     // edit course
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit(Course course)
+        public async Task<IActionResult> Edit(CourseViewModel courseViewModel, string searchCourse, int? pageSize)
         {
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await coursesService.Update(course);
+                    await coursesService.Update(courseViewModel.Course);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!coursesService.RoleExists(course.CourseId))
+                    if (!coursesService.RoleExists(courseViewModel.Course.CourseId))
                     {
                         return NotFound();
                     }
@@ -186,48 +199,29 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
-                return RedirectToAction(nameof(Index));
-
+                // Return view index and auto paging
+                return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
             }
-            return View(course);
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
 
-        //// GET: Admin/Courses/Delete/5
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var course = await _context.Courses
-        //        .FirstOrDefaultAsync(m => m.CourseId == id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(course);
-        //}
-
-        // POST: Admin/Courses/Delete/5
-        [HttpGet]
+   
+        // delete course
+        [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(CourseViewModel courseViewModel, string searchCourse, int? pageSize)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            await coursesService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            courseViewModel.Course.Status = false;
+            await coursesService.Update(courseViewModel.Course);
+            TempData["success"] = "success";
 
-            return RedirectToAction(nameof(Index));
+            // Return view index and auto paging
+            return RedirectToRoute(new { controller = "courses", action = "index", searchCourse = searchCourse, pageSize = pageSize });
         }
-
 
     }
 }

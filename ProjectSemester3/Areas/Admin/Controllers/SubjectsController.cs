@@ -25,6 +25,23 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
 
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(string subjectid)
+        {
+            var subject = await subjectsService.FindAjax(subjectid);
+            var subjectAjax = new Subject
+            {
+                SubjectId = subject.SubjectId,
+               SubjectName = subject.SubjectName,
+               Desc = subject.Desc,
+               Status = subject.Status
+                
+            };
+            return new JsonResult(subjectAjax);
+
+        }
+
         // Show page subject
         [Route("index")]
         public async Task<IActionResult> Index()
@@ -48,7 +65,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create([Bind("SubjectName,Desc,Status")] Subject subject)
+        public async Task<IActionResult> Create(Subject subject)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +105,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     }
                     else
                     {
-                        TempData["msg"] = "<script>alert('Successfully!');</script>";
+                        TempData["success"] = "success";
 
                         return RedirectToAction(nameof(Index));
 
@@ -103,7 +120,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     subject.Desc = subject.Desc.Trim();
                     subject.Status = true;
                     await subjectsService.Create(subject);
-                    TempData["msg"] = "<script>alert('Successfully!');</script>";
+                    TempData["success"] = "success";
 
 
                 }
@@ -114,47 +131,19 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         }
 
 
-        // open page edit subject
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await subjectsService.Find(id);
-            if (subject == null)
-            {
-                return NotFound();
-            }
-            return View("edit", subject);
-        }
-
+     
         // edit subject in db
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("edit")]
-        public async Task<IActionResult> Edit([Bind("SubjectId,SubjectName,Desc,Status")] Subject subject)
+        public async Task<IActionResult> Edit(Subject subject, string namesubject)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
+              
                     await subjectsService.Update(subject);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!subjectsService.Exists(subject.SubjectId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
+            
+                
+                TempData["success"] = "success";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -170,7 +159,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             }
             
             await subjectsService.Delete(id);
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+            TempData["success"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

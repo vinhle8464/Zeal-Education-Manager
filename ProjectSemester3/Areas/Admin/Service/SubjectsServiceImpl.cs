@@ -11,49 +11,49 @@ namespace ProjectSemester3.Areas.Admin.Service
 {
     public class SubjectsServiceImpl : ISubjectsService
     {
-        private readonly DatabaseContext _context;
-        public SubjectsServiceImpl(DatabaseContext context)
+        private readonly DatabaseContext context;
+        public SubjectsServiceImpl(DatabaseContext _context)
         {
-            _context = context;
+            context = _context;
         }
 
         public async Task<int> CountId()
         {
-           return await _context.Subjects.Where(p => p.Status == true).CountAsync();
+           return await context.Subjects.Where(p => p.Status == true).CountAsync();
         }
 
-       // public async Task<int> CountIdById(string SubjectId) => await _context.Subjects.Where(p => p.SubjectId.Contains(SubjectId) && p.Status == true).CountAsync();
+       // public async Task<int> CountIdById(string SubjectId) => await context.Subjects.Where(p => p.SubjectId.Contains(SubjectId) && p.Status == true).CountAsync();
 
         public async Task<dynamic> Create(Subject Subject)
         {
-            if (_context.Subjects.Any(p => p.SubjectName == Subject.SubjectName && p.Status == true))
+            if (context.Subjects.Any(p => p.SubjectName == Subject.SubjectName && p.Status == true))
             {
                 return 0;
             }
             else
             {
-                _context.Subjects.Add(Subject);
-              return await _context.SaveChangesAsync();
+                context.Subjects.Add(Subject);
+              return await context.SaveChangesAsync();
             }
             
         }
 
         public async Task Delete(string SubjectId)
         {
-            var Subject = _context.Subjects.Find(SubjectId);
+            var Subject = context.Subjects.Find(SubjectId);
             Subject.Status = false;
-            _context.Entry(Subject).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+            context.Entry(Subject).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
         }
 
-       public async Task<Subject> Find(string SubjectId) => await _context.Subjects.FirstOrDefaultAsync(p => p.SubjectId == SubjectId && p.Status == true);
+       public async Task<Subject> Find(string SubjectId) => await context.Subjects.FirstOrDefaultAsync(p => p.SubjectId == SubjectId && p.Status == true);
 
-        public async Task<List<Subject>> FindAll() => await _context.Subjects.Where(p => p.Status == true).Take(10).ToListAsync();
+        public async Task<List<Subject>> FindAll() => await context.Subjects.Where(p => p.Status == true).Take(10).ToListAsync();
 
         public string GetNewestId()
         {
 
-            return (from Subjects in _context.Subjects
+            return (from Subjects in context.Subjects
                     where
                       Subjects.Status == true
                     orderby
@@ -62,15 +62,18 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         }
 
-        public bool Exists(string SubjectId) => _context.Subjects.Any(e => e.SubjectId == SubjectId && e.Status == true);
+        public bool Exists(string SubjectId) => context.Subjects.Any(e => e.SubjectId == SubjectId && e.Status == true);
 
         public async Task<Subject> Update(Subject Subject)
         {
-            _context.Entry(Subject).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+            context.Entry(Subject).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
             return Subject;
         }
 
-
+        public async Task<Subject> FindAjax(string subjectId)
+        {
+            return await context.Subjects.FirstOrDefaultAsync(s => s.SubjectId == subjectId && s.Status == true);
+        }
     }
 }

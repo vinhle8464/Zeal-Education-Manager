@@ -11,5 +11,10 @@ namespace ProjectSemester3.Services
         List<Enquiry> FindAll();
         Enquiry Create(Enquiry enquiry);
         Enquiry Find(int id);
+
+        Task Delete(int id);
+        Task<dynamic> Update(Enquiry enquiry);
+        List<Enquiry> Search(string searchEnquiry);
+        Task<Enquiry> FindAjax(int id);
     }
 }

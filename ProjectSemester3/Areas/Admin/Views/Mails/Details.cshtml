@@ -7,20 +7,18 @@
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 <!-- Font Awesome -->
-<link rel="stylesheet" href="~/css/all.min.css">
+<!--<link rel="stylesheet" href="~/css/all.min.css">-->
 <!-- Theme style -->
-<link rel="stylesheet" href="~/css/adminlte.min.css">
+<!--<link rel="stylesheet" href="~/css/adminlte.min.css">-->
 <!-- summernote -->
-<link rel="stylesheet" href="~/css/summernote-bs4.min.css">
-<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
-<script>tinymce.init({ selector: 'textarea' });</script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--<link rel="stylesheet" href="~/css/summernote-bs4.min.css">
+<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>-->
+@*<script>tinymce.init({ selector: 'textarea' });</script>
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea'
     });
-</script>
+</script>*@
 
 <div class="container">
     <div class="row">
@@ -69,19 +67,19 @@
                             <div class="form-group">
                                 <div class="col">
                                     <div class="card card-primary card-outline">
-                                        <form method="post" asp-controller="mails" asp-action="reply" asp-route-MailId="@ViewBag.mail.MailId" enctype="multipart/form-data" name="Form" onsubmit="return validateForm();">
+                                        <form method="post" asp-controller="mails" asp-action="reply" asp-route-MailId="@ViewBag.mail.MailId" enctype="multipart/form-data" name="Form" onsubmit="return validateFormMail();">
                                             <div class="card-header">
                                                 <h3 class="card-title">Compose New Message</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <input class="form-control" placeholder="To:" value="@ViewBag.mail.EmailUser">
+                                                    <input class="form-control" placeholder="To:" value="@ViewBag.mail.EmailUser" required="required">
                                                 </div>
                                                 <div class="form-group">
-                                                    <input class="form-control" placeholder="Subject:">
+                                                    <input class="form-control" placeholder="Subject: Reply mail" disabled>
                                                 </div>
                                                 <div class="form-group">
-                                                    <textarea class="compose-textarea form-control" style="height: 300px" asp-for="ReplyContent" name="replycontent"></textarea>
+                                                    <textarea class="compose-textarea form-control" style="height: 300px" asp-for="ReplyContent" name="replycontent" placeholder="Something about reply"></textarea>
 
                                                 </div>
                                                 <input type="hidden" asp-for="MailId" />
@@ -118,15 +116,15 @@
 </div>
 
 
-<script src="~/bootstrap-4.6.0-dist/js/jquery.min.js"></script>
+<!--<script src="~/bootstrap-4.6.0-dist/js/jquery.min.js"></script>-->
 <!-- Bootstrap 4 -->
-<script src="~/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
+<!--<script src="~/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>-->
 <!-- AdminLTE App -->
-<script src="~/bootstrap-4.6.0-dist/js/adminlte.min.js"></script>
+<!--<script src="~/bootstrap-4.6.0-dist/js/adminlte.min.js"></script>-->
 <!-- Summernote -->
-<script src="~/bootstrap-4.6.0-dist/js/summernote-bs4.min.js"></script>
+<!--<script src="~/bootstrap-4.6.0-dist/js/summernote-bs4.min.js"></script>-->
 <!-- AdminLTE for demo purposes -->
-<script src="~/bootstrap-4.6.0-dist/js/demo.js"></script>
+<!--<script src="~/bootstrap-4.6.0-dist/js/demo.js"></script>-->
 @*<script src="~/js/tinymce.min.js"></script>*@
 @*<script src="https://cdn.tiny.cloud/1/rop5rm4xrwuxf50rl7125zggl8mz8pjvl0pao76mvlsal4lc/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script>tinymce.init({ selector: 'textarea' });</script>
@@ -142,8 +140,8 @@
         $('.compose-textarea').summernote()
     })
 
-    function validateForm() {
-        var replycontent = document.forms["Form"]["replycontent"].value.trim();
+    function validateFormMail() {
+        var replycontent = $('#replycontent').value.trim();
         if (replycontent == null || replycontent == "") {
             alert("Content send is not vacant");
             return false;

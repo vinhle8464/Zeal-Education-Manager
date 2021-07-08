@@ -66,7 +66,7 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 }
                 ViewBag.succ = "You send successful, thank you your idea";
 
-                return View("Index");
+                return View("Success");
             }
             else
             {

@@ -16,23 +16,30 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<int> CountId()
         {
-           return await context.Scholarships.Where(p => p.Status == true).CountAsync();
+            return await context.Scholarships.Where(p => p.Status == true).CountAsync();
         }
 
-       // public async Task<int> CountIdById(string ScholarshipId) => await context.Scholarships.Where(p => p.ScholarshipId.Contains(ScholarshipId) && p.Status == true).CountAsync();
+        // public async Task<int> CountIdById(string ScholarshipId) => await context.Scholarships.Where(p => p.ScholarshipId.Contains(ScholarshipId) && p.Status == true).CountAsync();
 
         public async Task<dynamic> Create(Scholarship Scholarship)
         {
-            if (context.Scholarships.Any(p => p.ScholarshipName.Equals(Scholarship.ScholarshipName) && p.Status == true))
+            if (context.Scholarships.Any(p => p.ScholarshipName == Scholarship.ScholarshipName && p.Status == true))
             {
                 return 0;
+            }
+            else if (context.Scholarships.Any(p => p.ScholarshipName == Scholarship.ScholarshipName && p.Status == false))
+            {
+                Scholarship.Status = true;
+                context.Entry(Scholarship).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                return await context.SaveChangesAsync();
+
             }
             else
             {
                 context.Scholarships.Add(Scholarship);
-              return await context.SaveChangesAsync();
+                return await context.SaveChangesAsync();
             }
-            
+
         }
 
         public async Task Delete(string ScholarshipId)
@@ -43,7 +50,7 @@ namespace ProjectSemester3.Areas.Admin.Service
             await context.SaveChangesAsync();
         }
 
-       public async Task<Scholarship> Find(string ScholarshipId) => await context.Scholarships.FirstOrDefaultAsync(p => p.ScholarshipId == ScholarshipId && p.Status == true);
+        public async Task<Scholarship> Find(string ScholarshipId) => await context.Scholarships.FirstOrDefaultAsync(p => p.ScholarshipId == ScholarshipId && p.Status == true);
 
         public async Task<List<Scholarship>> FindAll() => await context.Scholarships.Where(p => p.Status == true).Take(10).ToListAsync();
 
@@ -51,8 +58,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
 
             return (from Scholarships in context.Scholarships
-                    where
-                      Scholarships.Status == true
+
                     orderby
                       Scholarships.ScholarshipId descending
                     select Scholarships.ScholarshipId).Take(1).SingleOrDefault();
@@ -68,6 +74,9 @@ namespace ProjectSemester3.Areas.Admin.Service
             return Scholarship;
         }
 
-
+        public async Task<Scholarship> FindAjax(string scholarshipId)
+        {
+            return await context.Scholarships.FirstOrDefaultAsync(s => s.ScholarshipId == scholarshipId && s.Status == true);
+        }
     }
 }

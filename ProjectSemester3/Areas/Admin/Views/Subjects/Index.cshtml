@@ -12,34 +12,55 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Subjects</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new Subject
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">Subject</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                </div>
+                                <div class="table-data__tool-right">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Serial</th>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>Action</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var subject in ViewBag.subjects)
                             {
 
-                                <tr onclick="location.href = '@Url.Action("edit", "subjects", new { id=subject.SubjectId })'">
+                                <tr>
                                     <td>@index</td>
                                     <td>@subject.SubjectName</td>
                                     <td>@subject.Desc</td>
-                                    <td>
+                                    <td style="text-align: center;">
 
-                                        <a type="button" class="btn btn-success" asp-action="edit" asp-route-id="@subject.SubjectId"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-success editsubject" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
                                         <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@subject.SubjectId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
-
+                                        <input type="hidden" id="subjectid" value="@subject.SubjectId"  />
                                     </td>
                                 </tr>
 
@@ -52,27 +73,27 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="myModal" tabindex="-1" Subject="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+@*Modal Create*@
+<div class="modal fade" id="ModalCreate" tabindex="-1" Subject="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="myModalLabel">Create Subject</h4>
+                <h4 class="modal-title" id="myModalLabel">Create</h4>
 
             </div>
             <div class="modal-body">
-                <form asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
+                <form asp-action="create" method="post" name="Form" >
 
                     <div class="form-group">
                         <label for="NameSubject">NameSubject</label>
-                        <input type="text" class="form-control" asp-for="SubjectName" name="Subjectname" />
+                        <input type="text" class="form-control" asp-for="SubjectName" name="Subjectname" required="required" />
                     </div>
 
 
                     <div class="form-group">
                         <label for="desc">Description</label>
-                        <input type="text" class="form-control" asp-for="Desc" name="desc" />
+                        <input type="text" class="form-control" asp-for="Desc" name="desc" required="required"/>
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
@@ -81,18 +102,36 @@
         </div>
     </div>
 </div>
-<script>
-    function validateForm() {
-        var Subjectname = document.forms["Form"]["Subjectname"].value;
-        var desc = document.forms["Form"]["desc"].value;
-        if (Subjectname == null || Subjectname == "") {
-            alert("Please Fill Subject Name Field");
-            return false;
-        }
-        if (desc == null || desc == "") {
-            alert("Please Fill Description Field");
-            return false;
-        }
-    }
-</script>
+@*Modal Create*@
+
+@*Modal Edit*@
+<div class="modal fade" id="ModalEdit" tabindex="-1" Subject="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Edit</h4>
+
+            </div>
+            <div class="modal-body">
+                <form asp-area="admin" asp-controller="subjects" asp-action="edit" method="post" name="Form">
+                    <input type="hidden" id="subjectidid" asp-for="SubjectId" />
+                    <input type="hidden" id="subjectsatus" asp-for="Status" />
+
+                    <div class="form-group">
+                        <label for="NameSubject">NameSubject</label>
+                        <input type="text" class="form-control" id="namesubject" asp-for="SubjectName" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" class="form-control" id="descsubject" asp-for="Desc" required="required" />
+                    </div>
+                    <input type="submit" value="ADD" class="btn btn-primary" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Modal Edit*@
 
