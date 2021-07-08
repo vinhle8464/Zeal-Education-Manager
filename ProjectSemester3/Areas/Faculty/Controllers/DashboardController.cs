@@ -49,7 +49,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllersd
         [Route("profile")]
         public IActionResult Profile()
         {
-            ViewBag.account = accountService.Find(HttpContext.Session.GetString("username"));
+            ViewBag.faculty=ViewBag.account = accountService.Find(HttpContext.Session.GetString("username"));
             return View("Profile");
         }
 
