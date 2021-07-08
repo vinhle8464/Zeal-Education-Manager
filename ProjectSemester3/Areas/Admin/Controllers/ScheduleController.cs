@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -22,14 +25,53 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             scheduleService = _scheduleService;
         }
 
-        [Route("index")]
-        public async Task<IActionResult> Index()
+        // get data to modal edit
+        [Route("findajax")]
+        public async Task<IActionResult> FindAjax(int scheduleid)
         {
+            var schedule = await scheduleService.FindAjax(scheduleid);
+            var scheduleAjax = new Schedule
+            {
+               ScheduleId = schedule.ScheduleId,
+               ClassId = schedule.ClassId,
+               SubjectId = schedule.SubjectId,
+               Status = schedule.Status
+            };
+            return new JsonResult(scheduleAjax);
+
+        }
+
+        //Find Faculty In Class
+        [HttpGet]
+        [Route("findFaculty")]
+        public IActionResult FindSubject(string subjectid)
+        {
+            var listFaculty = scheduleService.GetListFaculty(subjectid.Trim());
+            if (listFaculty == null)
+            {
+                return NotFound();
+            }
+            var result = new List<ListSubjectViewModel>();
+            listFaculty.ForEach(s => result.Add(new ListSubjectViewModel
+            {
+                Id = s.AccountId,
+                Name = s.Fullname
+            }));
+            return new JsonResult(result);
+        }
+
+        [Route("index")]
+        public async Task<IActionResult> Index(string searchClassSchedule, int? page, int? pageSize)
+        {
+            
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.listClass = await scheduleService.SelectClasses();
-                //ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName");
-                //ViewData["SubjectId"] = new SelectList(context.Subjects, "SubjectId", "SubjectName");
+                var classes = await scheduleService.Search(searchClassSchedule);
+                ViewBag.searchClassSchedule = searchClassSchedule;
+              
+            
+
+                LoadPagination(classes, page, pageSize);
 
                 return View();
             }
@@ -38,6 +80,32 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
         }
+
+        // load pagination
+        public void LoadPagination(List<Class> classes, int? page, int? pageSize)
+        {
+            var scheduleViewModel = new ScheduleViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = classes.ToPagedList(pageNumber, pagesize);
+
+            scheduleViewModel.PagedList = (PagedList<Class>)onePageOfProducts;
+
+            ViewBag.listClass = scheduleViewModel;
+        }
+
+
 
         [HttpGet]
         [Route("details")]

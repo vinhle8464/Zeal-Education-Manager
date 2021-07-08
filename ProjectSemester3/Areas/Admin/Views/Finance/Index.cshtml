@@ -1,5 +1,6 @@
-﻿@{ 
-    ViewData["Title"] = "DashBoard";
+﻿
+@{
+    ViewData["Title"] = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 <!-- MAIN CONTENT-->
@@ -26,18 +27,7 @@
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    @foreach (var batch in course.Batches)
-                                    {
-                                        if (batch.Graduate == true)
-                                        {
-                                            <a asp-area="faculty" asp-controller="batch" asp-action="endingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
-                                            break;
-                                        }
-                                        else
-                                        {<a asp-area="faculty" asp-controller="batch" asp-action="startingbatch" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@batch.CourseId" asp-route-classid="@batch.ClassId"> <i class="zmdi zmdi-home"></i></a>
-                                            break;
-                                        }
-                                    }
+                                    <a asp-area="admin" asp-controller="finance" asp-action="financereport" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-courseid="@course.CourseId"><i class="zmdi zmdi-home"></i></a>
 
                                 </div>
                                 <div class="text">

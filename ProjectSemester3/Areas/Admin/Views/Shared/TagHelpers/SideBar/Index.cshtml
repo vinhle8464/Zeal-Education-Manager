@@ -126,7 +126,16 @@
                         <i class="fas fa-map-marker-alt"></i>Feedback Faculty
                     </a>
                 </li>
-                
+                <li>
+                    <a asp-area="admin" asp-controller="batch" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                        <i class="fas fa-map-marker-alt"></i>Batch Report
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="admin" asp-controller="finance" asp-action="index" asp-route-facultyid="@ViewBag.faculty.AccountId">
+                        <i class="fas fa-map-marker-alt"></i>Finance Report
+                    </a>
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>Pages
