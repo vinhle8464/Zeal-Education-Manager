@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.FeedbackFaculty
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.FeedbackFacultyViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Index";
@@ -13,12 +17,44 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>FeedBack Faculty</h1>
-                    <br />
-                    <button class="au-btn au-btn-icon au-btn--blue" data-toggle="modal" data-target="#myModal">
-                        <i class="zmdi zmdi-plus"></i>Add new FeedBack Faculty
-                    </button>
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">FeedBack Faculty</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchFeedbackFaculty" id="searchFeedbackFaculty" placeholder="Search..." value="@ViewBag.searchFeedbackFaculty" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -30,9 +66,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var feedbackfaculty in ViewBag.feedbackFacultys)
+                            @foreach (var feedbackfaculty in ViewBag.feedbackFacultys.PagedList)
                             {
-                                <tr onclick="location.href = '@Url.Action("edit", "feedbackfaculties", new { feedbackid=feedbackfaculty.FeedbackId, facultyid = feedbackfaculty.FacultyId })'">
+                                <tr >
                                     <td>@index</td>
                                     <td>@feedbackfaculty.FeedbackId</td>
                                     <td>@feedbackfaculty.Faculty.Fullname</td>
@@ -48,7 +84,23 @@
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "feedbackfaculties", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchFeedbackFaculty" value="@ViewBag.searchFeedbackFaculty" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.feedbackFacultys.PagedList.PageCount < ViewBag.feedbackFacultys.PagedList.PageNumber ? 0 : ViewBag.feedbackFacultys.PagedList.PageNumber) &nbsp;of @ViewBag.feedbackFacultys.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.feedbackFacultys.PagedList, page => Url.Action("index", "feedbackfaculties", new { searchFeedbackFaculty = ViewBag.searchFeedbackFaculty, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
+                @*//////////*@
             </div>
         </div>
     </div>
@@ -67,12 +119,12 @@
             <div class="modal-body">
                 <form asp-controller="feedbackfaculties" asp-action="create" method="post" name="Form" onsubmit="return validateForm();">
                     <div class="form-group">
-                        <label asp-for="FeedbackId" class="control-label"></label>
-                        <select asp-for="FeedbackId" class="form-control" asp-items="ViewBag.FeedbackId"></select>
+                        <label asp-for="FeedbackFaculties.FacultyId" class="control-label"></label>
+                        <select asp-for="FeedbackFaculties.FeedbackId" class="form-control" asp-items="ViewBag.FeedbackId"></select>
                     </div>
                     <div class="form-group">
-                        <label asp-for="FacultyId" class="control-label"></label>
-                        <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
+                        <label asp-for="FeedbackFaculties.FacultyId" class="control-label"></label>
+                        <select asp-for="FeedbackFaculties.FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
                     </div>
                     <input type="submit" value="ADD" class="btn btn-primary" />
                 </form>
@@ -81,3 +133,4 @@
         </div>
     </div>
 </div>
+

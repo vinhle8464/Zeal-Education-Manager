@@ -89,9 +89,9 @@ namespace ProjectSemester3.Services
 
         }
 
-        public async Task<TestSchedule> GetDetailTestSchedule(string subjectid, string classid)
+        public async Task<TestSchedule> GetDetailTestSchedule(string examid, string classid)
         {
-            return await context.TestSchedules.SingleOrDefaultAsync(t => t.Exam.SubjectId == subjectid && t.ClassId == classid);
+            return await context.TestSchedules.SingleOrDefaultAsync(t => t.Exam.ExamId == examid && t.ClassId == classid);
         }
     }
 }

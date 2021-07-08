@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -29,19 +31,48 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/FeedbackFaculties
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchFeedbackFaculty, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.feedbackFacultys = await feedbackFacultyService.FindAll();
+                //ViewBag.feedbackFacultys = await feedbackFacultyService.FindAll();
                 ViewData["FacultyId"] = new SelectList(_context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname");
                 ViewData["FeedbackId"] = new SelectList(_context.Feedbacks, "FeedbackId", "FeedbackId");
+
+                var feedbackFaculty = feedbackFacultyService.Search(searchFeedbackFaculty);
+                ViewBag.searchFeedbackFaculty = searchFeedbackFaculty;
+
+                LoadPagination(feedbackFaculty, page, pageSize);
                 return View();
             }
             else
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
+        }
+
+        // load pagination
+        public void LoadPagination(List<FeedbackFaculty> feedbackFaculties, int? page, int? pageSize)
+        {
+            var feedbackFacultyViewModel = new FeedbackFacultyViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = feedbackFaculties.ToPagedList(pageNumber, pagesize);
+
+            feedbackFacultyViewModel.PagedList = (PagedList<FeedbackFaculty>)onePageOfProducts;
+
+            ViewBag.feedbackFacultys = feedbackFacultyViewModel;
         }
 
 

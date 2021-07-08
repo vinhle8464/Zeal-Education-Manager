@@ -44,12 +44,12 @@
                                     {
                                         <tr onclick="location.href = '@Url.Action("detail", "schedule", new { subjectid=item.Subject.SubjectId})'" style="font-family: cursive; font-size: 22px ">
                                             <td>@index</td>
-                                            <td>@item.Subject.SubjectName</td>
-                                            <td>@item.Faculty.Fullname</td>
-                                            <td>@item.TimeDay</td>
-                                            <td>@item.StudyDay</td>
-                                            <td>@item.StartDate.ToString("MM/dd/yyyy")</td>
-                                            <td>@item.EndDate.ToString("MM/dd/yyyy")</td>
+                                            <td>@(item.Subject.SubjectName != null ? item.Subject.SubjectName : "none")</td>
+                                            <td>@(item.FacultyId != null ? item.Faculty.Fullname : "none")</td>
+                                            <td>@(item.TimeDay != null ? item.TimeDay : "none")</td>
+                                            <td>@(item.StudyDay != null ? item.StudyDay : "none")</td>
+                                            <td>@(Convert.ToInt32(item.StartDate.ToString("yyyy")) > 1000 ? item.StartDate.ToString("MM/dd/yyyy") : "none")</td>
+                                            <td>@(Convert.ToInt32(item.EndDate.ToString("yyyy")) > 1000 ? item.EndDate.ToString("MM/dd/yyyy") : "none")</td>
                                         </tr>
                                         index++;
                                     }

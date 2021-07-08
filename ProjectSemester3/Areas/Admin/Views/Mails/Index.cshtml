@@ -1,7 +1,11 @@
-﻿@model ProjectSemester3.Models.Mail
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.MailViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Mail";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,48 +17,101 @@
             <div class="card">
                 <div class="card-body">
                     <h1>Mails</h1>
-                    <br />
-                    <br /><br />
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Serial</th>
-                                <th>Title</th>
-                                <th>User's email</th>
-                                <th>Fullname</th>
-                                <th>Action</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var mail in ViewBag.mails)
-                            {
-                                <tr  onclick="location.href = '@Url.Action("details", "mails", new { id=mail.MailId })'">
-                                    <td>@index</td>
-                                    <td>@mail.Title</td>
-                                    <td>@mail.EmailUser</td>
-                                    <td>@mail.Fullname</td>
-                                    <td>
-
-                                        <a type="button" class="btn btn-success" asp-controller="mails" asp-action="details" asp-route-id="@mail.MailId"><i class="fas fa-mail-reply">Read</i></a>
-
-                                        <a type="button" class="btn btn-danger" asp-controller="mails" asp-action="delete" asp-route-id="@mail.MailId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                    @if (mail.Check)
+                    @*///////////////*@
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @{
+                                    var success = "";
+                                    if (TempData["success"] != null)
                                     {
-                                        <td style="color: green">Responded</td>
+                                        success = TempData["success"].ToString();
                                     }
-                                    else
-                                    {
-                                        <td style="color: red">Yet Respond</td>
-                                    }
+                                }
+                                @if (success.Equals("success"))
+                                {
+                                    <span class="au-alert-success" id="notification">Successfully!</span>
+                                }
+                                <!-- DATA TABLE -->
+                                <div class="table-data__tool">
+                                    <div class="table-data__tool-left padding_search_bar">
+                                        <form class="form-header" asp-action="index" method="get">
+                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                            <div class="rs-select2--light">
+                                                @* Start Search autocomplete*@
+                                                <input class="searchPadding" type="text" name="searchMail" id="searchMail" placeholder="Search..." value="@ViewBag.searchMail" />
+                                                @* End Search autocomplete*@
+                                            </div>
+                                            <div class="rs-select2--light">
+                                                <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                    Search
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="table-data__tool-right">
+                                        
+                                    </div>
+                                </div>
+                                <!-- END DATA TABLE -->
+                            </div>
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Serial</th>
+                                    <th>Title</th>
+                                    <th>User's email</th>
+                                    <th>Fullname</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
                                 </tr>
-                                index++;
+                            </thead>
+                            <tbody>
+                                @foreach (var mail in ViewBag.mails.PagedList)
+                                {
+                                    <tr onclick="location.href = '@Url.Action("details", "mails", new { id=mail.MailId })'">
+                                        <td>@index</td>
+                                        <td>@mail.Title</td>
+                                        <td>@mail.EmailUser</td>
+                                        <td>@mail.Fullname</td>
+                                        <td>
+
+                                            <a type="button" class="btn btn-success" asp-controller="mails" asp-action="details" asp-route-id="@mail.MailId"><i class="fas fa-mail-reply">Read</i></a>
+
+                                            <a type="button" class="btn btn-danger" asp-controller="mails" asp-action="delete" asp-route-id="@mail.MailId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        </td>
+                                        @if (mail.Check)
+                                        {
+                                            <td style="color: green">Responded</td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color: red">Yet Respond</td>
+                                        }
+                                    </tr>
+                                    index++;
+                                }
+                            </tbody>
+                        </table>
+                        @*Start pagination*@
+                        <div class="paging_bar">
+                            @using (Html.BeginForm("index", "mails", FormMethod.Get, new { id = "form1" }))
+                            {
+                                <input type="hidden" name="searchMail" value="@ViewBag.searchMail" />
+                                <div class="page-count">
+                                    Page &nbsp;@(ViewBag.mails.PagedList.PageCount < ViewBag.mails.PagedList.PageNumber ? 0 : ViewBag.mails.PagedList.PageNumber) &nbsp;of @ViewBag.mails.PagedList.PageCount
+                                </div>
+                                <div class="pagination">
+                                    @Html.PagedListPager((IPagedList)ViewBag.mails.PagedList, page => Url.Action("index", "mails", new { searchMail = ViewBag.searchMail, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                    &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                                </div>
                             }
-                        </tbody>
-                    </table>
+                        </div>
+                        @*End pagination*@
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-</div>

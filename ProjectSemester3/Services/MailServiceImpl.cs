@@ -131,5 +131,16 @@ namespace ProjectSemester3.Services
             context.SaveChanges();
             return mail;
         }
+
+        public List<Mail> Search(string searchMail)
+        {
+            var mails = context.Mail.AsQueryable();
+
+            if (searchMail != null) mails = mails.Where(b => b.Title.StartsWith(searchMail) || b.EmailUser.StartsWith(searchMail) || b.Fullname.StartsWith(searchMail));
+
+            var result = mails.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
     }
 }

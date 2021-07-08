@@ -34,12 +34,6 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 ViewBag.attendances = await attendanceService.SelectForStudent(student.AccountId);
                 ViewBag.subjects = await attendanceService.GetSubject(student.ClassId);
 
-                var subjects = await attendanceService.GetSubject(student.ClassId);
-                foreach (var subject in subjects)
-                {
-                    
-                }
-
                 return View();
             }
             return null;
@@ -53,13 +47,22 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 var student = accountService.Find(HttpContext.Session.GetString("username"));
                 ViewBag.attendances = await attendanceService.GetAttendancesBySubject(subjectid, student.AccountId, student.ClassId);
 
-                if (ModelState.IsValid)
-                {
-                    ViewBag.timeday = context.Schedules.SingleOrDefault(s => s.SubjectId == subjectid && s.ClassId == student.ClassId).TimeDay;
+                var timeday = context.Schedules.SingleOrDefault(s => s.SubjectId == subjectid && s.ClassId == student.ClassId);
+                var subjectname = context.Subjects.SingleOrDefault(s => s.SubjectId == subjectid).SubjectName;
 
-                    ViewBag.subjectname = context.Subjects.SingleOrDefault(s => s.SubjectId == subjectid).SubjectName;
+                if (timeday != null && subjectname != null)
+                {
+                    ViewBag.timeday = timeday.TimeDay;
+                    ViewBag.subjectname = subjectname;
                 }
-                
+                else
+                {
+                    ViewBag.attendances = await attendanceService.SelectForStudent(student.AccountId);
+                    ViewBag.subjects = await attendanceService.GetSubject(student.ClassId);
+                    return View("Index");
+
+                }
+
                 return View("Details");
             }
             return null;

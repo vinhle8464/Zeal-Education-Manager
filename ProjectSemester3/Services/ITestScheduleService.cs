@@ -13,6 +13,6 @@ namespace ProjectSemester3.Services
         Task CreateMarkBySubject(string ExamId, int maxmark, int rate);
 
         public Task<Account> GetFaculty(string facultyid);
-        public Task<TestSchedule> GetDetailTestSchedule(string subjectid, string classid);
+        public Task<TestSchedule> GetDetailTestSchedule(string examid, string classid);
     }
 }

@@ -16,5 +16,7 @@ namespace ProjectSemester3.Services
         Task Delete(int MailId);
         Task<Mail> Update(Mail mail);
         bool Exists(int MailId);
+        List<Mail> Search(string searchMail);
+
     }
 }

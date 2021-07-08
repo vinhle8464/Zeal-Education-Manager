@@ -1,4 +1,8 @@
-﻿@model ProjectSemester3.Models.Pay
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.PayViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
 
 @{
     ViewData["Title"] = "Index";
@@ -12,9 +16,43 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Pays</h1>
-                    <br />
-                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchPay" id="searchPay" placeholder="Search..." value="@ViewBag.searchPay" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -29,27 +67,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var pay in ViewBag.pays)
+                            @foreach (var pay in ViewBag.pays.PagedList)
                             {
-                            <tr onclick="location.href = '@Url.Action("details", "pays", new { id=pay.PayId })'">
-                                <td>@index</td>
-                                <td>@pay.Account.Fullname</td>
-                                <td>@pay.Payment</td>
-                                <td>@pay.Title</td>
-                                <td>@pay.Fee</td>
-                                <td>@pay.Total</td>
-                                <td>@(pay.PayStatus == true ? "Paid" : "Unpaid")</td>
-                                <td>
+                                <tr onclick="location.href = '@Url.Action("details", "pays", new { id=pay.PayId })'">
+                                    <td>@index</td>
+                                    <td>@pay.Account.Fullname</td>
+                                    <td>@pay.Payment</td>
+                                    <td>@pay.Title</td>
+                                    <td>@pay.Fee</td>
+                                    <td>@pay.Total</td>
+                                    <td>@(pay.PayStatus == true ? "Paid" : "Unpaid")</td>
+                                    <td>
 
-                                    <a type="button" class="btn btn-success" asp-action="details" asp-route-id="@pay.PayId"><i class="fas fa-edit"></i></a>
-                                </td>
-                            </tr>
+                                        <a type="button" class="btn btn-success" asp-action="details" asp-route-id="@pay.PayId"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
                                 index++;
                             }
                         </tbody>
                     </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "pays", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchPay" value="@ViewBag.searchPay" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.pays.PagedList.PageCount < ViewBag.pays.PagedList.PageNumber ? 0 : ViewBag.pays.PagedList.PageNumber) &nbsp;of @ViewBag.pays.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.pays.PagedList, page => Url.Action("index", "pays", new { searchPay = ViewBag.searchPays, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
                 </div>
             </div>
         </div>
     </div>
 </div>
+

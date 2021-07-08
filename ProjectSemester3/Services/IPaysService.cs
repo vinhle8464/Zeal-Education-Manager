@@ -15,5 +15,6 @@ namespace ProjectSemester3.Services
         bool Exists(int PayId);
         Pay GetFee(string studentid);
         Task PayFee(int id);
+        List<Pay> Search(string searchPay);
     }
 }
