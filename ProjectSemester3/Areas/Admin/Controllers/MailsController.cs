@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
 using ProjectSemester3.Services;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -29,19 +31,46 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // GET: Admin/Mails
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchMail, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.mails = await mailService.FindAll();
-                return View();
+                var mails = mailService.Search(searchMail);
+                ViewBag.searchMail = searchMail;
 
+                LoadPagination(mails, page, pageSize);
+
+                return View();
             }
             else
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
 
+        }
+
+        // load pagination
+        public void LoadPagination(List<Mail> mails, int? page, int? pageSize)
+        {
+            var mailViewModel = new MailViewModel();
+
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = mails.ToPagedList(pageNumber, pagesize);
+
+            mailViewModel.PagedList = (PagedList<Mail>)onePageOfProducts;
+
+            ViewBag.mails = mailViewModel;
         }
 
         // GET: Admin/Mails/Details/5
@@ -123,5 +152,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             await mailService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
+
+
     }
 }

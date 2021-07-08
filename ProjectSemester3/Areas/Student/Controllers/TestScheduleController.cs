@@ -36,12 +36,12 @@ namespace ProjectSemester3.Areas.Student.Controllers
         }
 
         [Route("details")]
-        public async Task<IActionResult> Details(string subjectid)
+        public async Task<IActionResult> Details(string examid)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
                 var account = accountService.Find(HttpContext.Session.GetString("username"));
-                ViewBag.testSchedule = await testScheduleService.GetDetailTestSchedule(subjectid, account.ClassId);
+                ViewBag.testSchedule = await testScheduleService.GetDetailTestSchedule(examid, account.ClassId);
                
                 return View();
             }

@@ -51,10 +51,10 @@
                                 <strong>Class: </strong> @ViewBag.testSchedule.Class.ClassName
                             </p>
                             <p>
-                                <strong>Faculty: </strong> @ViewBag.testSchedule.Faculty.Fullname
+                                <strong>Faculty: </strong> @(ViewBag.testSchedule.FacultyId != null ? ViewBag.testSchedule.Faculty.Fullname : "none")
                             </p>
                             <p>
-                                <strong>Date exam: </strong> @ViewBag.testSchedule.Date
+                                <strong>Date exam: </strong> @(ViewBag.testSchedule.Date != null ? ViewBag.testSchedule.Date :"none")
                             </p>
                         </div>
                     </div>

@@ -36,27 +36,17 @@ namespace ProjectSemester3.Areas.Student.Controllers
         {
             if (HttpContext.Session.GetString("username") != null)
             {
+                ViewBag.schedule = await scheduleService.SelectShedule(accountService.Find(HttpContext.Session.GetString("username")).ClassId);
+                ViewBag.account = accountService.Find(HttpContext.Session.GetString("username"));
+
                 var student = accountService.Find(HttpContext.Session.GetString("username"));
 
                 var schedule = await scheduleService.GetBySubjectId(subjectid, student.ClassId);
 
                 var startdate = schedule.StartDate;
                 var enddate = schedule.EndDate;
-                string[] studyday = schedule.StudyDay.Split(',');
+
                 var days = new List<string>();
-
-                while (enddate >= startdate)
-                {
-                    foreach (var day in studyday)
-                    {
-                        if (startdate.ToString("dddd") == day)
-                        {
-                            days.Add(day + " " + startdate.Date.ToString("dd/MM/yyyy"));
-                        }
-                    }
-                    startdate = startdate.AddDays(1);
-                }
-
                 var monday = new List<string>();
                 var tuesday = new List<string>();
                 var wednesday = new List<string>();
@@ -65,35 +55,56 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 var saturday = new List<string>();
                 var sunday = new List<string>();
 
-                foreach (var day in days)
+
+                if (startdate == null || enddate == null || schedule.StudyDay == null)
                 {
-                    if (day.Contains("Monday"))
+                    return View("Index");
+                }
+                else
+                {
+                    string[] studyday = schedule.StudyDay.Split(',');
+                    while (enddate >= startdate)
                     {
-                        monday.Add(day);
+                        foreach (var day in studyday)
+                        {
+                            if (startdate.ToString("dddd") == day)
+                            {
+                                days.Add(day + " " + startdate.Date.ToString("dd/MM/yyyy"));
+                            }
+                        }
+                        startdate = startdate.AddDays(1);
                     }
-                    else if (day.Contains("Tuesday"))
+
+                    foreach (var day in days)
                     {
-                        tuesday.Add(day);
-                    }
-                    else if (day.Contains("Wednesday"))
-                    {
-                        wednesday.Add(day);
-                    }
-                    else if (day.Contains("Thursday"))
-                    {
-                        thursday.Add(day);
-                    }
-                    else if (day.Contains("Friday"))
-                    {
-                        friday.Add(day);
-                    }
-                    else if (day.Contains("Saturday"))
-                    {
-                        saturday.Add(day);
-                    }
-                    else if (day.Contains("Sunday"))
-                    {
-                        sunday.Add(day);
+                        if (day.Contains("Monday"))
+                        {
+                            monday.Add(day);
+                        }
+                        else if (day.Contains("Tuesday"))
+                        {
+                            tuesday.Add(day);
+                        }
+                        else if (day.Contains("Wednesday"))
+                        {
+                            wednesday.Add(day);
+                        }
+                        else if (day.Contains("Thursday"))
+                        {
+                            thursday.Add(day);
+                        }
+                        else if (day.Contains("Friday"))
+                        {
+                            friday.Add(day);
+                        }
+                        else if (day.Contains("Saturday"))
+                        {
+                            saturday.Add(day);
+                        }
+                        else if (day.Contains("Sunday"))
+                        {
+                            sunday.Add(day);
+                        }
                     }
                 }
                 ViewBag.monday = monday;

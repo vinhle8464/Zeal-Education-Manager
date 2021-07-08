@@ -50,6 +50,15 @@ namespace ProjectSemester3.Areas.Admin.Service
             return FeedbackFaculty;
         }
 
+        public List<FeedbackFaculty> Search(string searchFeedbackFaculty)
+        {
+            var feedbackFaculty = context.FeedbackFaculties.AsQueryable();
 
+            if (searchFeedbackFaculty != null) feedbackFaculty = feedbackFaculty.Where(b => b.Faculty.Fullname.StartsWith(searchFeedbackFaculty));
+
+            var result = feedbackFaculty.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
     }
 }

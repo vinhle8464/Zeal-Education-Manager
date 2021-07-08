@@ -43,11 +43,11 @@
                                 <tbody>
                                     @foreach (var testschedule in ViewBag.testschedules)
                                     {
-                                        <tr onclick="location.href = '@Url.Action("details", "testschedule", new { subjectid=testschedule.Exam.Subject.SubjectId})'" style="font-family: cursive; font-size: 22px ">
+                                        <tr onclick="location.href = '@Url.Action("details", "testschedule", new { examid=testschedule.ExamId})'" style="font-family: cursive; font-size: 22px ">
                                             <td>@index</td>
                                             <td>@testschedule.Exam.Subject.SubjectName</td>
-                                            <td>@testschedule.Faculty.Fullname</td>
-                                            <td>@testschedule.Date.ToString("MM/dd/yyyy")</td>
+                                            <td>@(testschedule.FacultyId != null? testschedule.Faculty.Fullname : "None")</td>
+                                            <td>@(testschedule.Date != null ? testschedule.Date.ToString("MM/dd/yyyy") : "none")</td>
                                         </tr>
                                         index++;
                                     }

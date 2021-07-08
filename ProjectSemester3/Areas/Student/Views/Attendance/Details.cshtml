@@ -41,7 +41,7 @@
                                     <tr>
                                         <td>@attendance.Subject.SubjectName</td>
                                         <td>@attendance.Date.ToString("MM/dd/yyyy")</td>
-                                        <td> @ViewBag.timeday</td>
+                                        <td> @(ViewBag.timeday != null? ViewBag.timeday : "none")</td>
                                         <td>@attendance.Faculty.Fullname</td>
                                         @if (attendance.Checked)
                                         {

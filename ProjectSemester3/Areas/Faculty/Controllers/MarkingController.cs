@@ -38,7 +38,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
         [Route("student")]
         public IActionResult Student( string facultyid,string examid,string classid)
         {
-           var a= RouteData.Values["Model[0].ExamId"];
+           
             ViewBag.classes = markingService.getclass(classid);
             ViewBag.faculty  = markingService.getfaculty(facultyid);
             ViewBag.exams = markingService.getexam(examid);

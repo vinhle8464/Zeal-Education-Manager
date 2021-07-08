@@ -50,5 +50,16 @@ namespace ProjectSemester3.Services
             await context.SaveChangesAsync();
             //Thread.Sleep(10);
         }
+
+        public List<Pay> Search(string searchPay)
+        {
+            var pays = context.Pays.AsQueryable();
+
+            if (searchPay != null) pays = pays.Where(b => b.Title.StartsWith(searchPay) || b.Payment.StartsWith(searchPay) || b.Fee.ToString().StartsWith(searchPay));
+
+            var result = pays.ToList(); // execute query
+
+            return result;
+        }
     }
 }
