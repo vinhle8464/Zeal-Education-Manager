@@ -48,8 +48,8 @@
                                             <td>@(item.FacultyId != null ? item.Faculty.Fullname : "none")</td>
                                             <td>@(item.TimeDay != null ? item.TimeDay : "none")</td>
                                             <td>@(item.StudyDay != null ? item.StudyDay : "none")</td>
-                                            <td>@(Convert.ToInt32(item.StartDate.ToString("yyyy")) > 1000 ? item.StartDate.ToString("MM/dd/yyyy") : "none")</td>
-                                            <td>@(Convert.ToInt32(item.EndDate.ToString("yyyy")) > 1000 ? item.EndDate.ToString("MM/dd/yyyy") : "none")</td>
+                                            <td>@(Convert.ToInt32(item.StartDate.ToString("yyyy")) > 2000 ? item.StartDate.ToString("MM/dd/yyyy") : "none")</td>
+                                            <td>@(Convert.ToInt32(item.EndDate.ToString("yyyy")) > 2000 ? item.EndDate.ToString("MM/dd/yyyy") : "none")</td>
                                         </tr>
                                         index++;
                                     }

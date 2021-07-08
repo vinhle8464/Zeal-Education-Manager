@@ -13,6 +13,6 @@ namespace ProjectSemester3.Areas.Admin.Service
         public Task<List<string>> GetAllClass(string keyword);
         public List<Subject> GetListSubject(string className);
         public List<Account> GetListFaculty(string subjectId);
-
+        List<ClassAssignment> Search(string searchCourse);
     }
 }

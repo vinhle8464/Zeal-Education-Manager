@@ -73,7 +73,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                var professionals = await professionalsService.Search(searchProfessional, subjectKeyword);
+                var professionals = professionalsService.Search(searchProfessional, subjectKeyword);
                 ViewBag.searchProfessional = searchProfessional;
                 ViewBag.subjectKeyword = subjectKeyword;
                 //ViewBag.classKeyword = classKeyword;

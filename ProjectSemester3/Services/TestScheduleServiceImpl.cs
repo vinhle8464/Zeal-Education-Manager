@@ -19,18 +19,10 @@ namespace ProjectSemester3.Services
 
         public async Task<dynamic> Add(TestSchedule TestSchedule)
         {
-            if (context.TestSchedules.Any(p => p.ClassId.Equals(TestSchedule.ClassId) && p.ExamId == TestSchedule.ExamId))
-            {
-                return 0;
-            }
-            else
-            {
-                context.TestSchedules.Add(TestSchedule);
-                await context.SaveChangesAsync();
-                return 1;
-            }
+            context.Entry(TestSchedule).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            return await context.SaveChangesAsync();
 
-            
+
         }
 
         public async  Task<List<Class>> SelectClasses()
@@ -92,6 +84,47 @@ namespace ProjectSemester3.Services
         public async Task<TestSchedule> GetDetailTestSchedule(string examid, string classid)
         {
             return await context.TestSchedules.SingleOrDefaultAsync(t => t.Exam.ExamId == examid && t.ClassId == classid);
+        }
+
+
+        public  List<Class> Search(string searchClassSchudule)
+        {
+            var Classes = context.Classes.AsQueryable();
+
+            if (searchClassSchudule != null) Classes = Classes.Where(s => s.ClassName.Contains(searchClassSchudule));
+
+            var result = Classes.Where(b => b.Status == true).ToList(); // execute query
+
+            return result;
+        }
+
+        public List<Account> GetListFaculty(string examid)
+        {
+            var listFaculty = new List<Account>();
+            var subjectId = context.Exams.FirstOrDefault(e => e.ExamId == examid);
+            var listFacultyid = context.Professionals.Where(p => p.SubjectId == subjectId.SubjectId).Select(p => p.FacultyId).ToList();
+
+            foreach (var item in listFacultyid)
+            {
+                var obj = context.Accounts.FirstOrDefault(a => a.AccountId == item);
+                listFaculty.Add(obj);
+            }
+
+            return listFaculty;
+
+        }
+
+        public async Task<TestSchedule> FindAjax(int testscheduleid)
+        {
+            return await context.TestSchedules.FirstOrDefaultAsync(s => s.TestScheduleId == testscheduleid);
+        }
+
+        public async Task Delete(int id)
+        {
+            var obj = await context.TestSchedules.FirstOrDefaultAsync(s => s.TestScheduleId == id);
+            obj.Status = false;
+            context.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await context.SaveChangesAsync();
         }
     }
 }

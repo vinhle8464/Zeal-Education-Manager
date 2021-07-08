@@ -14,5 +14,12 @@ namespace ProjectSemester3.Services
 
         public Task<Account> GetFaculty(string facultyid);
         public Task<TestSchedule> GetDetailTestSchedule(string examid, string classid);
+
+        public List<Class> Search(string searchClassSchedule);
+
+        public List<Account> GetListFaculty(string exanid);
+
+        public Task<TestSchedule> FindAjax(int testscheduleid);
+        public Task Delete(int id);
     }
 }

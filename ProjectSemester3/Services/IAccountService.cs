@@ -42,7 +42,7 @@ namespace ProjectSemester3.Services
         Task<Account> FindAjax(string accountId);
 
         public Task<List<string>> GetKeyWordByKeyword(string keyword);
-        public Task<List<Account>> Search(string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword);
+        public List<Account> Search(string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword);
 
     }
 }

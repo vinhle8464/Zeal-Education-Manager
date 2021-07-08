@@ -61,6 +61,8 @@ namespace ProjectSemester3.Areas.Admin.Service
                 {
                     ClassId = classId,
                     SubjectId = item.SubjectId,
+                    StartDate = DateTime.Parse("1980/12/12"),
+                    EndDate = DateTime.Parse("1980/12/12"),
                     Status = true
 
                 };
@@ -92,6 +94,7 @@ namespace ProjectSemester3.Areas.Admin.Service
                 {
                     ClassId = classId,
                     ExamId = item,
+                    Date = DateTime.Parse("1980/12/12"),
                     Status = true
 
                 };

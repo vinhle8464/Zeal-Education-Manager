@@ -82,7 +82,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public bool RoleExists(string ClassId) => context.Classes.Any(e => e.ClassId == ClassId);
 
-        public async Task<List<Class>> Search(string searchCLass, int filterNumber)
+        public  List<Class> Search(string searchCLass, int filterNumber)
         {
             var classes = context.Classes.AsQueryable();
 

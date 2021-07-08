@@ -18,6 +18,6 @@ namespace ProjectSemester3.Areas.Admin.Service
         bool Exists(string ExamId, string SubjectId);
 
         public Task<Exam> FindAjax(string examId);
-        public Task<List<Exam>> Search(string searchExam, string filterSubject);
+        public List<Exam> Search(string searchExam, string filterSubject);
     }
 }

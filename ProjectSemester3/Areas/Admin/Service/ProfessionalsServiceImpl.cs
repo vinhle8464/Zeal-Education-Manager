@@ -117,7 +117,7 @@ namespace ProjectSemester3.Areas.Admin.Service
 
 
 
-        public async Task<List<Professional>> Search(string searchKeyword1, string subjectKeyword)
+        public List<Professional> Search(string searchKeyword1, string subjectKeyword)
         {
             var professionals = context.Professionals.AsQueryable();
 

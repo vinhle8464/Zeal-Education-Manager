@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectSemester3.Areas.Admin.Service;
 using ProjectSemester3.Areas.Admin.ViewModel;
 using ProjectSemester3.Models;
+using X.PagedList;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -78,21 +79,45 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
         // page index of ClassAssignment
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchClassAssignment, int? page, int? pageSize)
         {
             if (HttpContext.Session.GetString("username") != null && HttpContext.Session.GetString("role") != null)
             {
-                ViewBag.classassignments = await classAssignmentService.FindAll();
-                //ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName");
-                //ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname");
+                var classAssignments = classAssignmentService.Search(searchClassAssignment);
+                ViewBag.searchClassAssignment = searchClassAssignment;
+
+                LoadPagination(classAssignments, page, pageSize);
+
                 return View();
             }
             else
             {
                 return RedirectToRoute(new { controller = "account", action = "signin" });
             }
+        }
 
+        // load pagination
+        public void LoadPagination(List<ClassAssignment> classAssignments, int? page, int? pageSize)
+        {
+            var classAssignmentViewModel = new ClassAssignmentViewModel();
 
+            ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+            int pagesize = (pageSize ?? 5);
+            ViewBag.psize = pagesize;
+
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfProducts = classAssignments.ToPagedList(pageNumber, pagesize);
+
+            classAssignmentViewModel.PagedList = (PagedList<ClassAssignment>)onePageOfProducts;
+
+            ViewBag.classAssignments = classAssignmentViewModel;
         }
 
 
@@ -100,7 +125,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("create")]
-        public async Task<IActionResult> Create(ClassAssignment classAssignment, string cbbClass, string cbbSubject)
+        public async Task<IActionResult> Create(ClassAssignment classAssignment, string cbbClass, string cbbSubject, string searchClassAssignment, int? pageSize)
         {
             if (ModelState.IsValid)
             {
@@ -110,54 +135,17 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                     TempData["msg"] = "<script>alert('Class is not Exist!');</script>";
 
                     // Return view index and auto paging
-                    //return RedirectToRoute(new { controller = "batches", action = "index", searchKeyword = searchKeyword, courseKeyword = courseKeyword, classKeyword = classKeyword, pageSize = pageSize });
+                    return RedirectToRoute(new { controller = "classassignments", action = "index", searchClassAssignment = searchClassAssignment, pageSize = pageSize });
                 }
                 await classAssignmentService.Create(classAssignment.FacultyId, classs.ClassId, cbbSubject.Trim());
-            TempData["msg"] = "<script>alert('Successfully!');</script>";
+                TempData["success"] = "success";
 
             }
-            ViewBag.classassignments = await classAssignmentService.FindAll();
 
-            //ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName", classAssignment.ClassId);
-            //ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname", classAssignment.FacultyId);
-            return View("index");
+            return RedirectToRoute(new { controller = "classassignments", action = "index", searchClassAssignment = searchClassAssignment, pageSize = pageSize });
         }
 
-        // go to page edit classAssignment
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string facultyid, string classid)
-        {
 
-            var classAssignment = await classAssignmentService.Find(facultyid, classid);
-
-            ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName", classAssignment.ClassId);
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname", classAssignment.FacultyId);
-            return View(classAssignment);
-        }
-
-        // Edit classAssignment
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit")]
-        public async Task<IActionResult> Edit(string id, [Bind("FacultyId,ClassId")] ClassAssignment classAssignment)
-        {
-
-
-            if (ModelState.IsValid)
-            {
-
-                context.Update(classAssignment);
-                await context.SaveChangesAsync();
-
-                TempData["msg"] = "<script>alert('Successfully!');</script>";
-
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClassId"] = new SelectList(context.Classes, "ClassId", "ClassName", classAssignment.ClassId);
-            ViewData["FacultyId"] = new SelectList(context.Accounts.Where(a => a.RoleId == "role02"), "AccountId", "Fullname", classAssignment.FacultyId);
-
-            return View(classAssignment);
-        }
 
 
     }

@@ -9,17 +9,19 @@ namespace ProjectSemester3.Services
         public Task<List<Schedule>> SelectShedule(string classid);
         public Task<List<Class>> SelectClasses();
         public Task<Class> GetClass(string classid);
-        public Task<List<Subject>> GetListSubject(string classid);
+    //    public Task<List<Subject>> GetListSubject(string classid);
 
         public Task<dynamic> Add(Schedule schedule);
         public Task CreateAttendance(Schedule schedule);
       //  public string GetNewestId();
         public Task<Account> GetFaculty(string facultyid);
         public Task<Schedule> GetBySubjectId(string subjectid, string classid);
-        public Task<List<Class>> Search(string searchClassSchedule);
+        public List<Class> Search(string searchClassSchedule);
 
         public List<Account> GetListFaculty(string subjectId);
 
         public Task<Schedule> FindAjax(int scheduleid);
+
+        public Task Delete(int id);
     }
 }

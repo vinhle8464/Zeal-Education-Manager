@@ -404,7 +404,7 @@ namespace ProjectSemester3.Services
             return list;
         }
 
-        public async Task<List<Account>> Search(string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword)
+        public List<Account> Search(string searchKeyword, string roleKeyword, string genderKeyword, string statusKeyword)
         {
 
             var accounts = context.Accounts.AsQueryable();

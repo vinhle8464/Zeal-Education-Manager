@@ -14,7 +14,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         public Task<List<string>> GetAllFaculty(string keyword);
         public List<Subject> GetListSubject(string facultyName);
         public Task<List<string>> GetKeyWordByKeyword(string keyword);
-        public Task<List<Professional>> Search(string searchKeyword1, string subjectKeyword);
+        public List<Professional> Search(string searchKeyword1, string subjectKeyword);
 
     }
 }
