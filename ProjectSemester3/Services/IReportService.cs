@@ -17,7 +17,7 @@ namespace ProjectSemester3.Services
         public List<Attendance> GetAttendances(string studentid);
         public int GetDateOff(string subjectid, string studentid);
         public Task<string> GetStatusSubject(string classid, string studentid, string subjectid);
-        public Task<List<Subject>> GetSubject();
+        public Task<List<CourseSubject>> GetCourseSubject(string coursename);
         public Task<Pay> GetPayByStudent(string studentid);
 
         public Task<Batch> GetDateAttendance(string classid);

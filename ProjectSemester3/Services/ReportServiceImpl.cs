@@ -75,9 +75,9 @@ namespace ProjectSemester3.Services
             return null;
         }
 
-        public async Task<List<Subject>> GetSubject()
+        public async Task<List<CourseSubject>> GetCourseSubject(string coursename)
         {
-            return await context.Subjects.ToListAsync();
+            return await context.CourseSubjects.Where(c => c.Course.CourseName == coursename).ToListAsync();
         }
 
         public async Task<Batch> GetDateAttendance(string classid)

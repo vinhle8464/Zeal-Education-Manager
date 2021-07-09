@@ -146,5 +146,13 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             return RedirectToRoute(new { controller = "enquiries", action = "index", searchEnquiry = searchEnquiry, pageSize = pageSize });
         }
 
+        [Route("detail")]
+        public IActionResult Detail(int enquiryid)
+        {
+            ViewBag.enquiry = enquiryService.Find(enquiryid);
+            return View("detail");
+
+        }
+
     }
 }

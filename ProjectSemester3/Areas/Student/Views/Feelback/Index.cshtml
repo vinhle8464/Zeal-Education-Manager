@@ -21,35 +21,29 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <h1 class="title">Feelback</h1>
+                <h1 class="title">Feedback</h1>
                 <div class="card-body">
                     <form asp-controller="feelback" asp-action="send" method="post">
                         <div class="row form-group">
                             <div class="col-md-6">
-                                <!-- <label for="fname">First Name</label> -->
-                                <input type="text" name="fname" class="form-control" placeholder="Your firstname">
+                                <!-- <label for="fname">Full Name</label> -->
+                                <input type="text" name="fullname" class="form-control" value="@ViewBag.student.Fullname">
                             </div>
                             <div class="col-md-6">
-                                <!-- <label for="lname">Last Name</label> -->
-                                <input type="text" name="lname" class="form-control" placeholder="Your lastname">
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <!-- <label for="email">Class</label> -->
-                                <input type="text" name="classstudent" class="form-control" placeholder="Your class">
+                                <!-- <label for="lname">Class</label> -->
+                                <input type="text" name="classstudent" class="form-control" value="@ViewBag.student.Class.ClassName">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <!-- <label for="email">Email</label> -->
-                                <input type="text" name="email" class="form-control" placeholder="Your email address">
+                                <input type="text" name="email" class="form-control" value="@ViewBag.student.Email">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <!-- <label for="email">Email</label> -->
-                                <input type="text" name="phone" class="form-control" placeholder="Your phone number">
+                                <input type="text" name="phone" class="form-control" value="@ViewBag.student.Phone">
                             </div>
                         </div>
 

@@ -7,8 +7,8 @@
     ViewData["Title"] = "Enquiry";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
-<script>tinymce.init({ selector: 'textarea' });</script>
+@*<script src="~/js/tinymce.min.js" referrerpolicy="origin"></script>
+<script>tinymce.init({ selector: 'textarea' });</script>*@
 @{ var index = 1;
 }
 <div class="container">
@@ -67,7 +67,7 @@
                         <tbody>
                             @foreach (var enquiry in ViewBag.enquiries.PagedList)
                             {
-                                <tr>
+                                <tr onclick="location.href = '@Url.Action("detail", "enquiries", new { enquiryid=enquiry.Id})'">
                                     <td>@index</td>
                                     <td>@enquiry.Title</td>
                                     <td style="text-align: center;">

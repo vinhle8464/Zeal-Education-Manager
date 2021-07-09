@@ -21,12 +21,14 @@ namespace ProjectSemester3.Areas.Student.Controllers
         private IAccountService accountService;
         private IReportService reportService;
         private DatabaseContext context;
+        private IProfileService profileService;
 
-        public ReportsController(IAccountService accountService, IReportService reportService, DatabaseContext context)
+        public ReportsController(IAccountService accountService, IReportService reportService, DatabaseContext context, IProfileService profileService)
         {
             this.accountService = accountService;
             this.reportService = reportService;
             this.context = context;
+            this.profileService = profileService;
         }
 
         [Route("index")]
@@ -52,8 +54,9 @@ namespace ProjectSemester3.Areas.Student.Controllers
             ViewBag.batch = reportService.GetCourse(studentid);
 
             var classid = accountService.Find(HttpContext.Session.GetString("username")).ClassId;
+            var course = profileService.SelectCourse(studentid);
 
-            var listSubject = await reportService.GetSubject();
+            var listSubject = await reportService.GetCourseSubject(course);
             var listStudying = new List<string>();
             var listCompleted = new List<string>();
             var listScheduled = new List<string>();
@@ -62,15 +65,15 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 var item = await reportService.GetStatusSubject(classid, studentid, subject.SubjectId);
                 if (item.Contains("Studying"))
                 {
-                    listStudying.Add(subject.SubjectName);
+                    listStudying.Add(subject.Subject.SubjectName);
                 }
                 else if (item.Contains("Complete"))
                 {
-                    listCompleted.Add(subject.SubjectName);
+                    listCompleted.Add(subject.Subject.SubjectName);
                 }
                 else
                 {
-                    listScheduled.Add(subject.SubjectName);
+                    listScheduled.Add(subject.Subject.SubjectName);
                 }
             }
             ViewBag.listStudying  = listStudying;

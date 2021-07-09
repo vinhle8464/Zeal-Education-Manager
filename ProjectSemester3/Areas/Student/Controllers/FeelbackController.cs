@@ -34,6 +34,8 @@ namespace ProjectSemester3.Areas.Student.Controllers
         {
             if (HttpContext.Session.GetString("username") != null)
             {
+                ViewBag.student = accountService.Find(HttpContext.Session.GetString("username"));
+
                 return View();
             }
             return null;
@@ -41,9 +43,9 @@ namespace ProjectSemester3.Areas.Student.Controllers
 
         [HttpPost]
         [Route("send")]
-        public IActionResult Send(string fname, string lname, string email, string subject, string message, string phone, string classstudent)
+        public IActionResult Send(string fullname, string email, string subject, string message, string phone, string classstudent)
         {
-            var s = "Fullname: " + fname + " " + lname + "<br>" + "Class: " + classstudent + "<br>" + "Email: " + email + "<br>" + subject + "<br>" + "Phone number: " + phone + "<br>" + message;
+            var s = "Fullname: " + fullname + "<br>" + "Class: " + classstudent + "<br>" + "Email: " + email + "<br>" + subject + "<br>" + "Phone number: " + phone + "<br>" + message;
             var mailHelper = new MailHelper(configuration);
             if (mailHelper.Send(email, configuration["Gmail:Username"], subject, s))
             {
@@ -53,9 +55,9 @@ namespace ProjectSemester3.Areas.Student.Controllers
 
 
                     var mail = new Mail();
-                    mail.Title = subject + ", Class: " + classstudent;
+                    mail.Title = subject + " | Class: " + classstudent;
                     mail.EmailUser = email;
-                    mail.Fullname = fname + " " + lname;
+                    mail.Fullname = fullname;
                     mail.PhoneNumber = phone;
                     mail.Content = message;
                     mail.SendDate = DateTime.Now;
