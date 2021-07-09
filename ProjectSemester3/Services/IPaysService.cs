@@ -13,7 +13,7 @@ namespace ProjectSemester3.Services
         Task<Pay> FindById(int? PayId);
         Task<Pay> Update(Pay pay);
         bool Exists(int PayId);
-        Pay GetFee(string studentid);
+        Pay GetFee(string studentid, string title);
         Task PayFee(int id);
         public List<Pay> Search(string searchPay);
     }

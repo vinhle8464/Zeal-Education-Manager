@@ -62,7 +62,7 @@
 
                                         <a type="button" class="btn btn-success editrole" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
 
-                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@role.RoleId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+                                        @*<a type="button" class="btn btn-danger" asp-action="delete" asp-route-id="@role.RoleId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>*@
                                         <input type="hidden" asp-for="RoleId" value="@role.RoleId" id="idrole" />
 
                                     </td>
