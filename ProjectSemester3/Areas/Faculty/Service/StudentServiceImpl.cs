@@ -119,7 +119,12 @@ namespace ProjectSemester3.Areas.Faculty.Service
         }
         public List<Class> classes(string facultyid)
         {
-            return context.ClassAssignments.Where(m => m.FacultyId == facultyid).Select(n => n.Class).ToList();
+            List<Class> classes = new List<Class>();
+            foreach (var classid in context.ClassAssignments.Where(m => m.FacultyId == facultyid).Distinct().Select(n => n.Class.ClassId).ToList())
+            {
+                classes = classes.Union(context.Classes.Where(m => m.ClassId == classid).ToList()).ToList();
+            }
+            return classes;
         }
         public Class getclass(string classid)
         {

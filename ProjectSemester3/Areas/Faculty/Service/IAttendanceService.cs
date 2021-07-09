@@ -10,8 +10,8 @@ namespace ProjectSemester3.Areas.Faculty.Service
     {
         List<Subject> subjects(string classid);
         List<Class> classes(string facultyid);
-        List<Attendance> attendances(string subjectid);
+        List<Attendance> attendances(string subjectid, string classid);
         dynamic update(int attendanceid,string check);
-        List<Attendance> search(string search);
+        List<Attendance> search(string subjectid,string search, string classid);
     }
 }

@@ -25,7 +25,7 @@
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    <a asp-area="faculty" asp-controller="attendance" asp-action="attendances" asp-route-facultyid="@ViewBag.account.AccountId" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
+                                    <a asp-area="faculty" asp-controller="attendance" asp-action="attendances" asp-route-facultyid="@ViewBag.account.AccountId" asp-route-classid="@ViewBag.classid" asp-route-subjectid="@subjects.SubjectId"><i class="zmdi zmdi-check-circle"></i></a>
                                 </div>
                                 <div class="text">
                                     <h3>@subjects.SubjectName</h3>

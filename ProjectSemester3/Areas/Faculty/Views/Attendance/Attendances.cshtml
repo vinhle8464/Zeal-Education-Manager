@@ -14,7 +14,7 @@
         
             <div class="col-md-12">
                 <div style="text-align:center">
-                    <form class="form-header"asp-area="faculty" asp-controller="attendance" asp-action="search" asp-route-facultyid="@ViewBag.faculty.AccountId" method="POST">
+                    <form class="form-header"asp-area="faculty" asp-controller="attendance" asp-action="search" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@ViewBag.subjectid" asp-route-classid="@ViewBag.classid" method="POST">
                         <input class="au-input au-input--xl" type="datetime-local" name="search" placeholder="Search " />
                         <button class="au-btn--submit" type="submit">
                             <i class="zmdi zmdi-search"></i>
@@ -63,8 +63,8 @@
                                 }
                                 <td>
 
-                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="present"  asp-route-search="@ViewBag.search"  type="button" class="btn btn-success"><i class="fas fa-check"></i></a>
-                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-check="apsent" asp-route-search="@ViewBag.search" type="button" class="btn btn-success"><i class="fas fa-close"></i></a>
+                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-classid="@ViewBag.classid" asp-route-check="present"  asp-route-search="@ViewBag.search"  type="button" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                    <a asp-area="faculty" asp-controller="attendance" asp-action="edit" asp-route-facultyid="@ViewBag.faculty.AccountId" asp-route-subjectid="@students.Subject.SubjectId" asp-route-attendanceid="@students.AttendanceId" asp-route-classid="@ViewBag.classid" asp-route-check="apsent" asp-route-search="@ViewBag.search" type="button" class="btn btn-success"><i class="fas fa-close"></i></a>
 
                                 </td>
                             </tr>

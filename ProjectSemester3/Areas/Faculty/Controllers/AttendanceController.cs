@@ -24,6 +24,7 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
         [Route("")]
         public IActionResult Subject(string facultyid, string classid)
         {
+            ViewBag.classid = classid;
             ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
             ViewBag.subjects = attendanceService.subjects(classid);
             return View();
@@ -36,34 +37,39 @@ namespace ProjectSemester3.Areas.Faculty.Controllers
             return View("class");
         }
         [Route("attendances")]
-        public IActionResult attendances(string facultyid, string subjectid, string search)
+        public IActionResult attendances(string facultyid, string subjectid, string search,string classid)
         {
             if (search == null)
             {
+                ViewBag.classid = classid;
+                ViewBag.subjectid = subjectid;
                 ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
-                ViewBag.students = attendanceService.attendances(subjectid);
+                ViewBag.students = attendanceService.attendances(subjectid,classid);
                 return View("attendances");
             }
             else
             {
+                ViewBag.classid = classid;
+                ViewBag.subjectid = subjectid;
                 ViewBag.faculty = ViewBag.account = accountService.FindID(facultyid);
-                ViewBag.students = attendanceService.search(search);
+                ViewBag.students = attendanceService.search(subjectid,search, classid);
                 ViewBag.search = search;
                 return View("attendances");
             }
 
         }
         [Route("edit")]
-        public IActionResult Edit(int attendanceid, string check, string facultyid, string subjectid,string search)
+        public IActionResult Edit(int attendanceid, string check, string facultyid, string subjectid,string search,string classid)
         {
+            ViewBag.classid = classid;
             attendanceService.update(attendanceid, check);
-            return RedirectToRoute(new { controller = "attendance", action = "attendances", facultyid = facultyid, search = search,subjectid=subjectid });
+            return RedirectToRoute(new { controller = "attendance", action = "attendances", facultyid = facultyid, search = search,subjectid=subjectid,classid=classid });
         }
         [Route("search")]
-        public IActionResult Search(string facultyid,string search)
+        public IActionResult Search(string facultyid,string search,string classid,string subjectid)
         {
-            
-            return RedirectToRoute(new { controller = "attendance", action = "attendances",facultyid=facultyid ,search = search });
+           
+            return RedirectToRoute(new { controller = "attendance", action = "attendances",facultyid=facultyid ,search = search,classid=classid,subjectid=subjectid });
         }
 
     }

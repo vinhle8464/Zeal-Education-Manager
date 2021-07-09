@@ -14,17 +14,22 @@ namespace ProjectSemester3.Areas.Faculty.Service
             context = _context;
         }
 
-        public List<Attendance> attendances(string subjectid)
+        public List<Attendance> attendances(string subjectid,string classid)
         {
-            return context.Attendances.Where(m => m.SubjectId==context.Subjects.FirstOrDefault(m=>m.SubjectId==subjectid).SubjectId).ToList();
+            return context.Attendances.Where(m => m.SubjectId==context.Subjects.FirstOrDefault(m=>m.SubjectId==subjectid).SubjectId&&m.ClassId==classid).ToList();
         }
 
         public List<Class> classes(string facultyid)
         {
-            return context.ClassAssignments.Where(m=>m.FacultyId==facultyid).Select(m=>m.Class).ToList();       
+            List<Class> classes = new List<Class>();
+            foreach (var classid in context.ClassAssignments.Where(m => m.FacultyId == facultyid).Distinct().Select(n => n.Class.ClassId).ToList())
+            {
+                classes = classes.Union(context.Classes.Where(m => m.ClassId == classid).ToList()).ToList();
+            }
+            return classes;
         }
 
-        public List<Attendance> search(string search)
+        public List<Attendance> search(string subjectid,string search,string classid)
         {
             string mydate = null;
             DateTime date2;
@@ -34,7 +39,7 @@ namespace ProjectSemester3.Areas.Faculty.Service
                 mydate =date2.ToString("MM/dd/yyyy");
             }
 
-            return context.Attendances.Where(m => m.Date.Equals(DateTime.Parse( mydate))).ToList();
+            return context.Attendances.Where(m => m.Date.Equals(DateTime.Parse( mydate))&&m.ClassId==classid&& m.SubjectId == context.Subjects.FirstOrDefault(m => m.SubjectId == subjectid).SubjectId).ToList();
         }
 
         public List<Subject> subjects(string classid)
