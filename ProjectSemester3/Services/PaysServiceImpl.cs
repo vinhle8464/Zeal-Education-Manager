@@ -36,9 +36,9 @@ namespace ProjectSemester3.Services
                 .FirstOrDefaultAsync(m => m.PayId == PayId);
         }
 
-        public Pay GetFee(string studentid)
+        public Pay GetFee(string studentid, string title)
         {
-            return context.Pays.SingleOrDefault(p => p.AccountId == studentid);
+            return context.Pays.SingleOrDefault(p => p.AccountId == studentid && p.Title == title);
         }
 
         public async Task PayFee(int id)

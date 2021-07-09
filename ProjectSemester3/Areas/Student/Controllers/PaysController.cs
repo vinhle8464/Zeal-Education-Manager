@@ -55,7 +55,7 @@ namespace ProjectSemester3.Areas.Student.Controllers
 
         // GET: Student/Pays/Details/5
         [Route("details")]
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
            
             if (id == null)
@@ -77,7 +77,7 @@ namespace ProjectSemester3.Areas.Student.Controllers
             var account = accountService.Find(HttpContext.Session.GetString("username"));
            
 
-            var pay1 = paysService.GetFee(account.AccountId);
+            var pay1 = paysService.GetFee(account.AccountId, pay.Title);
             pay1.Total = Convert.ToInt32(pay1.Total);
             if (pay1 == null)
             {
