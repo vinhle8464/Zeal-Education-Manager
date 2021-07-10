@@ -57,12 +57,7 @@ namespace ProjectSemester3.Areas.Student.Controllers
         [Route("details")]
         public async Task<IActionResult> Details(int id)
         {
-           
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+        
             var pay = await paysService.FindById(id);
 
             if (pay == null)
@@ -130,8 +125,8 @@ namespace ProjectSemester3.Areas.Student.Controllers
                 var payId = Int32.Parse(HttpContext.Session.GetString("payment"));
                 await paysService.PayFee(payId);
             }
-
-            return View("success");
+            ViewBag.pays = await paysService.FindAllPayByAccountId(accountService.Find(HttpContext.Session.GetString("username")).AccountId);
+            return View("index");
         }
     }
 }
