@@ -66,8 +66,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         {
 
             return (from courses in context.Courses
-                    where
-                      courses.Status == true
+                   
                     orderby
                       courses.CourseId descending
                     select courses.CourseId).Take(1).SingleOrDefault();

@@ -48,14 +48,13 @@ namespace ProjectSemester3.Areas.Admin.Service
 
        public async Task<Subject> Find(string SubjectId) => await context.Subjects.FirstOrDefaultAsync(p => p.SubjectId == SubjectId && p.Status == true);
 
-        public async Task<List<Subject>> FindAll() => await context.Subjects.Where(p => p.Status == true).Take(10).ToListAsync();
+        public async Task<List<Subject>> FindAll() => await context.Subjects.Where(p => p.Status == true).ToListAsync();
 
         public string GetNewestId()
         {
 
             return (from Subjects in context.Subjects
-                    where
-                      Subjects.Status == true
+                    
                     orderby
                       Subjects.SubjectId descending
                     select Subjects.SubjectId).Take(1).SingleOrDefault();

@@ -918,3 +918,7 @@ INSERT [dbo].[mail] ([mail_id], [title], [email_user], [fullname], [phone_number
 INSERT [dbo].[mail] ([mail_id], [title], [email_user], [fullname], [phone_number], [content], [reply_content], [send_date], [reply_date], [check], [status]) VALUES (8, N'Y kien tap the | Class: Class 1', N'tranmini0401@gmail.com', N'Vinh', N'123456789', N'Em muon them may tinh cho phong hoc Class 1', N'nha truong se sap xep cho lop', CAST(N'2021-07-09T21:58:53.000' AS DateTime), CAST(N'2021-07-09T21:59:42.333' AS DateTime), 1, 1)
 SET IDENTITY_INSERT [dbo].[mail] OFF
 GO
+
+
+
+--Note: All Password in Account is '1'
