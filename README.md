@@ -85,8 +85,7 @@ User manual:
    10. Create Professional for faculty
    11. Create Class-assignment 
    12. Create Schedule and test_schedule for all class
-   13. Finally, 
-   14. 
+
     
     
     
