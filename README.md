@@ -2,7 +2,7 @@
 
 This is a Education Management System project.
 
-Technology:
+⦁	Technical:
   - ASP.Net Core
   - HTML, CSS, JS, Jquery, Ajax, C#
   - SQL server
