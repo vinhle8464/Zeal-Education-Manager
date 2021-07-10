@@ -210,7 +210,6 @@ namespace ProjectSemester3.Areas.Student.Controllers
         {
             var student = accountService.Find(HttpContext.Session.GetString("username"));
             ViewBag.pays = await reportService.GetPayByStudent(student.AccountId);
-            var pays = await reportService.GetPayByStudent(student.AccountId);
             
 
             return View("Pay");

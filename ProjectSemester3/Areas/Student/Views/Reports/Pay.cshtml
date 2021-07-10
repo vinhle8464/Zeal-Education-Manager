@@ -9,106 +9,109 @@
 
 <div class="container">
     <div class="row">
-        <div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-6">
-                    <address>
-                        <strong>Zeal Education</strong>
-                        <br>
-                        212-214 Nguyen Dinh Chieu
-                        <br>
-                        Ward 6, District 3, HCM City
-                        <br>
-                        <abbr title="Phone">P:</abbr> +84123456789
-                    </address>
+        @foreach (var pay in ViewBag.pays)
+        {
+            <div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <address>
+                            <strong>Zeal Education</strong>
+                            <br>
+                            212-214 Nguyen Dinh Chieu
+                            <br>
+                            Ward 6, District 3, HCM City
+                            <br>
+                            <abbr title="Phone">P:</abbr> +84123456789
+                        </address>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                        <p>
+                            <em>Date: @(DateTime.Now)</em>
+                        </p>
+                        <p>
+                            <em>Receipt #: 34522677W</em>
+                        </p>
+                    </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 text-right">
-                    <p>
-                        <em>Date: @(DateTime.Now)</em>
-                    </p>
-                    <p>
-                        <em>Receipt #: 34522677W</em>
-                    </p>
-                </div>
-            </div>
-            <div class="content">
-                <div>
-                    <p><strong>Fullname: </strong> @ViewBag.pays.Account.Fullname</p>
-                    <p><strong>Class: </strong> @ViewBag.pays.Account.Class.ClassName</p>
-                    <p><strong>Email: </strong> @ViewBag.pays.Account.Email</p>
-                    <p><strong>Phone: </strong> @ViewBag.pays.Account.Phone</p>
-                    <p><strong>Address: </strong> @ViewBag.pays.Account.Address</p>
-                </div>
-                <div class="text-center">
-                    <h1>Receipt</h1>
-                </div>
-                <form action="" method="post">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th class="text-center">Price</th>
-                                <th class="text-center">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="col-md-9"><em>@ViewBag.pays.Title</em></td>
-                                <td class="col-md-1" style="text-align: center"> 1 </td>
-                                <td class="col-md-1 text-center">@ViewBag.pays.Fee</td>
-                                <td class="col-md-1 text-center">@ViewBag.pays.Fee</td>
-                            </tr>
-                            <tr>
-                                <td>   </td>
-                                <td>   </td>
-                                <td class="text-right">
-                                    <p>
-                                        <strong>Subtotal: </strong>
-                                    </p>
-                                    <p>
-                                        <strong>Tax: </strong>
-                                    </p>
-                                    <p>
-                                        <strong>Discount: </strong>
-                                    </p>
-                                </td>
-                                <td class="text-center">
-                                    <p>
-                                        <strong>@ViewBag.pays.Fee</strong>
-                                    </p>
-                                    <p>
-                                        <strong>$0</strong>
-                                    </p>
+                <div class="content">
+                    <div>
+                        <p><strong>Fullname: </strong> @pay.Account.Fullname</p>
+                        <p><strong>Class: </strong> @pay.Account.Class.ClassName</p>
+                        <p><strong>Email: </strong> @pay.Account.Email</p>
+                        <p><strong>Phone: </strong> @pay.Account.Phone</p>
+                        <p><strong>Address: </strong> @pay.Account.Address</p>
+                    </div>
+                    <div class="text-center">
+                        <h1>Receipt</h1>
+                    </div>
+                    <form action="" method="post">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-9"><em>@pay.Title</em></td>
+                                    <td class="col-md-1" style="text-align: center"> 1 </td>
+                                    <td class="col-md-1 text-center">@pay.Fee</td>
+                                    <td class="col-md-1 text-center">@pay.Fee</td>
+                                </tr>
+                                <tr>
+                                    <td>   </td>
+                                    <td>   </td>
+                                    <td class="text-right">
+                                        <p>
+                                            <strong>Subtotal: </strong>
+                                        </p>
+                                        <p>
+                                            <strong>Tax: </strong>
+                                        </p>
+                                        <p>
+                                            <strong>Discount: </strong>
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <p>
+                                            <strong>@pay.Fee</strong>
+                                        </p>
+                                        <p>
+                                            <strong>$0</strong>
+                                        </p>
 
-                                    <p>
-                                        <strong>@ViewBag.pays.Discount</strong>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>   </td>
-                                <td>   </td>
-                                <td class="text-right"><h4><strong>Total: </strong></h4></td>
-                                <td class="text-center text-danger"><h4><strong>@ViewBag.pays.Total</strong></h4></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @if (@ViewBag.pays.PayStatus)
-                    {
-                        <button type="text" class="btn btn-success btn-lg btn-block" disabled>
-                            Paid
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="text" class="btn btn-success btn-lg btn-block" disabled>
-                            Unpaid 
-                        </button>
-                    }
-                </form>
+                                        <p>
+                                            <strong>@pay.Discount</strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>   </td>
+                                    <td>   </td>
+                                    <td class="text-right"><h4><strong>Total: </strong></h4></td>
+                                    <td class="text-center text-danger"><h4><strong>@pay.Total</strong></h4></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @if (@pay.PayStatus)
+                        {
+                            <button type="text" class="btn btn-success btn-lg btn-block" disabled>
+                                Paid
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="text" class="btn btn-success btn-lg btn-block" disabled>
+                                Unpaid 
+                            </button>
+                        }
+                    </form>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
