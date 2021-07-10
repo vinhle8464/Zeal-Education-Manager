@@ -51,14 +51,13 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<Role> Find(string RoleId) => await context.Roles.FirstOrDefaultAsync(p => p.RoleId == RoleId && p.Status == true);
 
-        public async Task<List<Role>> FindAll() => await context.Roles.Where(p => p.Status == true).Take(10).ToListAsync();
+        public async Task<List<Role>> FindAll() => await context.Roles.Where(p => p.Status == true).ToListAsync();
 
         public string GetNewestId()
         {
 
             return (from roles in context.Roles
-                    where
-                      roles.Status == true
+                   
                     orderby
                       roles.RoleId descending
                     select roles.RoleId).Take(1).SingleOrDefault();
