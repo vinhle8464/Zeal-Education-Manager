@@ -87,7 +87,7 @@ User manual:
    12. Create Schedule and test_schedule for all class
 
     
-    
+After that, you can login by faculty's account and student's account. ALl feature worked!
     
     
     
