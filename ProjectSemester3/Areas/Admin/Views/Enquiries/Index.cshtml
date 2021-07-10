@@ -61,29 +61,33 @@
                             <tr>
                                 <th>Serial</th>
                                 <th>Title</th>
+                                <th>Answer</th>
+
                                 <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var enquiry in ViewBag.enquiries.PagedList)
                             {
-                                <tr onclick="location.href = '@Url.Action("detail", "enquiries", new { enquiryid=enquiry.Id})'">
-                                    <td>@index</td>
-                                    <td>@enquiry.Title</td>
-                                    <td style="text-align: center;">
-                                        <a type="button" class="btn btn-success editenquiry" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
-                                        @*//delete form*@
-                                        <form asp-controller="enquiries" asp-action="delete" method="post" style="display: inline-block;">
-                                            <input type="hidden" asp-for="Enquiry.Id" value="@enquiry.Id" />
-                                            <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
-                                            <input type="hidden" name="pageSize" value="@ViewBag.psize" />
-                                            <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
-                                        </form>
-                                        @*//delete form*@
+                            <tr>
+                                <td>@index</td>
+                                <td>@enquiry.Title</td>
+                                <td>@enquiry.Answer</td>
 
-                                        <input type="hidden" name="enquiryid" id="enquiryid" value="@enquiry.Id" />
-                                    </td>
-                                </tr>
+                                <td style="text-align: center;">
+                                    <a type="button" class="btn btn-success editenquiry" data-toggle="modal" data-target="#ModalEdit" asp-controller="" asp-action=""><i class="fas fa-edit"></i></a>
+                                    @*//delete form*@
+                                    <form asp-controller="enquiries" asp-action="delete" method="post" style="display: inline-block;">
+                                        <input type="hidden" asp-for="Enquiry.Id" value="@enquiry.Id" />
+                                        <input type="hidden" name="searchEnquiry" value="@ViewBag.searchEnquiry" />
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <button type="submit" onclick="return confirm('Are you sure?')"> <a type="button" class="btn btn-danger" style="color: white;"><i class="far fa-trash-alt"></i></a></button>
+                                    </form>
+                                    @*//delete form*@
+
+                                    <input type="hidden" name="enquiryid" id="enquiryid" value="@enquiry.Id" />
+                                </td>
+                            </tr>
                                 index++;
                             }
                         </tbody>

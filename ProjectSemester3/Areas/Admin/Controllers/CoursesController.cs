@@ -215,8 +215,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(CourseViewModel courseViewModel, string searchCourse, int? pageSize)
         {
 
-            courseViewModel.Course.Status = false;
-            await coursesService.Update(courseViewModel.Course);
+            await coursesService.Delete(courseViewModel.Course.CourseId);
             TempData["success"] = "success";
 
             // Return view index and auto paging

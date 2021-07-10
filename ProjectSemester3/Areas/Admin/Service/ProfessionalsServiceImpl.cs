@@ -18,12 +18,11 @@ namespace ProjectSemester3.Areas.Admin.Service
 
         public async Task<dynamic> Create(Professional professional)
         {
-            if (context.Professionals.Any(p => p.FacultyId == professional.FacultyId && p.SubjectId == professional.SubjectId) && professional.Status == true)
+            if (context.Professionals.Any(p => p.FacultyId == professional.FacultyId && p.SubjectId == professional.SubjectId && p.Status == true))
             {
-
                 return 0;
             }
-            else if (context.Professionals.Any(p => p.FacultyId == professional.FacultyId && p.SubjectId == professional.SubjectId) && professional.Status == false)
+            else if (context.Professionals.Any(p => p.FacultyId == professional.FacultyId && p.SubjectId == p.SubjectId && p.Status == false))
             {
                 professional.Status = true;
                 context.Entry(professional).State = Microsoft.EntityFrameworkCore.EntityState.Modified;

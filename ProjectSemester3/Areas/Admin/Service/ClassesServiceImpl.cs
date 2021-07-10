@@ -31,11 +31,6 @@ namespace ProjectSemester3.Areas.Admin.Service
             {
                 return 0;
 
-            }else if (context.Classes.Any(p => p.ClassName.Equals(classes.ClassName) && p.Status == false))
-            {
-                classes.Status = true;
-                context.Entry(classes).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                await context.SaveChangesAsync();
             }
             else
             {

@@ -29,8 +29,9 @@ namespace ProjectSemester3.Areas.Admin.Service
             }
             else if (context.Scholarships.Any(p => p.ScholarshipName == Scholarship.ScholarshipName && p.Status == false))
             {
-                Scholarship.Status = true;
-                context.Entry(Scholarship).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                var newscho = await context.Scholarships.FirstOrDefaultAsync(s => s.ScholarshipName == Scholarship.ScholarshipName);
+                newscho.Status = true;
+                context.Entry(newscho).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 return await context.SaveChangesAsync();
 
             }
