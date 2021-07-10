@@ -30,13 +30,11 @@
                         <tbody>
                             @foreach (var c in ViewBag.scholarshipstudents)
                             {
-                            <tr onclick="location.href = '@Url.Action("details", "scholarshipstudents", new { accountid = c.AccountId, scholarshipid=c.ScholarshipId })'">
+                            <tr>
                                 <td>@index</td>
                                 <td>@c.Scholarship.ScholarshipName</td>
                                 <td>@c.Account.Fullname</td>
-                                <td>
-                                    <a asp-controller="classassignments" asp-action="details" asp-route-accountid="@c.AccountId" asp-route-scholarshipid="@c.ScholarshipId">View</a>
-                                </td>
+                              
                             </tr>
                                 index++;
                             }
