@@ -55,7 +55,7 @@ namespace ProjectSemester3.Areas.Admin.Service
         public async Task<List<string>> GetAllFaculty(string keyword)
         {
             var result = new List<string>();
-            var list = await context.Accounts.Where(c => c.Fullname.ToLower().Contains(keyword.ToLower()) && c.RoleId == "role02" && c.Active == true && c.Status == true).ToListAsync();
+            var list = await context.Accounts.Where(c => c.Fullname.ToLower().Contains(keyword.ToLower()) && c.RoleId == "role02" && c.Status == true).ToListAsync();
 
             foreach (var item in list)
             {

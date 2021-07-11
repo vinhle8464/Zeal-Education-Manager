@@ -53,7 +53,17 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [Route("findSubject")]
         public IActionResult FindSubject(string facultyName)
         {
-            var listSubject = professionalsService.GetListSubject(facultyName.Trim());
+            var listSubject = new List<Subject>();
+
+            try
+            {
+                listSubject = professionalsService.GetListSubject(facultyName.Trim());
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             if(listSubject == null)
             {
                 return NotFound();
