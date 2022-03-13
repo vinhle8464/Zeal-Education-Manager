@@ -1,4 +1,4 @@
-# ProjectSemester3New
+# Zeal-Education-Manager
 
 This is a Education Management System project.
 
